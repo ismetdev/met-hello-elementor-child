@@ -1,0 +1,50 @@
+name: Build zip and publish release on tag
+
+# Runs when you push a version tag like v1.4.0. It builds a clean, correctly
+# structured met-hello-elementor-child.zip on Linux (forward-slash paths, so it
+# never suffers Windows/PowerShell backslash corruption), creates the matching
+# GitHub Release, and attaches the zip. The bundled Plugin Update Checker
+# delivers this zip to WordPress sites, so its structure must be exactly
+# met-hello-elementor-child/...
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Build clean theme zip
+        run: |
+          # Stage the theme inside a folder named exactly
+          # "met-hello-elementor-child" so the zip unpacks to
+          # wp-content/themes/met-hello-elementor-child/ on the target site.
+          mkdir -p build/met-hello-elementor-child
+          for item in $(ls -A | grep -vE '^(\.git|\.github|\.gitattributes|\.gitignore|\.claude|node_modules|build)$'); do
+            cp -r "$item" build/met-hello-elementor-child/
+          done
+          cd build
+          zip -rq ../met-hello-elementor-child.zip met-hello-elementor-child -x "*.zip"
+          cd ..
+          echo "---- zip contents (first 20 entries) ----"
+          unzip -l met-hello-elementor-child.zip | head -20
+          echo "---- verifying style.css is present ----"
+          unzip -l met-hello-elementor-child.zip | grep -q "met-hello-elementor-child/style.css" && echo "OK: style.css present" || (echo "ERROR: style.css missing" && exit 1)
+          echo "---- verifying functions.php is present ----"
+          unzip -l met-hello-elementor-child.zip | grep -q "met-hello-elementor-child/functions.php" && echo "OK: functions.php present" || (echo "ERROR: functions.php missing" && exit 1)
+          echo "---- verifying update library is present ----"
+          unzip -l met-hello-elementor-child.zip | grep -q "met-hello-elementor-child/libs/plugin-update-checker/plugin-update-checker.php" && echo "OK: update library present" || (echo "ERROR: update library missing" && exit 1)
+
+      - name: Create release and attach zip
+        uses: softprops/action-gh-release@v2
+        with:
+          files: met-hello-elementor-child.zip
