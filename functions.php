@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Theme version. Bump this together with the header in style.css so browsers
  * and CDNs pick up fresh assets (used for cache-busting in the enqueues below).
  */
-define( 'MET_HELLO_CHILD_VERSION', '1.4.0' );
+define( 'MET_HELLO_CHILD_VERSION', '1.4.1' );
 
 /**
  * Auto-updater. Checks GitHub for newer releases and shows the update on the

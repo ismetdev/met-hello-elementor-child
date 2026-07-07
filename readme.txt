@@ -61,6 +61,10 @@ Maintenance during WordPress updates (drop-in):
 
 == Changelog ==
 
+= 1.4.1 =
+* Replace the placeholder screenshot with a real 1200x900 branded theme
+  thumbnail. Verifies the end-to-end GitHub update flow.
+
 = 1.4.0 =
 * Add GitHub-based automatic updates via the bundled Plugin Update Checker
   library (theme mode). New releases published on
