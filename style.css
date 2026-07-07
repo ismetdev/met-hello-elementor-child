@@ -5,7 +5,7 @@ Description: Child theme of Hello Elementor. Gives native WordPress blog Posts, 
 Author:      ismetdev
 Author URI:  https://github.com/ismetdev
 Template:    hello-elementor
-Version:     1.4.1
+Version:     1.4.2
 Text Domain: met-hello-child
 Domain Path: /languages
 License:     GNU General Public License v2 or later
@@ -160,6 +160,8 @@ body.met-hello-child-fullwidth .site-main.met-view {
 .met-single .post-hero__meta-item{display:inline-flex;align-items:center;gap:var(--space-2);}
 .met-single .post-hero__meta-item svg{width:16px;height:16px;color:var(--gold-soft);}
 .met-single .post-hero__meta-sep{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.35);}
+.met-single .post-hero__author{color:#fff;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;transition:color var(--t-fast) var(--ease);}
+.met-single .post-hero__author:hover{color:var(--gold-soft);}
 
 /* Feature image */
 .met-single .post-feature{margin-top:clamp(-56px,-7vw,-96px);position:relative;z-index:2;}
@@ -189,7 +191,7 @@ body.met-hello-child-fullwidth .site-main.met-view {
 .met-single .post-back svg{width:18px;height:14px;transition:transform var(--t-fast) var(--ease);}
 .met-single .post-back:hover{color:var(--gold);}
 .met-single .post-back:hover svg{transform:translateX(-3px);}
-.met-single .post-share{display:flex;align-items:center;gap:var(--space-3);}
+.met-single .post-share{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3);}
 .met-single .post-share__label{font-size:var(--text-sm);color:var(--ink-soft);}
 .met-single .post-share a{width:36px;height:36px;border-radius:9px;background:var(--paper-cool);border:1px solid var(--hairline-strong);display:flex;align-items:center;justify-content:center;color:var(--ink-soft);transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease);}
 .met-single .post-share a:hover{background:var(--gold);color:#fff;border-color:var(--gold);transform:translateY(-2px);}

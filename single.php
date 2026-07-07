@@ -22,8 +22,19 @@ while ( have_posts() ) :
 	$met_primary_term = met_hello_child_get_primary_term();
 	$met_reading_time = met_hello_child_reading_time();
 	$met_permalink    = get_permalink();
-	$met_share_url    = rawurlencode( $met_permalink );
-	$met_share_title  = rawurlencode( get_the_title() );
+	$met_author_url   = get_author_posts_url( (int) get_the_author_meta( 'ID' ) );
+
+	// Back button points to the post's category archive; falls back to the
+	// filterable Newsroom URL only when the post has no category.
+	$met_term_link = $met_primary_term ? get_term_link( $met_primary_term ) : '';
+	if ( $met_primary_term && ! is_wp_error( $met_term_link ) ) {
+		$met_back_url   = $met_term_link;
+		/* translators: %s: category name. */
+		$met_back_label = sprintf( __( 'Back to %s', 'met-hello-child' ), $met_primary_term->name );
+	} else {
+		$met_back_url   = met_hello_child_back_link_url();
+		$met_back_label = __( 'Back to Newsroom', 'met-hello-child' );
+	}
 	?>
 
 	<main id="content" <?php post_class( 'site-main met-view met-single' ); ?>>
@@ -50,8 +61,11 @@ while ( have_posts() ) :
 						<span class="post-hero__meta-item">
 							<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.7"/><path d="M5 20c0-3.3 3-5.5 7-5.5s7 2.2 7 5.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
 							<?php
-							/* translators: %s: post author name. */
-							printf( esc_html__( 'By %s', 'met-hello-child' ), esc_html( get_the_author() ) );
+							printf(
+								/* translators: %s: post author name, linked to their archive. */
+								esc_html__( 'By %s', 'met-hello-child' ),
+								'<a class="post-hero__author" href="' . esc_url( $met_author_url ) . '">' . esc_html( get_the_author() ) . '</a>'
+							);
 							?>
 						</span>
 						<span class="post-hero__meta-sep"></span>
@@ -113,15 +127,20 @@ while ( have_posts() ) :
 
 					<!-- Post end row -->
 					<div class="post-end">
-						<a class="post-back" href="<?php echo esc_url( met_hello_child_back_link_url() ); ?>">
+						<a class="post-back" href="<?php echo esc_url( $met_back_url ); ?>">
 							<svg viewBox="0 0 22 12" fill="none" aria-hidden="true" focusable="false"><path d="M21 6H2M7 1L2 6l5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-							<?php echo esc_html__( 'Back to Newsroom', 'met-hello-child' ); ?>
+							<?php echo esc_html( $met_back_label ); ?>
 						</a>
 						<div class="post-share">
 							<span class="post-share__label"><?php echo esc_html__( 'Share', 'met-hello-child' ); ?></span>
-							<a href="<?php echo esc_url( 'https://www.facebook.com/sharer/sharer.php?u=' . $met_share_url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr__( 'Share on Facebook', 'met-hello-child' ); ?>"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v2H8v3h2v6h3v-6h2.5l.5-3H13v-2c0-.6.4-1 1-1z"/></svg></a>
-							<a href="<?php echo esc_url( 'https://www.linkedin.com/sharing/share-offsite/?url=' . $met_share_url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr__( 'Share on LinkedIn', 'met-hello-child' ); ?>"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M6.5 8.5v9H4v-9h2.5zM5.2 4a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM20 17.5h-2.5v-4.7c0-1.2-.4-2-1.5-2-.8 0-1.3.6-1.5 1.1-.1.2-.1.5-.1.7v4.9H12s.03-8.2 0-9h2.5v1.3c.3-.5 1-1.2 2.3-1.2 1.7 0 3.2 1.1 3.2 3.6v5.3z"/></svg></a>
-							<a href="<?php echo esc_url( 'https://api.whatsapp.com/send?text=' . $met_share_title . '%20' . $met_share_url ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr__( 'Share on WhatsApp', 'met-hello-child' ); ?>"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M4 20l1.3-4A8 8 0 1112 20a8 8 0 01-4-1L4 20z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5.4 0 .7-.4.7-.8v-1c0-.3-.2-.5-.5-.6l-1-.2c-.3 0-.5.1-.7.3-.6-.3-1.1-.8-1.4-1.4.2-.2.3-.4.3-.7l-.2-1c-.1-.3-.3-.5-.6-.5h-1c-.4 0-.8.3-.8.7z" fill="currentColor"/></svg></a>
+							<?php foreach ( met_hello_child_get_share_links( $met_permalink, get_the_title() ) as $met_share ) : ?>
+								<a href="<?php echo esc_url( $met_share['url'] ); ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php echo esc_attr( $met_share['label'] ); ?>">
+									<?php
+									// Trusted static SVG markup.
+									echo met_hello_child_social_icon( $met_share['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+									?>
+								</a>
+							<?php endforeach; ?>
 						</div>
 					</div>
 

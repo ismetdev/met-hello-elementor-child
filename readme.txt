@@ -61,6 +61,13 @@ Maintenance during WordPress updates (drop-in):
 
 == Changelog ==
 
+= 1.4.2 =
+* Single post: add Threads, X, and Telegram share buttons (now X, Facebook,
+  LinkedIn, WhatsApp, Telegram, Threads), built from a reusable helper.
+* Single post: the Back button now points to the post's category archive
+  (falls back to the Newsroom URL only when the post has no category).
+* Single post: the author name now links to the author's archive page.
+
 = 1.4.1 =
 * Replace the placeholder screenshot with a real 1200x900 branded theme
   thumbnail. Verifies the end-to-end GitHub update flow.
