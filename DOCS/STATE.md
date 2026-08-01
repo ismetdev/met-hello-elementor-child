@@ -9,11 +9,10 @@ Last updated: 2026-08-01
 
 | | |
 |---|---|
-| Version in the repo | **1.5.0**, not yet tagged or released |
-| Last released version | **1.4.2** |
+| Shipped version | **1.5.0** |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
 | Branch | `main` |
-| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2` |
+| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0` |
 | Parent theme | `hello-elementor` |
 | Requires | WordPress 6.0+ (tested to 6.5), PHP 7.4+ |
 | Text domain | `met-hello-child` (`/languages`) |
@@ -37,13 +36,13 @@ Elementor pages, or the MetCPT custom post types.
 | Surface | File | Status |
 |---|---|---|
 | Single blog post | [single.php](../single.php) | Shipped 1.1.0, extended 1.4.2 |
-| Maintenance drop-in | [dropins/maintenance.php](../dropins/maintenance.php) | Added 1.5.0, copy to `wp-content/` by hand |
 | Category, tag, date archives | [archive.php](../archive.php) | Shipped 1.2.0 |
 | Search results | [search.php](../search.php) | Shipped 1.3.0 |
 | Author profiles | [author.php](../author.php) | Shipped 1.3.0 |
 | 404 | [404.php](../404.php) | Shipped 1.3.0 |
 | Maintenance (503) | [template-parts/maintenance-page.php](../template-parts/maintenance-page.php) | Shipped 1.3.0, needs a `wp-config.php` toggle |
 | 403 Forbidden | [error-403.php](../error-403.php) | Shipped 1.3.0, needs `.htaccess` wiring |
+| Maintenance drop-in | [dropins/maintenance.php](../dropins/maintenance.php) | Added 1.5.0, copy to `wp-content/` by hand |
 | Shared card partial | [template-parts/met-card.php](../template-parts/met-card.php) | Shipped 1.3.0 |
 | Design system CSS | [assets/css/theme.css](../assets/css/theme.css) | Tokens on `:root`, components under `.met-view` |
 | Auto-update pipeline | [inc/updater.php](../inc/updater.php), [release.yml](../.github/workflows/release.yml) | Shipped 1.4.0, verified by the 1.4.1 release |
@@ -87,15 +86,13 @@ Same site, separate repos, separate release cycles.
 
 ## Open items
 
-1. **Release 1.5.0.** The repo is at 1.5.0 but no tag exists, so no site can get
-   it yet. Tag and push when ready.
-2. **Self-host the fonts.** Geist and Instrument Serif load from the Google Fonts
+1. **Self-host the fonts.** Geist and Instrument Serif load from the Google Fonts
    CDN. The TODO in [inc/assets.php](../inc/assets.php) keeps the swap to one
    function: drop files in `assets/fonts`, ship a local `@font-face` sheet,
    return its URL.
-3. **No `languages/` directory yet.** The text domain is declared and strings are
+2. **No `languages/` directory yet.** The text domain is declared and strings are
    wrapped, but no `.pot` has been generated.
-4. **Lint has never been run.** `phpcs.xml.dist` and `composer.json` are in
+3. **Lint has never been run.** `phpcs.xml.dist` and `composer.json` are in
    place, but `composer install` has not been run on either machine, so the code
    has not been checked against WordPress Coding Standards yet.
 

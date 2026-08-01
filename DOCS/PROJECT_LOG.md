@@ -43,7 +43,24 @@ root. `error-403.php` stays too, because deployed `.htaccess` files reference it
 path. See [DECISIONS.md](DECISIONS.md#d20).
 
 Version bumped to 1.5.0 in `style.css` and `functions.php`, with a `readme.txt`
-changelog entry. Not tagged yet.
+changelog entry.
+
+**Verified against the running Local site**, all clean, no PHP notices anywhere:
+
+| Check | Result |
+|---|---|
+| Single post, category, search, author, 404 | Render, correct `.met-view` modifier, correct body class |
+| Stylesheet URL | `assets/css/theme.css?ver=1.5.0`, served, 18.5 KB |
+| `style.css` | Served as header only, 1 KB, never enqueued |
+| Home and Pages | No child CSS, no full-width class. Scope gate holds |
+| Share buttons | X, Facebook, LinkedIn, WhatsApp, Telegram, Threads |
+| Back link | Resolves to the post's category archive |
+| Author link | Resolves to the author archive |
+| Font preconnect | Both hints present, on styled views only |
+| Maintenance page | 503, `Retry-After: 3600`, noindex, no home button, renders from its new path |
+
+The maintenance check used a temporary mu-plugin gated behind a query string,
+removed straight after. Tagged and released as v1.5.0.
 
 ---
 
