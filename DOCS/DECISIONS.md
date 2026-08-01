@@ -318,3 +318,34 @@ and keep dev files out of the release zip through `.gitattributes` and the
 **Why.** The standard should be checked into the repo so both machines lint the
 same way. The dependencies should not be, because a WordPress theme is deployed
 by copying files and no site needs phpcs.
+
+---
+
+## D22: plan on Opus, code on Sonnet 5 <a id="d22"></a>
+
+**Decision (2026-08-01).** Planning, research and review run on the default
+model. All coding runs on **Sonnet 5**.
+
+The handover is explicit. After the user approves a plan, Claude must stop before
+writing any code and say:
+
+> Plan approved. Switch to Sonnet 5 now: run `/model sonnet`. Tell me when you
+> have, and I will start.
+
+Claude does not begin editing files until the user confirms the switch. If the
+user says to proceed anyway, that is their call, so proceed and note the model in
+use.
+
+Coding means writing or editing project files: PHP, CSS, JS, config, templates.
+It does not mean the small edits that are part of planning, such as updating a
+doc in `DOCS/`.
+
+**Why.** Sonnet 5 is fast and cheap enough for implementation once the plan is
+settled, and the plan is where the expensive thinking belongs. Splitting the two
+keeps cost down without weakening the design work. Same reason as
+[WRITING_RULES.md](WRITING_RULES.md): work smart, do not burn tokens by habit.
+
+**How this is enforced.** `CLAUDE.md` at the repo root carries the rule, because
+Claude Code loads that file at the start of every session on both machines.
+Nothing in `DOCS/` is loaded automatically. If the rule ever needs to change,
+change it in both places.
