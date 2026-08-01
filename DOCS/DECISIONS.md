@@ -349,3 +349,23 @@ keeps cost down without weakening the design work. Same reason as
 Claude Code loads that file at the start of every session on both machines.
 Nothing in `DOCS/` is loaded automatically. If the rule ever needs to change,
 change it in both places.
+
+---
+
+## D23: read these docs partially, and cap the log
+
+**Decision (2026-08-01).** `CLAUDE.md` states how much of each doc to read.
+`PROJECT_LOG.md` defaults to its top 40 lines. `DECISIONS.md` is searched by
+topic rather than read whole. `STATE.md` and `WRITING_RULES.md` are read whole
+because they stay small. When `PROJECT_LOG.md` passes about 200 lines, entries
+older than the current year move to `DOCS/archive/PROJECT_LOG-<year>.md`.
+
+**Why.** The log is the only append-forever file here, and almost every task
+needs just the newest entries. Left alone it would grow until reading it cost
+more than the work. The other files are bounded, so a blanket rule against
+reading them fully would cost more in missed context than it saves in tokens.
+
+**Measured on 2026-08-01**, so the trade-off is on record rather than guessed:
+`CLAUDE.md` about 630 tokens and the only file loaded automatically,
+`DECISIONS.md` about 4,100, `PROJECT_LOG.md` about 2,600, `STATE.md` about 1,500,
+`WRITING_RULES.md` about 830.

@@ -2,6 +2,11 @@
 
 What was built and when. Newest first.
 
+Reading this file: the newest entries are at the top, so the first 40 lines are
+usually enough. Read further only when you need older history. When this file
+passes about 200 lines, archive entries older than the current year into
+`DOCS/archive/PROJECT_LOG-<year>.md`.
+
 **Provenance.** Reconstructed on 2026-08-01. Versions 1.0.0 to 1.4.2 were built on
 the home machine, and Claude Code transcripts do not sync between machines, so the
 office laptop has none of those sessions. The entries below come from the

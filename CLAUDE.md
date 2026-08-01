@@ -32,12 +32,20 @@ conventional commit format.
 This repo is worked on from two machines. Run `git pull --ff-only origin main`
 first. When releasing, push `main` before pushing the `vX.Y.Z` tag.
 
-## Project context
+## Project context, and how much of it to read
 
-- [DOCS/STATE.md](DOCS/STATE.md): current version, layout, scope boundary, open
-  items, release steps.
-- [DOCS/DECISIONS.md](DOCS/DECISIONS.md): why the code is the way it is.
-- [DOCS/PROJECT_LOG.md](DOCS/PROJECT_LOG.md): what happened and when.
+Read only what the task needs. None of these load automatically.
+
+| File | What it is | How to read it |
+|---|---|---|
+| [DOCS/STATE.md](DOCS/STATE.md) | Current version, layout, scope boundary, open items, release steps | Whole file. It is short and stays short. Start here |
+| [DOCS/DECISIONS.md](DOCS/DECISIONS.md) | Why the code is the way it is | Search for the topic, then read that entry. Read it whole only when reviewing the design |
+| [DOCS/PROJECT_LOG.md](DOCS/PROJECT_LOG.md) | What happened and when | **Top 40 lines by default**, which is the provenance note plus the newest entries. Read further only when the task is about older history |
+| [DOCS/WRITING_RULES.md](DOCS/WRITING_RULES.md) | Writing standard | Whole file, it is small |
+
+When PROJECT_LOG.md passes about 200 lines, move entries older than the current
+year into `DOCS/archive/PROJECT_LOG-<year>.md` and link it from the top. The
+newest entries stay cheap to reach.
 
 ## Theme specifics
 
