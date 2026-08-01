@@ -3,9 +3,9 @@
  * The template for displaying category, tag, and date archives of blog Posts.
  *
  * Renders a compact petrol header band plus a uniform responsive card grid that
- * matches the single-post look. Native-post archives only — Haraka CPT archives
- * are handled by the plugin and never reach this file. Header and footer come
- * from get_header() / get_footer() (Elementor Theme Builder on this site).
+ * matches the single-post look. Native-post archives only: MetCPT archives are
+ * handled by the plugin and never reach this file. Header and footer come from
+ * get_header() / get_footer() (Elementor Theme Builder on this site).
  *
  * @package MetHelloElementorChild
  */

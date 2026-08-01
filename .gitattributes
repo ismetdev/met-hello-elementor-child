@@ -1,0 +1,22 @@
+# Normalise line endings in the repository to LF.
+* text=auto
+
+*.php text
+*.css text
+*.js  text
+*.md  text
+*.txt text
+*.yml text
+
+*.png binary
+*.jpg binary
+*.mo  binary
+
+# Development files. Not part of a theme install.
+/.editorconfig   export-ignore
+/.gitattributes  export-ignore
+/.github         export-ignore
+/.gitignore      export-ignore
+/composer.json   export-ignore
+/phpcs.xml.dist  export-ignore
+/DOCS            export-ignore

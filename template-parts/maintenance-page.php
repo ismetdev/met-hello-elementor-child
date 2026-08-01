@@ -2,9 +2,10 @@
 /**
  * Styled maintenance page shown by the theme's maintenance toggle.
  *
- * Loaded by met_hello_child_maybe_maintenance() (functions.php) with WordPress
- * running. Rendering (and all inlined CSS) is delegated to the shared standalone
- * renderer. No home button — the front end is intentionally unavailable.
+ * Loaded by met_hello_child_maybe_maintenance() (inc/maintenance.php) with
+ * WordPress running. Rendering, and all inlined CSS, is delegated to the shared
+ * standalone renderer. No home button: the front end is intentionally
+ * unavailable.
  *
  * @package MetHelloElementorChild
  */

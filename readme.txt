@@ -22,7 +22,7 @@ Scope is deliberately narrow:
 
 * It styles native blog Posts, their archives, search, 404, and author pages.
 * It never edits or renames the parent theme (hello-elementor).
-* It never touches the Haraka plugin (Events / Tenders / Careers custom post
+* It never touches the MetCPT plugin (Events / Tenders / Careers custom post
   types and their single templates).
 * Elementor-built pages are left untouched.
 
@@ -47,7 +47,7 @@ Maintenance mode (theme toggle):
   filter. If LiteSpeed Cache is active, purge all after toggling.
 
 Maintenance during WordPress updates (drop-in):
-  Copy the bundled maintenance.php into wp-content/ (i.e. wp-content/maintenance.php).
+  Copy the bundled dropins/maintenance.php to wp-content/maintenance.php.
   WordPress shows it automatically while core/plugins/themes update. This file is
   NOT part of the theme folder and must be placed manually on each deploy.
 
@@ -60,6 +60,20 @@ Maintenance during WordPress updates (drop-in):
   needed for those.
 
 == Changelog ==
+
+= 1.5.0 =
+* Restructure the theme to the standard WordPress layout. functions.php is now a
+  bootstrap that loads six modules from inc/ (setup, updater, assets,
+  template-tags, social, maintenance). No behaviour changed.
+* Move the design CSS to assets/css/theme.css. style.css now holds the theme
+  header only and is not enqueued.
+* Move maintenance-template.php to template-parts/maintenance-page.php.
+* Add phpcs.xml.dist (WordPress Coding Standards), composer.json, .editorconfig
+  and .gitattributes.
+* Exclude development files from the release zip.
+* Add the missing dropins/maintenance.php that the installation notes told you
+  to copy into wp-content/.
+* Rename the remaining "Haraka" references to "MetCPT".
 
 = 1.4.2 =
 * Single post: add Threads, X, and Telegram share buttons (now X, Facebook,

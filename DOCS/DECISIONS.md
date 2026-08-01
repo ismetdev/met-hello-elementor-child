@@ -280,3 +280,41 @@ conventional commit format. This covers chat replies, docs, commits, PRDs and
 plans.
 
 **Why.** Long output costs tokens and reading time for no gain.
+
+---
+
+## D20: standard theme layout, within what WordPress allows <a id="d20"></a>
+
+**Decision (2026-08-01, v1.5.0).** `functions.php` is a bootstrap only. Behaviour
+lives in six modules under `inc/`. The design CSS moved to
+`assets/css/theme.css`, and `style.css` keeps the theme header and nothing else.
+The maintenance page moved to `template-parts/maintenance-page.php`. The
+WordPress drop-in was added at `dropins/maintenance.php`.
+
+**Why.** A 549-line `functions.php` mixing updates, enqueues, template tags,
+icons and error pages is the usual place a WordPress theme rots. Splitting it
+means a change has one obvious home.
+
+**What could not move, and why.** WordPress resolves the template hierarchy at
+the theme root only. `single.php`, `archive.php`, `author.php`, `search.php` and
+`404.php` must stay there, as must `style.css`, `functions.php` and
+`screenshot.png`. `error-403.php` stays because live `.htaccess` files point at
+its full path, so moving it would break the 403 page on deployed sites.
+
+**Behaviour note.** The only user-visible change is the enqueued stylesheet URL,
+now `assets/css/theme.css`. Nothing else about the rendered output changed. All
+19 public functions kept their names, so any external code hooking them still
+works.
+
+---
+
+## D21: lint config in the repo, dependencies out of it
+
+**Decision (2026-08-01).** Ship `phpcs.xml.dist` (WordPress Coding Standards,
+text domain and prefix enforced) and `composer.json`. Keep `vendor/` out of git,
+and keep dev files out of the release zip through `.gitattributes` and the
+`release.yml` exclude list.
+
+**Why.** The standard should be checked into the repo so both machines lint the
+same way. The dependencies should not be, because a WordPress theme is deployed
+by copying files and no site needs phpcs.

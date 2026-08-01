@@ -9,14 +9,24 @@ Last updated: 2026-08-01
 
 | | |
 |---|---|
-| Shipped version | **1.4.2** (`style.css` header and `MET_HELLO_CHILD_VERSION`) |
+| Version in the repo | **1.5.0**, not yet tagged or released |
+| Last released version | **1.4.2** |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
-| Branch | `main`, in sync with `origin/main` at `6c3dcef` |
+| Branch | `main` |
 | Tags | `v1.4.0`, `v1.4.1`, `v1.4.2` |
 | Parent theme | `hello-elementor` |
 | Requires | WordPress 6.0+ (tested to 6.5), PHP 7.4+ |
 | Text domain | `met-hello-child` (`/languages`) |
 | License | GPL-2.0-or-later |
+
+## Layout
+
+See the structure tree in [README.md](../README.md#structure). The short version:
+WordPress requires the template hierarchy files (`single.php`, `archive.php`,
+`author.php`, `search.php`, `404.php`), `style.css`, `functions.php` and
+`screenshot.png` at the theme root, so they stay there. `error-403.php` also
+stays because `.htaccess` points at its path. Everything else lives in `inc/`,
+`assets/`, `template-parts/` or `dropins/`.
 
 ## What the theme does
 
@@ -27,23 +37,24 @@ Elementor pages, or the MetCPT custom post types.
 | Surface | File | Status |
 |---|---|---|
 | Single blog post | [single.php](../single.php) | Shipped 1.1.0, extended 1.4.2 |
+| Maintenance drop-in | [dropins/maintenance.php](../dropins/maintenance.php) | Added 1.5.0, copy to `wp-content/` by hand |
 | Category, tag, date archives | [archive.php](../archive.php) | Shipped 1.2.0 |
 | Search results | [search.php](../search.php) | Shipped 1.3.0 |
 | Author profiles | [author.php](../author.php) | Shipped 1.3.0 |
 | 404 | [404.php](../404.php) | Shipped 1.3.0 |
-| Maintenance (503) | [maintenance-template.php](../maintenance-template.php) | Shipped 1.3.0, needs a `wp-config.php` toggle |
+| Maintenance (503) | [template-parts/maintenance-page.php](../template-parts/maintenance-page.php) | Shipped 1.3.0, needs a `wp-config.php` toggle |
 | 403 Forbidden | [error-403.php](../error-403.php) | Shipped 1.3.0, needs `.htaccess` wiring |
 | Shared card partial | [template-parts/met-card.php](../template-parts/met-card.php) | Shipped 1.3.0 |
-| Design system CSS | [style.css](../style.css) | Tokens on `:root`, components under `.met-view` |
-| Auto-update pipeline | [functions.php:30-47](../functions.php#L30-L47), [release.yml](../.github/workflows/release.yml) | Shipped 1.4.0, verified by the 1.4.1 release |
+| Design system CSS | [assets/css/theme.css](../assets/css/theme.css) | Tokens on `:root`, components under `.met-view` |
+| Auto-update pipeline | [inc/updater.php](../inc/updater.php), [release.yml](../.github/workflows/release.yml) | Shipped 1.4.0, verified by the 1.4.1 release |
 
 ## Scope boundary
 
 This is the thing most likely to break by accident.
 
-`met_hello_child_is_styled_view()` in
-[functions.php:72-78](../functions.php#L72-L78) is the single gate for the
-stylesheet, the font preconnect hints, and the full-width body class. It uses
+`met_hello_child_is_styled_view()` in [inc/setup.php](../inc/setup.php) is the
+single gate for the stylesheet, the font preconnect hints, and the full-width
+body class. It uses
 `is_singular( 'post' )` plus `is_category() || is_tag() || is_date()`, not the
 broad `is_single()` or `is_archive()`. That keeps MetCPT Events, Tenders and
 Careers, Pages, and the blog home out. See [DECISIONS.md](DECISIONS.md#d3).
@@ -76,25 +87,25 @@ Same site, separate repos, separate release cycles.
 
 ## Open items
 
-1. **Stale "Haraka" branding in comments.** About 4 comments still say "Haraka"
-   instead of "MetCPT": [functions.php:8](../functions.php#L8),
-   [README.md:5](../README.md#L5), [readme.txt:25](../readme.txt#L25),
-   [style.css:4](../style.css#L4). Cosmetic, no functional effect. Raised from the
-   MetCPT session on 2026-07-29 and deferred to a theme session. Still open.
+1. **Release 1.5.0.** The repo is at 1.5.0 but no tag exists, so no site can get
+   it yet. Tag and push when ready.
 2. **Self-host the fonts.** Geist and Instrument Serif load from the Google Fonts
-   CDN. The TODO at [functions.php:92-100](../functions.php#L92-L100) keeps the
-   swap to one function: drop files in `/assets/fonts`, ship a local `@font-face`
-   sheet, return its URL.
-3. **No `/languages` directory yet.** The text domain is declared and strings are
+   CDN. The TODO in [inc/assets.php](../inc/assets.php) keeps the swap to one
+   function: drop files in `assets/fonts`, ship a local `@font-face` sheet,
+   return its URL.
+3. **No `languages/` directory yet.** The text domain is declared and strings are
    wrapped, but no `.pot` has been generated.
-4. **`maintenance.php` naming.** `readme.txt` tells users to copy a bundled
-   `maintenance.php` into `wp-content/`, but the repo ships
-   `maintenance-template.php`. Reconcile the two.
+4. **Lint has never been run.** `phpcs.xml.dist` and `composer.json` are in
+   place, but `composer install` has not been run on either machine, so the code
+   has not been checked against WordPress Coding Standards yet.
+
+Closed on 2026-08-01: stale "Haraka" comments renamed to "MetCPT"; the missing
+`dropins/maintenance.php` added.
 
 ## How to cut the next release
 
-1. Bump the version in both [style.css](../style.css#L8) (`Version:` header) and
-   `MET_HELLO_CHILD_VERSION` in [functions.php:22](../functions.php#L22).
+1. Bump the version in both [style.css](../style.css) (`Version:` header) and
+   `MET_HELLO_CHILD_VERSION` in [functions.php](../functions.php).
 2. Add a `= X.Y.Z =` block to the changelog in [readme.txt](../readme.txt#L62).
 3. Commit, push `main` first, then `git tag vX.Y.Z && git push origin vX.Y.Z`.
 4. `release.yml` builds the zip inside a folder named exactly

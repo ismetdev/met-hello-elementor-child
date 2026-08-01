@@ -2,10 +2,10 @@
 /**
  * The template for displaying single blog Posts.
  *
- * Applies to native WordPress Posts only. Haraka CPT singles are rendered by the
- * Haraka plugin's own templates and never reach this file. The header and footer
+ * Applies to native WordPress Posts only. MetCPT singles are rendered by the
+ * MetCPT plugin's own templates and never reach this file. The header and footer
  * come from get_header() / get_footer(), which on this site are produced by the
- * Elementor Theme Builder — so no header/footer markup is hardcoded here.
+ * Elementor Theme Builder, so no header or footer markup is hardcoded here.
  *
  * @package MetHelloElementorChild
  */
@@ -91,7 +91,7 @@ while ( have_posts() ) :
 			</header>
 
 			<?php
-			// Feature image — render the frame only when a featured image exists.
+			// Feature image: render the frame only when a featured image exists.
 			// No image means no frame at all: no gap, no placeholder (decision 3).
 			if ( has_post_thumbnail() ) :
 				$met_thumb_alt = get_post_meta( get_post_thumbnail_id(), '_wp_attachment_image_alt', true );
@@ -102,7 +102,7 @@ while ( have_posts() ) :
 				<div class="post-feature">
 					<div class="container">
 						<div class="post-feature__frame">
-							<?php // the_post_thumbnail() escapes the alt attribute itself — pass the raw value. ?>
+							<?php // the_post_thumbnail() escapes the alt attribute itself, so pass the raw value. ?>
 							<?php the_post_thumbnail( 'large', array( 'alt' => $met_thumb_alt ) ); ?>
 						</div>
 					</div>

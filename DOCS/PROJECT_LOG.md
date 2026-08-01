@@ -12,6 +12,41 @@ finished theme was first pushed to GitHub. From here on, log as work happens.
 
 ---
 
+## 2026-08-01: v1.5.0 restructure to the standard theme layout
+
+Structural refactor, no change to what the site renders.
+
+- `functions.php` went from 549 lines to a bootstrap of about 45. Behaviour split
+  into `inc/setup.php`, `inc/updater.php`, `inc/assets.php`,
+  `inc/template-tags.php`, `inc/social.php`, `inc/maintenance.php`.
+- Design CSS moved to `assets/css/theme.css`. `style.css` now holds the theme
+  header only and is not enqueued. Both files kept git history through `git mv`.
+- `maintenance-template.php` moved to `template-parts/maintenance-page.php`.
+- Added `MET_HELLO_CHILD_DIR` and `MET_HELLO_CHILD_URI` so no file repeats
+  `get_stylesheet_directory()`.
+- The update checker is now built inside a function instead of leaving a global
+  variable behind.
+- Added `phpcs.xml.dist`, `composer.json`, `.editorconfig`, `.gitattributes`.
+  Added `/vendor/` to `.gitignore`.
+- `release.yml` now excludes DOCS, composer, phpcs and editor config from the
+  zip. Before this, users would have received all of them.
+- Fixed the last "Haraka" references, which were open item 1.
+- Added `dropins/maintenance.php`. `readme.txt` had been telling users to copy a
+  bundled file that did not exist. That was open item 4.
+
+Checked: `php -l` clean on all 16 theme PHP files, and all 19 existing functions
+are present with unchanged names.
+
+What did not move, because WordPress does not allow it: the template hierarchy
+files, `style.css`, `functions.php` and `screenshot.png` must sit at the theme
+root. `error-403.php` stays too, because deployed `.htaccess` files reference its
+path. See [DECISIONS.md](DECISIONS.md#d20).
+
+Version bumped to 1.5.0 in `style.css` and `functions.php`, with a `readme.txt`
+changelog entry. Not tagged yet.
+
+---
+
 ## 2026-08-01: project docs added (office laptop)
 
 Added `DOCS/STATE.md`, `DOCS/DECISIONS.md`, `DOCS/PROJECT_LOG.md` and
