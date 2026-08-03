@@ -376,3 +376,25 @@ reading them fully would cost more in missed context than it saves in tokens.
 `CLAUDE.md` about 630 tokens and the only file loaded automatically,
 `DECISIONS.md` about 4,100, `PROJECT_LOG.md` about 2,600, `STATE.md` about 1,500,
 `WRITING_RULES.md` about 830.
+
+---
+
+## D24: the theme ships English only, no translation catalogue
+
+**Decision (2026-08-03).** No `.pot` template, no `languages/` catalogue, no
+translation work. The theme's interface text stays English.
+
+**Why.** The site is English, so a translation catalogue would be effort spent
+with no return. Generating and maintaining a `.pot` only pays off when somebody
+is actually translating it.
+
+**What stays anyway.** Every string keeps its `__()` / `esc_html__()` wrapper and
+the `met-hello-child` text domain, and `phpcs` keeps enforcing the domain. That
+costs nothing now and is what makes this reversible: if the site ever needs a
+second language, generating the catalogue is a single `wp i18n make-pot` run
+against code that is already prepared. Stripping the wrappers to "clean up" would
+throw that away, so do not.
+
+**Scope.** This is about the theme's own interface text. It says nothing about
+the MetTranslate plugin, which handles page content and is a separate project
+with its own repo and release cycle.

@@ -60,6 +60,10 @@ no PHP notices.
 `composer.lock` is now committed, so both machines lint against identical
 standard versions. No version bump: nothing user-facing changed.
 
+Closed the last two open items the same day, both as decisions rather than work:
+stay on the Google Fonts CDN (D15), and ship English only with no translation
+catalogue (D24). The theme now has no open items.
+
 Also found and removed two zero-byte stray files at the repo root
 (`C:UsersIIUM`, `Holdings.claudeclaude-notify-signalsstop`), created by an
 unquoted path in a `claude-notify-signals` hook splitting on the space in

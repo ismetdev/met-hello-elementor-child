@@ -86,16 +86,16 @@ Same site, separate repos, separate release cycles.
 
 ## Open items
 
-1. **No `languages/` directory yet.** Every string is wrapped for translation,
-   but no `.pot` template has been generated, so the theme's own interface text
-   is English only. Separate from the MetTranslate plugin, which handles content
-   rather than interface text. Only worth doing if the site needs a non-English
-   UI.
+None. The theme is done and shipped at 1.5.0.
+
+Work only starts here again if the site asks for something new, or if a
+WordPress, PHP or Hello Elementor update breaks something.
 Closed on 2026-08-01: stale "Haraka" comments renamed to "MetCPT"; the missing
 `dropins/maintenance.php` added.
 
-Closed on 2026-08-03: decided to stay on the Google Fonts CDN, see
-[DECISIONS.md](DECISIONS.md) D15. Ran `composer install` and `phpcs` for the
+Closed on 2026-08-03: stay on the Google Fonts CDN, see
+[DECISIONS.md](DECISIONS.md) D15. Ship English only with no translation
+catalogue, see D24. Ran `composer install` and `phpcs` for the
 first time.
 Found and fixed two config defects (prefix list, CRLF line endings) and 9 real
 findings. `phpcs` is clean. See [PROJECT_LOG.md](PROJECT_LOG.md) for detail.
