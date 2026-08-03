@@ -91,12 +91,10 @@ Same site, separate repos, separate release cycles.
 Scroll to Top (see [PLAN/PRD-scroll-top.md](../PLAN/PRD-scroll-top.md)) shipped
 in 1.7.0, colour bug fixed in 1.7.1 (see [DECISIONS.md D26](DECISIONS.md#d26)):
 
-- Live staging is on 1.7.0 (installed by manual upload; the GitHub auto-updater
-  failed there with a cURL 52 error, not investigated further, see
-  PROJECT_LOG). Still needs updating to 1.7.1 to pick up the colour fix.
-- The GitHub auto-updater's cURL 52 failure on live staging is unresolved and
-  unexplained. It may have been a one-off network blip; it may recur. Worth
-  retrying next release and noting whether it happens again.
+- Live staging is on 1.7.1, installed via the GitHub auto-updater, which
+  worked this time with no error. Colour, position, and on/off all confirmed
+  working on staging (2026-08-03). The 1.7.0 cURL 52 failure was a one-off
+  network blip, not a persistent host block: closed, see PROJECT_LOG.
 - The PRD's step 6-8 passes (accessibility, responsive/collision, Lighthouse
   performance) have not been run.
 

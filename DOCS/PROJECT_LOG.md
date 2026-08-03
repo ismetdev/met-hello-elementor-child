@@ -17,6 +17,20 @@ finished theme was first pushed to GitHub. From here on, log as work happens.
 
 ---
 
+## 2026-08-03: v1.7.1 confirmed live: auto-updater worked, colour fix verified
+
+Retried the GitHub auto-updater on live staging for 1.7.1, this time with no
+error. Confirms the earlier 1.7.0 cURL 52 "Empty reply from server" was a
+one-off network blip, not a persistent block from the host: no code or
+config change was made to the updater between the two attempts. Closing that
+as resolved; no further action unless it recurs.
+
+User confirmed on live staging: colour, position, and on/off all work
+correctly. Both fixes below hold up outside the local environment they were
+diagnosed in.
+
+---
+
 ## 2026-08-03: v1.7.1, fix Scroll to Top colour on live staging
 
 1.7.0 shipped and installed on live staging by manual upload (the built-in
