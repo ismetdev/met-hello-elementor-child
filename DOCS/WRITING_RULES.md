@@ -76,6 +76,14 @@ archive.
 Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
 ```
 
+## Release write-ups
+
+After pushing and tagging, the chat message reporting it follows the same bar
+as the commit message: short. State the version, what shipped, and one line
+on what to test next. Do not re-explain the reasoning, that already lives in
+the commit body, DECISIONS.md, or PROJECT_LOG.md. Link to those instead of
+repeating them.
+
 ## Documentation
 
 - Every doc starts with what it is for, in one or two lines.
