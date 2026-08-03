@@ -225,8 +225,15 @@ one function, `met_hello_child_fonts_url()`
 ([functions.php:98-100](../functions.php#L98-L100)), with a TODO describing the
 self-hosting path.
 
-**Why.** Ship first, keep the migration to a one-function change. Self-hosting is
-tracked in [STATE.md](STATE.md#open-items), not forgotten.
+**Why.** Ship first, keep the migration to a one-function change.
+
+**Settled on 2026-08-03: stay on the CDN.** Google Fonts is treated as a trusted
+dependency for this site, and the theme has bigger things to spend effort on. The
+one-function structure stays, so the decision can be reversed cheaply if a
+privacy or performance requirement ever forces it. Noted for the record: browsers
+partition their HTTP cache per site now, so the old "the visitor already has it
+cached from another site" benefit no longer exists, and self-hosting is usually
+the faster option. Not enough to act on.
 
 ---
 

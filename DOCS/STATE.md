@@ -86,16 +86,17 @@ Same site, separate repos, separate release cycles.
 
 ## Open items
 
-1. **Self-host the fonts.** Geist and Instrument Serif load from the Google Fonts
-   CDN. The TODO in [inc/assets.php](../inc/assets.php) keeps the swap to one
-   function: drop files in `assets/fonts`, ship a local `@font-face` sheet,
-   return its URL.
-2. **No `languages/` directory yet.** The text domain is declared and strings are
-   wrapped, but no `.pot` has been generated.
+1. **No `languages/` directory yet.** Every string is wrapped for translation,
+   but no `.pot` template has been generated, so the theme's own interface text
+   is English only. Separate from the MetTranslate plugin, which handles content
+   rather than interface text. Only worth doing if the site needs a non-English
+   UI.
 Closed on 2026-08-01: stale "Haraka" comments renamed to "MetCPT"; the missing
 `dropins/maintenance.php` added.
 
-Closed on 2026-08-03: ran `composer install` and `phpcs` for the first time.
+Closed on 2026-08-03: decided to stay on the Google Fonts CDN, see
+[DECISIONS.md](DECISIONS.md) D15. Ran `composer install` and `phpcs` for the
+first time.
 Found and fixed two config defects (prefix list, CRLF line endings) and 9 real
 findings. `phpcs` is clean. See [PROJECT_LOG.md](PROJECT_LOG.md) for detail.
 `composer.lock` is committed so both machines lint against the same standard
