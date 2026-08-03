@@ -24,7 +24,8 @@ Scope is deliberately narrow:
 * It never edits or renames the parent theme (hello-elementor).
 * It never touches the MetCPT plugin (Events / Tenders / Careers custom post
   types and their single templates).
-* Elementor-built pages are left untouched.
+* Elementor-built Pages are left untouched, except for an opt-in Page Hero band
+  (see Optional wiring below), which a Page only gets if an editor turns it on.
 
 == Installation ==
 
@@ -37,6 +38,14 @@ Scope is deliberately narrow:
 
 These extra surfaces need one-time wiring; the themed Posts/archives/search/404/
 author pages work with no setup.
+
+Page Hero (Elementor Pages):
+  On any Page, open the "Page Hero" box in the editor and pick a variant
+  (Standard or Business) to print a full-width header band above the Elementor
+  content, matching the design of the themed blog Posts and archives. Leave the
+  variant on "None" and the Page is untouched. Requires the Page's Layout
+  (Page Attributes) to be set to Elementor Full Width or Elementor Canvas; other
+  layouts render no hero.
 
 Maintenance mode (theme toggle):
   Add to wp-config.php (above the "stop editing" line):
@@ -60,6 +69,18 @@ Maintenance during WordPress updates (drop-in):
   needed for those.
 
 == Changelog ==
+
+= 1.6.0 =
+* Add Page Hero: an opt-in, editor-controlled header band for Elementor Pages
+  (inc/page-hero.php, template-parts/page-hero.php), reusing the existing
+  editorial design. Two variants, Standard (the shared .met-hero band) and
+  Business (a taller hero with a tag and up to two buttons), chosen and filled
+  in from a new "Page Hero" meta box. A Page with no variant set is unchanged.
+  Renders on the Elementor Full Width and Canvas page layouts only.
+* The design stylesheet and font preconnect hints now also load on a Page with
+  a hero set; the full-width body class stays limited to the original blog
+  Posts/archives/search/author/404 views, since Full Width Pages already render
+  edge to edge.
 
 = 1.5.0 =
 * Restructure the theme to the standard WordPress layout. functions.php is now a

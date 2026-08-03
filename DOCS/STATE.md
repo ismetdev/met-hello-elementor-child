@@ -9,10 +9,10 @@ Last updated: 2026-08-03
 
 | | |
 |---|---|
-| Shipped version | **1.5.0** |
+| Shipped version | **1.6.0** |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
 | Branch | `main` |
-| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0` |
+| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0` |
 | Parent theme | `hello-elementor` |
 | Requires | WordPress 6.0+ (tested to 6.5), PHP 7.4+ |
 | Text domain | `met-hello-child` (`/languages`) |
@@ -44,6 +44,7 @@ Elementor pages, or the MetCPT custom post types.
 | 403 Forbidden | [error-403.php](../error-403.php) | Shipped 1.3.0, needs `.htaccess` wiring |
 | Maintenance drop-in | [dropins/maintenance.php](../dropins/maintenance.php) | Added 1.5.0, copy to `wp-content/` by hand |
 | Shared card partial | [template-parts/met-card.php](../template-parts/met-card.php) | Shipped 1.3.0 |
+| Page Hero (opt-in Elementor Page header) | [inc/page-hero.php](../inc/page-hero.php), [template-parts/page-hero.php](../template-parts/page-hero.php) | Shipped 1.6.0, applied so far to `/whistleblowing/` on local `v2` |
 | Design system CSS | [assets/css/theme.css](../assets/css/theme.css) | Tokens on `:root`, components under `.met-view` |
 | Auto-update pipeline | [inc/updater.php](../inc/updater.php), [release.yml](../.github/workflows/release.yml) | Shipped 1.4.0, verified by the 1.4.1 release |
 
@@ -64,7 +65,7 @@ and blog category, tag and date archives. No overlap.
 
 ## Environment
 
-- Local dev site: `github-test` (Local by Flywheel).
+- Local dev site: `v2` (Local by Flywheel; renamed from `github-test` on 2026-08-03).
 - Target site: https://v2.iiumholdings.com.my
 - Two machines. Every commit so far is authored by "Ismet Home" (home machine).
   This laptop is "Ismet Office". GitHub is the source of truth. Run
@@ -86,10 +87,26 @@ Same site, separate repos, separate release cycles.
 
 ## Open items
 
-None. The theme is done and shipped at 1.5.0.
+Page Hero (see [PLAN/PRD-page-hero.md](../PLAN/PRD-page-hero.md)) shipped in
+1.6.0, but the rollout across the 16 target Pages is manual editor work, not
+code, and is not finished:
 
-Work only starts here again if the site asks for something new, or if a
-WordPress, PHP or Hello Elementor update breaks something.
+- Applied so far: `/whistleblowing/` (local `v2`).
+- Remaining 15: `/news-announcement/`, `/press-releases/`, `/events/`,
+  `/gallery/`, `/csr-initiatives/`, `/tenders/`, `/careers/`, `/contact-us/`,
+  `/iium-holdings-group-of-companies/`, `/board-of-directors/`,
+  `/management-team/`, `/board-charter/`, `/code-of-business-conduct/`,
+  `/rise2030-strategy-blueprint/`, `/corporate-profile/`. For each: set the
+  Page's Layout (Page Attributes) to Elementor Full Width, fill in the "Page
+  Hero" meta box, then delete the old Elementor-built header section.
+- The PRD's step 6 responsive/accessibility/performance pass (Lighthouse
+  before/after on 3 representative pages) has not been run.
+- The business hero variant is built and shipped, but only tested on
+  `/whistleblowing/` as a local scratch page. The 9 `/business/` subsidiary
+  pages are 1.7.0 scope, per the PRD.
+- Live staging (v2.iiumholdings.com.my) has not been updated to 1.6.0 or had
+  any Page's hero applied yet.
+
 Closed on 2026-08-01: stale "Haraka" comments renamed to "MetCPT"; the missing
 `dropins/maintenance.php` added.
 

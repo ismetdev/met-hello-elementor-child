@@ -398,3 +398,38 @@ throw that away, so do not.
 **Scope.** This is about the theme's own interface text. It says nothing about
 the MetTranslate plugin, which handles page content and is a separate project
 with its own repo and release cycle.
+
+---
+
+## D25: Page Hero is opt-in per Page, gated separately from the styled views <a id="d25"></a>
+
+**Decision (2026-08-03).** Elementor Pages can carry a header band ("Page
+Hero", [inc/page-hero.php](../inc/page-hero.php)), but only when an editor sets
+a variant in the Page's own "Page Hero" meta box. There is no slug list in code.
+The stylesheet and font preconnect hints load on such a Page via a second,
+narrower test, `met_hello_child_page_has_hero()`, kept separate from
+`met_hello_child_is_styled_view()` ([D3](#d3)). The full-width body class stays
+tied to the original test only.
+
+**Why.** `met_hello_child_is_styled_view()` also drives the full-width body
+class, which strips Hello Elementor's centered container. Folding Pages into
+that test would force full width on every Page carrying a hero, fighting
+whatever layout Elementor already has for it. Elementor Full Width Pages (what
+all 16 target Pages use) already render edge to edge, so the class is not
+needed there; keeping the gates separate means a Page can opt into the hero
+without opting into anything else the styled-view test controls.
+
+Opt-in via meta, rather than a hardcoded slug list, means adding the hero to a
+new Page is an editor action, not a code release.
+
+**Where it renders.** The hero prints via
+`elementor/page_templates/header-footer/before_content` (Elementor Full Width,
+what all 16 launch Pages use) and, as a safety net, the matching Canvas hook.
+Default and Theme page layouts render no hero; the meta box states this next to
+the variant field. See
+[PLAN/PRD-page-hero.md](../PLAN/PRD-page-hero.md) for the fuller design
+reasoning, including the performance budget.
+
+**Data.** Copy (eyebrow, subtitle, business-variant CTA buttons) lives in
+`_met_hero_*` post meta, edited from the Page editor. No hero title field: the
+hero always prints `get_the_title()`.

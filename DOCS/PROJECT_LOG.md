@@ -17,6 +17,39 @@ finished theme was first pushed to GitHub. From here on, log as work happens.
 
 ---
 
+## 2026-08-03: v1.6.0, Page Hero for Elementor Pages
+
+Built and shipped Page Hero: an opt-in header band for Elementor Pages,
+matching the design already shipped for blog Posts and archives. Full design in
+[PLAN/PRD-page-hero.md](../PLAN/PRD-page-hero.md), reasoning in
+[DECISIONS.md D25](DECISIONS.md#d25).
+
+New: `inc/page-hero.php` (gate, "Page Hero" meta box, save handler, the two
+Elementor `before_content` render hooks), `template-parts/page-hero.php`
+(Standard variant reuses `.met-hero` unchanged; Business variant is new
+markup and CSS in `assets/css/theme.css`). `inc/assets.php`'s stylesheet and
+preconnect gates now also fire on a Page with a hero set; the full-width body
+class was deliberately left alone, see D25.
+
+The business variant shipped with an icon mark (ported from the CLAUDE DESIGN
+reference), then the icon was removed at the user's request right after the
+first live test, since a generic placeholder icon wasn't wanted on every
+subsidiary page. Removed the markup and its now-dead CSS in the same session.
+
+Tested live on `/whistleblowing/` on the local site (renamed `github-test` ->
+`v2` this session). First attempt showed a completely bare page: no site
+header, no hero, no styling. Cause was a missed instruction, not a bug: the
+Page's Layout (Page Attributes) was not set to Elementor Full Width, so neither
+Elementor's own chrome nor the hero hook rendered. Once set, both the Standard
+and Business variants worked. `phpcs` clean throughout.
+
+Remaining work is tracked in [STATE.md](STATE.md#open-items): 15 of the 16
+target Pages still need the layout set, the meta box filled in, and the old
+Elementor header section removed by hand; the PRD's performance/responsive pass
+has not run; live staging has not been touched.
+
+---
+
 ## 2026-08-03: first phpcs run, config fixed, 9 findings fixed
 
 `composer install` and `phpcs` had never been run since the config shipped in

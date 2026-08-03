@@ -13,8 +13,14 @@
        layout.
      - The template's hardcoded <footer> is NOT ported. The live footer comes
        from Elementor via get_footer().
-   This stylesheet is enqueued only on the theme's styled views (functions.php).
-   The maintenance and 403 pages are standalone and inline their own CSS.
+     - The Page Hero band (`.met-page-hero`, near the end of this file) is a
+       third consumer of the same `.met-view` scope: an opt-in header for
+       Elementor Pages, printed by inc/page-hero.php. It does not use the
+       full-width body class the other views rely on, since Elementor Full
+       Width Pages already render edge to edge.
+   This stylesheet is enqueued on the theme's styled views and on any Page with a
+   Page Hero (inc/assets.php). The maintenance and 403 pages are standalone and
+   inline their own CSS.
    ========================================================================== */
 
 /* --- Design tokens ------------------------------------------------------- */
@@ -206,6 +212,28 @@ body.met-hello-child-fullwidth .site-main.met-view {
 .met-404 .met-404__btn svg{width:18px;height:14px;}
 .met-404 .met-404__btn--ghost{background:transparent;color:var(--ink);border-color:var(--hairline-strong);}
 .met-404 .met-404__btn--ghost:hover{border-color:var(--gold);color:var(--gold);background:transparent;}
+
+/* =============================================================================
+   PAGE HERO: opt-in header band for Elementor Pages (.met-page-hero)
+   -----------------------------------------------------------------------------
+   Printed above Elementor content via the hooks in inc/page-hero.php, on any
+   Page that sets a hero variant in its meta box (template-parts/page-hero.php).
+   Standard variant reuses .met-hero above unchanged. Business variant is new.
+   ========================================================================== */
+.met-view .met-page-hero{position:relative;}
+
+.met-view .page-hero-business{background:var(--petrol);color:#fff;position:relative;overflow:hidden;padding:clamp(56px,8vw,104px) 0 clamp(64px,9vw,116px);}
+.met-view .page-hero-business::before{content:"";position:absolute;inset:0;background:var(--pattern-light) center/60px 104px;pointer-events:none;}
+.met-view .page-hero-business__inner{position:relative;max-width:62ch;}
+.met-view .page-hero-business__tag{display:inline-flex;align-items:center;gap:var(--space-3);font-size:var(--text-xs);font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7);background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);padding:8px 16px;border-radius:999px;}
+.met-view .page-hero-business__name{margin-top:var(--space-5);font-size:clamp(30px,4.5vw,52px);line-height:1.06;letter-spacing:-0.03em;font-weight:700;color:#fff;}
+.met-view .page-hero-business__line{margin-top:var(--space-4);font-size:var(--text-lg);line-height:1.6;color:rgba(255,255,255,0.8);max-width:58ch;}
+.met-view .page-hero-business__actions{margin-top:var(--space-6);display:flex;flex-wrap:wrap;gap:var(--space-4);}
+.met-view .page-hero-business__btn{display:inline-flex;align-items:center;gap:var(--space-3);height:46px;padding:0 var(--space-5);border-radius:10px;font-weight:600;font-size:var(--text-base);transition:background var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease);}
+.met-view .page-hero-business__btn--primary{background:var(--gold);border:1px solid var(--gold);color:var(--petrol-deep);}
+.met-view .page-hero-business__btn--primary:hover{background:var(--gold-soft);border-color:var(--gold-soft);}
+.met-view .page-hero-business__btn:not(.page-hero-business__btn--primary){background:transparent;border:1px solid rgba(255,255,255,0.3);color:#fff;}
+.met-view .page-hero-business__btn:not(.page-hero-business__btn--primary):hover{border-color:var(--gold-soft);color:var(--gold-soft);}
 
 /* =============================================================================
    RESPONSIVE (template breakpoints preserved)

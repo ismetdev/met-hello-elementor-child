@@ -2,8 +2,11 @@
 /**
  * Front-end assets: fonts, the design stylesheet, and resource hints.
  *
- * Everything here is gated by met_hello_child_is_styled_view(), so other pages
- * stay plain Hello Elementor and load none of it.
+ * Everything here is gated by met_hello_child_is_styled_view() or, for Elementor
+ * Pages carrying a Page Hero, met_hello_child_page_has_hero() (inc/page-hero.php).
+ * Any other page stays plain Hello Elementor and loads none of it. Note the
+ * full-width body class in inc/setup.php stays tied to the narrower styled-view
+ * test only: Elementor Full Width Pages already render edge to edge.
  *
  * @package MetHelloElementorChild
  */
@@ -26,7 +29,8 @@ function met_hello_child_fonts_url() {
 }
 
 /**
- * Enqueue the design stylesheet and fonts, only on the theme's styled views.
+ * Enqueue the design stylesheet and fonts, on the theme's styled views and on
+ * any Page carrying a Page Hero (inc/page-hero.php).
  *
  * Hello Elementor ships its CSS as reset.css (handle "hello-elementor") and
  * theme.css (handle "hello-elementor-theme-style"), both enqueued by the parent
@@ -37,7 +41,7 @@ function met_hello_child_fonts_url() {
  * enqueued. The rules live in assets/css/theme.css.
  */
 function met_hello_child_enqueue_styles() {
-	if ( ! met_hello_child_is_styled_view() ) {
+	if ( ! met_hello_child_is_styled_view() && ! met_hello_child_page_has_hero() ) {
 		return;
 	}
 
@@ -61,7 +65,7 @@ add_action( 'wp_enqueue_scripts', 'met_hello_child_enqueue_styles', 20 );
  * @return array
  */
 function met_hello_child_resource_hints( $urls, $relation_type ) {
-	if ( 'preconnect' === $relation_type && met_hello_child_is_styled_view() ) {
+	if ( 'preconnect' === $relation_type && ( met_hello_child_is_styled_view() || met_hello_child_page_has_hero() ) ) {
 		$urls[] = 'https://fonts.googleapis.com';
 		$urls[] = array(
 			'href'        => 'https://fonts.gstatic.com',
