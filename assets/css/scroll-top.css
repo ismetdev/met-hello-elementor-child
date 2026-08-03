@@ -1,11 +1,15 @@
-/* Scroll to Top (.met-to-top): sitewide, self-contained, no theme.css tokens.
-   Colour set inline by inc/scroll-top.php. See DOCS/DECISIONS.md D26. */
+/* Scroll to Top (button.met-to-top): sitewide, self-contained, no theme.css
+   tokens. Colour set inline by inc/scroll-top.php. See DOCS/DECISIONS.md D26.
+   Selectors are qualified with the `button` element (not just `.met-to-top`)
+   to outrank a generic `[type=button]` reset some plugin/theme CSS ships:
+   an attribute selector is the same specificity tier as a class, so a bare
+   `.met-to-top` can lose that fight on cascade order alone. */
 :root{--met-tt-accent:#0E3B40;--met-tt-fill:#FFFFFF;--met-tt-on-accent:#FFFFFF;}
-.met-to-top{position:fixed;bottom:24px;right:24px;z-index:9990;width:48px;height:48px;display:flex;align-items:center;justify-content:center;padding:0;border:1.5px solid var(--met-tt-accent);border-radius:50%;background:var(--met-tt-fill);color:var(--met-tt-accent);cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.14);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .22s ease,transform .22s ease,background .16s ease,color .16s ease;}
-.met-to-top.is-visible{opacity:1;visibility:visible;transform:translateY(0);}
-.met-to-top:hover,.met-to-top:focus-visible{background:var(--met-tt-accent);color:var(--met-tt-on-accent);}
-.met-to-top:focus-visible{outline:2px solid var(--met-tt-accent);outline-offset:3px;}
-.met-to-top svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;}
-body.met-hello-child-tt-left .met-to-top{right:auto;left:24px;}
-@media (max-width:560px){.met-to-top{bottom:16px;right:16px;width:44px;height:44px;}body.met-hello-child-tt-left .met-to-top{left:16px;}}
-@media (prefers-reduced-motion:reduce){.met-to-top{transition:opacity .12s linear;transform:none;}}
+button.met-to-top{position:fixed;bottom:24px;right:24px;z-index:9990;width:48px;height:48px;display:flex;align-items:center;justify-content:center;padding:0;border:1.5px solid var(--met-tt-accent);border-radius:50%;background:var(--met-tt-fill);color:var(--met-tt-accent);cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.14);opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .22s ease,transform .22s ease,background .16s ease,color .16s ease;}
+button.met-to-top.is-visible{opacity:1;visibility:visible;transform:translateY(0);}
+button.met-to-top:hover,button.met-to-top:focus-visible{background:var(--met-tt-accent);color:var(--met-tt-on-accent);}
+button.met-to-top:focus-visible{outline:2px solid var(--met-tt-accent);outline-offset:3px;}
+button.met-to-top svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;}
+body.met-hello-child-tt-left button.met-to-top{right:auto;left:24px;}
+@media (max-width:560px){button.met-to-top{bottom:16px;right:16px;width:44px;height:44px;}body.met-hello-child-tt-left button.met-to-top{left:16px;}}
+@media (prefers-reduced-motion:reduce){button.met-to-top{transition:opacity .12s linear;transform:none;}}

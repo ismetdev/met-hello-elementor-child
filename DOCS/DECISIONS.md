@@ -488,3 +488,19 @@ screen. An inline `style=""` attribute is part of the element itself, not a
 stylesheet resource, so no combiner or critical-CSS tool can touch it. The
 Customizer's live-preview JS was updated to match: it sets the property on the
 button element directly, not on `documentElement`.
+
+**Selectors are qualified `button.met-to-top`, not bare `.met-to-top` (also fixed in 1.7.1).** A second, independent bug behind the same "colour doesn't
+show" symptom. Even after the fix above put the correct `--met-tt-accent`
+value directly on the element, DevTools on local `v2` showed a generic
+`[type=button], [type=submit], button { border: 1px solid #c36; color: #c36;
+... }` rule (source not this theme) winning over our
+`.met-to-top { border: ...var(--met-tt-accent); color: ...var(--met-tt-accent);
+}` rule. The reason: `[type=button]` is an attribute selector, the same
+specificity tier as a class selector (0,1,0), so it ties with `.met-to-top`
+rather than losing to it, and the tie is broken by cascade order, which this
+theme cannot control or predict. Qualifying every rule with the element type,
+`button.met-to-top` (0,1,1), puts this component one specificity tier above
+any bare class or attribute selector, so it wins regardless of what else is
+on the page or in what order it loads. This is the general fix for "some
+unrelated CSS keeps overriding my button," not a one-off patch for this one
+conflict.

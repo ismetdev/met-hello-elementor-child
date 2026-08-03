@@ -81,14 +81,22 @@ Maintenance during WordPress updates (drop-in):
 == Changelog ==
 
 = 1.7.1 =
-* Fix: Scroll to Top's Customizer colour could silently fail to show on sites
-  running CSS optimisation (observed with LiteSpeed Cache's CSS Combine). The
-  colour was set via a `:root` variable in a separate `<style>` tag, and such
-  plugins are free to move or reorder `<link>`/`<style>` tags; if the button's
-  own stylesheet default ended up printed after our override, the default won
-  even though the correct value was present earlier in the source. The colour
-  is now set as an inline `style` attribute directly on the button element,
-  which no such tool touches.
+* Fix: Scroll to Top's Customizer colour could silently fail to show, two
+  separate causes found and fixed.
+  1) On sites running CSS optimisation (observed with LiteSpeed Cache's CSS
+     Combine), the colour was set via a `:root` variable in a separate
+     `<style>` tag, and such plugins are free to move or reorder
+     `<link>`/`<style>` tags; if the button's own stylesheet default ended up
+     printed after our override, the default won even though the correct
+     value was present earlier in the source. Fixed by setting the colour as
+     an inline `style` attribute directly on the button element, which no
+     such tool touches.
+  2) Independently, a generic `[type=button]` reset rule shipped by another
+     plugin or the environment (an attribute selector, the same specificity
+     tier as a class) could still beat our `.met-to-top` class selector on
+     cascade order alone. Fixed by qualifying every selector with the
+     element type (`button.met-to-top`), one specificity tier higher, so our
+     rule wins regardless of load order or what else is on the page.
 
 = 1.7.0 =
 * Add a sitewide Scroll to Top button (inc/scroll-top.php,

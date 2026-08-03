@@ -39,8 +39,25 @@ Fixed by moving the colour from a `:root` `<style>` block to an inline
 `style` attribute on the button element itself
 ([inc/scroll-top.php](../inc/scroll-top.php)), which no CSS-combining tool can
 touch. Updated the Customizer live-preview script to match (targets the
-button element, not `documentElement`). Full reasoning in
-[DECISIONS.md D26](DECISIONS.md#d26). `phpcs` clean.
+button element, not `documentElement`).
+
+That fix alone was not enough: retested on local `v2` and the colour still
+did not show. View-source confirmed the correct value was now on the button's
+own `style=""` attribute, which meant the remaining problem was not caching
+or ordering at all. DevTools (screenshots from the user) showed the actual
+culprit: a generic `[type=button], [type=submit], button { border: 1px solid
+#c36; color: #c36; ... }` rule, source unidentified (not this theme's CSS),
+beating our `.met-to-top` rule. `[type=button]` is an attribute selector, the
+same specificity tier as a class, so it ties with `.met-to-top` rather than
+losing, and cascade order (which this theme does not control) broke the tie
+in the other rule's favour.
+
+Fixed by qualifying every selector in `assets/css/scroll-top.css` with the
+element type, `button.met-to-top` instead of `.met-to-top`, one specificity
+tier higher than any bare class or attribute selector, so it wins
+unconditionally rather than depending on load order. Both fixes are recorded
+together in [DECISIONS.md D26](DECISIONS.md#d26). `phpcs` clean; neither fix
+had shipped yet (v1.7.1 was not pushed or tagged until both were confirmed).
 
 ---
 
