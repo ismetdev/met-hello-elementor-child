@@ -475,3 +475,16 @@ arrow, and the hover fill; there is no separate picker for each, which would
 let someone configure an unreadable combination. See
 [PLAN/PRD-scroll-top.md](../PLAN/PRD-scroll-top.md) for the fuller reasoning,
 including the performance budget and the accessibility checklist.
+
+**The colour is an inline `style` attribute on the button, not a `wp_add_inline_style()` `<style>` tag (fixed in 1.7.1).** The first cut used
+`wp_add_inline_style()`, which prints a `:root{--met-tt-accent:...}` block. On
+a site running CSS optimisation (found on live staging: LiteSpeed Cache's CSS
+Combine), that block is a `<style>` tag like any other, free to be moved,
+merged, or reordered. If `scroll-top.css`'s own file default ends up printed
+after our override, the file's default wins the cascade, even though the
+correct value is present earlier in the raw source, which is exactly what
+made this look right in "View Source" while showing the wrong colour on
+screen. An inline `style=""` attribute is part of the element itself, not a
+stylesheet resource, so no combiner or critical-CSS tool can touch it. The
+Customizer's live-preview JS was updated to match: it sets the property on the
+button element directly, not on `documentElement`.

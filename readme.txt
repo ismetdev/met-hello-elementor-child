@@ -46,8 +46,8 @@ Scroll to Top (on by default, no setup needed):
   A floating button on every page, hidden until the reader scrolls down about
   one screen. Configure it under Appearance > Customize > Scroll to Top: turn
   it off, move it to the left, or change its colour (default is the brand
-  petrol). If a caching plugin is active, purge the cache after changing the
-  colour, since it is printed as inline CSS.
+  petrol). If a full-page caching plugin is active, purge it after changing any
+  of these, same as any other Customizer change.
 
 Page Hero (Elementor Pages):
   On any Page, open the "Page Hero" box in the editor and pick a variant
@@ -79,6 +79,16 @@ Maintenance during WordPress updates (drop-in):
   needed for those.
 
 == Changelog ==
+
+= 1.7.1 =
+* Fix: Scroll to Top's Customizer colour could silently fail to show on sites
+  running CSS optimisation (observed with LiteSpeed Cache's CSS Combine). The
+  colour was set via a `:root` variable in a separate `<style>` tag, and such
+  plugins are free to move or reorder `<link>`/`<style>` tags; if the button's
+  own stylesheet default ended up printed after our override, the default won
+  even though the correct value was present earlier in the source. The colour
+  is now set as an inline `style` attribute directly on the button element,
+  which no such tool touches.
 
 = 1.7.0 =
 * Add a sitewide Scroll to Top button (inc/scroll-top.php,

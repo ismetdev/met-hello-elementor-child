@@ -9,10 +9,10 @@ Last updated: 2026-08-03
 
 | | |
 |---|---|
-| Shipped version | **1.7.0** |
+| Shipped version | **1.7.1** |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
 | Branch | `main` |
-| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0` |
+| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.7.1` |
 | Parent theme | `hello-elementor` |
 | Requires | WordPress 6.0+ (tested to 6.5), PHP 7.4+ |
 | Text domain | `met-hello-child` (`/languages`) |
@@ -89,11 +89,16 @@ Same site, separate repos, separate release cycles.
 ## Open items
 
 Scroll to Top (see [PLAN/PRD-scroll-top.md](../PLAN/PRD-scroll-top.md)) shipped
-in 1.7.0 on local `v2` only:
+in 1.7.0, colour bug fixed in 1.7.1 (see [DECISIONS.md D26](DECISIONS.md#d26)):
 
+- Live staging is on 1.7.0 (installed by manual upload; the GitHub auto-updater
+  failed there with a cURL 52 error, not investigated further, see
+  PROJECT_LOG). Still needs updating to 1.7.1 to pick up the colour fix.
+- The GitHub auto-updater's cURL 52 failure on live staging is unresolved and
+  unexplained. It may have been a one-off network blip; it may recur. Worth
+  retrying next release and noting whether it happens again.
 - The PRD's step 6-8 passes (accessibility, responsive/collision, Lighthouse
   performance) have not been run.
-- Live staging (v2.iiumholdings.com.my) has not been updated to 1.7.0.
 
 Page Hero (see [PLAN/PRD-page-hero.md](../PLAN/PRD-page-hero.md)) shipped in
 1.6.0. All 16 target Pages now have it applied on local `v2`. Still open:

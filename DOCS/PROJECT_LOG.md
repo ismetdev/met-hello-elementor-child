@@ -17,6 +17,33 @@ finished theme was first pushed to GitHub. From here on, log as work happens.
 
 ---
 
+## 2026-08-03: v1.7.1, fix Scroll to Top colour on live staging
+
+1.7.0 shipped and installed on live staging by manual upload (the built-in
+GitHub updater failed with a cURL 52 "Empty reply from server" against the
+GitHub release asset; not investigated further since the manual path worked
+and the user chose not to retry the auto-updater first).
+
+On staging, the button's on/off and position settings worked from the
+Customizer, but a custom colour did not visually apply, always showing the
+default petrol. View-source confirmed the correct hex value was present in
+the page (`--met-tt-accent:#d59f0f;` inside the
+`met-hello-child-scroll-top-inline-css` `<style>` block added by
+`wp_add_inline_style()`), which ruled out a save or page-cache problem and
+pointed at a CSS cascade/ordering issue instead. Staging runs LiteSpeed
+Cache; its CSS optimisation features (Combine/Critical CSS) can reorder
+`<link>`/`<style>` tags, letting `scroll-top.css`'s own file default win over
+our override despite the correct value being earlier in the raw HTML.
+
+Fixed by moving the colour from a `:root` `<style>` block to an inline
+`style` attribute on the button element itself
+([inc/scroll-top.php](../inc/scroll-top.php)), which no CSS-combining tool can
+touch. Updated the Customizer live-preview script to match (targets the
+button element, not `documentElement`). Full reasoning in
+[DECISIONS.md D26](DECISIONS.md#d26). `phpcs` clean.
+
+---
+
 ## 2026-08-03: Page Hero applied to all 16 target Pages; v1.7.0, Scroll to Top
 
 Manually applied the 1.6.0 Page Hero to the remaining 15 of the 16 target

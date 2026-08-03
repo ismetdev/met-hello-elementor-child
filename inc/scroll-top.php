@@ -197,12 +197,6 @@ function met_hello_child_enqueue_scroll_top_assets() {
 		MET_HELLO_CHILD_VERSION
 	);
 
-	$met_tt_colour = met_hello_child_scroll_top_colour();
-	wp_add_inline_style(
-		'met-hello-child-scroll-top',
-		sprintf( ':root{--met-tt-accent:%s;}', esc_html( $met_tt_colour ) )
-	);
-
 	// A plain bool, not the WP 6.3+ array $args form: this theme states support
 	// from WP 6.0. Printing in the footer already means the script runs after
 	// the DOM it queries for exists, which is the practical benefit `defer`
@@ -236,13 +230,24 @@ add_filter( 'body_class', 'met_hello_child_scroll_top_body_class' );
  * Print the button markup in the footer. Fires on every page: `wp_footer` runs
  * on Elementor Canvas (canvas.php) and via get_footer() on Elementor Full
  * Width and every other template.
+ *
+ * The colour is set as an inline `style` attribute directly on the button,
+ * not via wp_add_inline_style()'s <style> tag. A caching/optimisation plugin
+ * (LiteSpeed Cache's CSS Combine and similar features in others) is free to
+ * move, merge or reorder <link>/<style> tags, and if scroll-top.css's own
+ * default :root value ends up printed after our override, the default wins
+ * even though the correct value is present earlier in the source. An inline
+ * style attribute is part of the element itself, not a stylesheet resource,
+ * so no such tool can touch or reorder it.
  */
 function met_hello_child_render_scroll_top_button() {
 	if ( ! met_hello_child_scroll_top_enabled() ) {
 		return;
 	}
+
+	$met_tt_style = sprintf( '--met-tt-accent:%s;', esc_attr( met_hello_child_scroll_top_colour() ) );
 	?>
-	<button type="button" class="met-to-top" aria-label="<?php esc_attr_e( 'Scroll to top', 'met-hello-child' ); ?>">
+	<button type="button" class="met-to-top" style="<?php echo esc_attr( $met_tt_style ); ?>" aria-label="<?php esc_attr_e( 'Scroll to top', 'met-hello-child' ); ?>">
 		<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 	</button>
 	<?php

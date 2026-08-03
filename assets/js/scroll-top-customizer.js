@@ -13,7 +13,13 @@
 
 	api( 'met_hello_child_scroll_top_colour', function ( value ) {
 		value.bind( function ( newValue ) {
-			document.documentElement.style.setProperty( '--met-tt-accent', newValue );
+			// The button carries its own inline style attribute for this
+			// property (inc/scroll-top.php), not a :root rule, so the update
+			// has to target the button itself to take effect.
+			var button = document.querySelector( '.met-to-top' );
+			if ( button ) {
+				button.style.setProperty( '--met-tt-accent', newValue );
+			}
 		} );
 	} );
 
