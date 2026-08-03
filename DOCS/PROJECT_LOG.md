@@ -17,6 +17,45 @@ finished theme was first pushed to GitHub. From here on, log as work happens.
 
 ---
 
+## 2026-08-03: Page Hero applied to all 16 target Pages; v1.7.0, Scroll to Top
+
+Manually applied the 1.6.0 Page Hero to the remaining 15 of the 16 target
+Pages on local `v2` (`/whistleblowing/` was done first, see the entry below).
+All 16 now carry a hero.
+
+Then built and shipped Scroll to Top: a sitewide floating button, on by
+default, configurable (on/off, left/right, accent colour) under Appearance >
+Customize > Scroll to Top. Full design in
+[PLAN/PRD-scroll-top.md](../PLAN/PRD-scroll-top.md), reasoning in
+[DECISIONS.md D26](DECISIONS.md#d26).
+
+New: `inc/scroll-top.php` (Customizer section/settings/sanitisers, sitewide
+enqueue gated on the on/off setting, the `wp_footer` render), and two
+self-contained assets, `assets/css/scroll-top.css` and
+`assets/js/scroll-top.js`, plus `assets/js/scroll-top-customizer.js` for the
+Customizer live preview only. This is the theme's first sitewide JS and CSS,
+and its first Customizer integration; see D26 for why it cannot depend on
+`assets/css/theme.css`.
+
+The on/off setting uses the `refresh` Customizer transport rather than
+`postMessage`, unlike colour and position: turning the button off removes it
+from the page entirely (no CSS, JS, or markup), and there is no cheap way to
+simulate that removal live in the preview iframe without also rendering
+markup that is not really there. Colour and position preview live; on/off
+needs a preview reload.
+
+Measured file sizes against the PRD's 1KB-per-file performance budget:
+`scroll-top.js` is 914 bytes, under budget.
+`scroll-top.css` is 1418 bytes, about 400 bytes over, after trimming comments
+and shortening values once. The overage buys the accessibility and responsive
+requirements from the PRD (a `prefers-reduced-motion` branch, a mobile
+breakpoint, the left-position override) as real CSS rather than something cut
+to hit a number. Both are still small in absolute terms and gzip further.
+
+`phpcs` clean throughout.
+
+---
+
 ## 2026-08-03: v1.6.0, Page Hero for Elementor Pages
 
 Built and shipped Page Hero: an opt-in header band for Elementor Pages,

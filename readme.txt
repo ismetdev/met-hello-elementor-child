@@ -26,6 +26,9 @@ Scope is deliberately narrow:
   types and their single templates).
 * Elementor-built Pages are left untouched, except for an opt-in Page Hero band
   (see Optional wiring below), which a Page only gets if an editor turns it on.
+* A sitewide Scroll to Top button is the one exception to "theme keeps the
+  content, Elementor keeps the chrome": on by default everywhere, configurable
+  in Appearance > Customize > Scroll to Top.
 
 == Installation ==
 
@@ -38,6 +41,13 @@ Scope is deliberately narrow:
 
 These extra surfaces need one-time wiring; the themed Posts/archives/search/404/
 author pages work with no setup.
+
+Scroll to Top (on by default, no setup needed):
+  A floating button on every page, hidden until the reader scrolls down about
+  one screen. Configure it under Appearance > Customize > Scroll to Top: turn
+  it off, move it to the left, or change its colour (default is the brand
+  petrol). If a caching plugin is active, purge the cache after changing the
+  colour, since it is printed as inline CSS.
 
 Page Hero (Elementor Pages):
   On any Page, open the "Page Hero" box in the editor and pick a variant
@@ -69,6 +79,16 @@ Maintenance during WordPress updates (drop-in):
   needed for those.
 
 == Changelog ==
+
+= 1.7.0 =
+* Add a sitewide Scroll to Top button (inc/scroll-top.php,
+  assets/css/scroll-top.css, assets/js/scroll-top.js), on by default on every
+  page, hidden until the reader scrolls down about one screen. Configurable
+  under Appearance > Customize > Scroll to Top: on/off, left or right, and an
+  accent colour, all with a live preview.
+* Self-contained: does not depend on assets/css/theme.css, since that file does
+  not load on every page. Under 1KB of new JavaScript; the CSS is close to it.
+  Turning the button off removes its CSS, JS, and markup entirely.
 
 = 1.6.0 =
 * Add Page Hero: an opt-in, editor-controlled header band for Elementor Pages

@@ -433,3 +433,45 @@ reasoning, including the performance budget.
 **Data.** Copy (eyebrow, subtitle, business-variant CTA buttons) lives in
 `_met_hero_*` post meta, edited from the Page editor. No hero title field: the
 hero always prints `get_the_title()`.
+
+---
+
+## D26: Scroll to Top is a deliberate, sitewide exception to D2 <a id="d26"></a>
+
+**Decision (2026-08-03).** A floating Scroll to Top button
+([inc/scroll-top.php](../inc/scroll-top.php)) renders on `wp_footer` on every
+page of the site: the homepage, every Elementor Page, blog Posts, archives, and
+everything else. On by default, configurable (on/off, side, colour) in the
+Customizer under "Scroll to Top".
+
+**Why an exception, not a new rule.** [D2](#d2) says Elementor keeps the
+chrome, the theme keeps the content. A floating button is chrome. Three reasons
+this one piece of chrome goes in the theme anyway, checked 2026-08-03:
+
+- Elementor free has no Back to Top widget; it is Elementor Pro only.
+- Hello Elementor 3.4.9 does not provide one either.
+- Building it per Page in Elementor would mean repeating and keeping it in
+  sync across every page by hand, the same inconsistency problem
+  [D25](#d25)'s Page Hero was built to solve.
+
+D2 still governs everything else. This does not open the door to moving other
+chrome into the theme without the same reasoning.
+
+**Why it cannot use theme.css.** [assets/css/theme.css](../assets/css/theme.css)
+is gated to the styled views and Page Hero pages
+(`met_hello_child_is_styled_view()`, `met_hello_child_page_has_hero()`), so on
+the homepage and most Elementor Pages it never loads, and its `:root` tokens do
+not exist there. The button ships two small, self-contained files
+(`assets/css/scroll-top.css`, `assets/js/scroll-top.js`) with no dependency on
+theme.css, so either can load without the other, and the button works
+correctly on pages that carry none of the theme's other design system.
+
+**Why a real `<button>`, not a link.** It performs an action (scroll), not a
+navigation, so it is keyboard-activatable on Enter and Space with no JS beyond
+the click handler, and reads correctly to a screen reader with no extra ARIA.
+
+**Customizer, one colour.** A single accent colour drives the border, the
+arrow, and the hover fill; there is no separate picker for each, which would
+let someone configure an unreadable combination. See
+[PLAN/PRD-scroll-top.md](../PLAN/PRD-scroll-top.md) for the fuller reasoning,
+including the performance budget and the accessibility checklist.

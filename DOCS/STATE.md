@@ -9,10 +9,10 @@ Last updated: 2026-08-03
 
 | | |
 |---|---|
-| Shipped version | **1.6.0** |
+| Shipped version | **1.7.0** |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
 | Branch | `main` |
-| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0` |
+| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0` |
 | Parent theme | `hello-elementor` |
 | Requires | WordPress 6.0+ (tested to 6.5), PHP 7.4+ |
 | Text domain | `met-hello-child` (`/languages`) |
@@ -44,7 +44,8 @@ Elementor pages, or the MetCPT custom post types.
 | 403 Forbidden | [error-403.php](../error-403.php) | Shipped 1.3.0, needs `.htaccess` wiring |
 | Maintenance drop-in | [dropins/maintenance.php](../dropins/maintenance.php) | Added 1.5.0, copy to `wp-content/` by hand |
 | Shared card partial | [template-parts/met-card.php](../template-parts/met-card.php) | Shipped 1.3.0 |
-| Page Hero (opt-in Elementor Page header) | [inc/page-hero.php](../inc/page-hero.php), [template-parts/page-hero.php](../template-parts/page-hero.php) | Shipped 1.6.0, applied so far to `/whistleblowing/` on local `v2` |
+| Page Hero (opt-in Elementor Page header) | [inc/page-hero.php](../inc/page-hero.php), [template-parts/page-hero.php](../template-parts/page-hero.php) | Shipped 1.6.0, applied to all 16 target Pages on local `v2` |
+| Scroll to Top (sitewide button) | [inc/scroll-top.php](../inc/scroll-top.php), [assets/css/scroll-top.css](../assets/css/scroll-top.css), [assets/js/scroll-top.js](../assets/js/scroll-top.js) | Shipped 1.7.0. Customizer: Appearance > Customize > Scroll to Top |
 | Design system CSS | [assets/css/theme.css](../assets/css/theme.css) | Tokens on `:root`, components under `.met-view` |
 | Auto-update pipeline | [inc/updater.php](../inc/updater.php), [release.yml](../.github/workflows/release.yml) | Shipped 1.4.0, verified by the 1.4.1 release |
 
@@ -87,25 +88,24 @@ Same site, separate repos, separate release cycles.
 
 ## Open items
 
-Page Hero (see [PLAN/PRD-page-hero.md](../PLAN/PRD-page-hero.md)) shipped in
-1.6.0, but the rollout across the 16 target Pages is manual editor work, not
-code, and is not finished:
+Scroll to Top (see [PLAN/PRD-scroll-top.md](../PLAN/PRD-scroll-top.md)) shipped
+in 1.7.0 on local `v2` only:
 
-- Applied so far: `/whistleblowing/` (local `v2`).
-- Remaining 15: `/news-announcement/`, `/press-releases/`, `/events/`,
-  `/gallery/`, `/csr-initiatives/`, `/tenders/`, `/careers/`, `/contact-us/`,
-  `/iium-holdings-group-of-companies/`, `/board-of-directors/`,
-  `/management-team/`, `/board-charter/`, `/code-of-business-conduct/`,
-  `/rise2030-strategy-blueprint/`, `/corporate-profile/`. For each: set the
-  Page's Layout (Page Attributes) to Elementor Full Width, fill in the "Page
-  Hero" meta box, then delete the old Elementor-built header section.
+- The PRD's step 6-8 passes (accessibility, responsive/collision, Lighthouse
+  performance) have not been run.
+- Live staging (v2.iiumholdings.com.my) has not been updated to 1.7.0.
+
+Page Hero (see [PLAN/PRD-page-hero.md](../PLAN/PRD-page-hero.md)) shipped in
+1.6.0. All 16 target Pages now have it applied on local `v2`. Still open:
+
 - The PRD's step 6 responsive/accessibility/performance pass (Lighthouse
   before/after on 3 representative pages) has not been run.
 - The business hero variant is built and shipped, but only tested on
   `/whistleblowing/` as a local scratch page. The 9 `/business/` subsidiary
-  pages are 1.7.0 scope, per the PRD.
-- Live staging (v2.iiumholdings.com.my) has not been updated to 1.6.0 or had
-  any Page's hero applied yet.
+  pages are 1.7.0-plus scope, per the PRD (icon marks were dropped from the
+  business variant per a mid-build request, see PROJECT_LOG).
+- Live staging has not been updated to 1.6.0/1.7.0 or had any Page's hero
+  applied yet.
 
 Closed on 2026-08-01: stale "Haraka" comments renamed to "MetCPT"; the missing
 `dropins/maintenance.php` added.
