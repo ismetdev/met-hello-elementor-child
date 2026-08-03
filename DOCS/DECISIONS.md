@@ -504,3 +504,14 @@ any bare class or attribute selector, so it wins regardless of what else is
 on the page or in what order it loads. This is the general fix for "some
 unrelated CSS keeps overriding my button," not a one-off patch for this one
 conflict.
+
+**The button re-parents itself to a direct child of `<body>` at runtime (fixed in 1.7.2).** A third, separate bug: on live staging, the button was visible
+at laptop/desktop widths but missing at phone/tablet widths. `position:fixed`
+positions against the nearest ancestor that has a `transform` (or `filter` /
+`perspective`) set, not the screen, if one exists between the element and
+`<body>`. A responsive header's mobile-menu slide animation is a common way
+for a site to end up with exactly that, usually on a wrapper the theme does
+not control and that only applies at some breakpoints. `assets/js/scroll-top.js`
+now moves the button to be a direct child of `<body>` as its first action, the
+same technique modals and tooltips use for this exact class of bug, so no
+ancestor markup, on this site or the next redesign, can trap it again.

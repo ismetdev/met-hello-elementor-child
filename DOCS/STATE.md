@@ -9,10 +9,10 @@ Last updated: 2026-08-03
 
 | | |
 |---|---|
-| Shipped version | **1.7.1** |
+| Shipped version | **1.7.2** |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
 | Branch | `main` |
-| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.7.1` |
+| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.7.1`, `v1.7.2` |
 | Parent theme | `hello-elementor` |
 | Requires | WordPress 6.0+ (tested to 6.5), PHP 7.4+ |
 | Text domain | `met-hello-child` (`/languages`) |
@@ -89,26 +89,36 @@ Same site, separate repos, separate release cycles.
 ## Open items
 
 Scroll to Top (see [PLAN/PRD-scroll-top.md](../PLAN/PRD-scroll-top.md)) shipped
-in 1.7.0, colour bug fixed in 1.7.1 (see [DECISIONS.md D26](DECISIONS.md#d26)):
+in 1.7.0. Two bugs found and fixed since (see [DECISIONS.md D26](DECISIONS.md#d26)):
 
-- Live staging is on 1.7.1, installed via the GitHub auto-updater, which
-  worked this time with no error. Colour, position, and on/off all confirmed
-  working on staging (2026-08-03). The 1.7.0 cURL 52 failure was a one-off
-  network blip, not a persistent host block: closed, see PROJECT_LOG.
-- The PRD's step 6-8 passes (accessibility, responsive/collision, Lighthouse
-  performance) have not been run.
+- Colour lost under CSS optimisation and a selector-specificity tie: fixed in
+  1.7.1, confirmed working on live staging (2026-08-03).
+- Button missing at phone/tablet widths, present at laptop/desktop: fixed in
+  1.7.2 by re-parenting the button to `<body>` at runtime. **Not yet retested
+  on live staging.**
+- The 1.7.0 cURL 52 auto-updater failure was a one-off network blip, not a
+  persistent host block: closed, see PROJECT_LOG.
+- Step-6 accessibility pass done by code/HTTP inspection (no headless browser
+  in this environment): one `<h1>`, correct `aria-label`/`aria-hidden`,
+  keyboard/reduced-motion/screen-reader behaviour, 44px+ touch target all
+  confirmed on local. The live accent colour (`#e0dd31`) computes to 1.44:1
+  contrast against white, failing WCAG AA; not a bug (D26 leaves colour
+  unpoliced) but worth a note to the site owner.
+- Lighthouse pass (step 8) not run: no headless browser available; needs a
+  manual pass on `/board-charter/`, `/gallery/`, `/events/` on live staging.
 
 Page Hero (see [PLAN/PRD-page-hero.md](../PLAN/PRD-page-hero.md)) shipped in
-1.6.0. All 16 target Pages now have it applied on local `v2`. Still open:
+1.6.0. All 16 target Pages now have it applied on local `v2`; one `<h1>` per
+page confirmed. Still open:
 
-- The PRD's step 6 responsive/accessibility/performance pass (Lighthouse
-  before/after on 3 representative pages) has not been run.
+- The PRD's step 6 responsive/Lighthouse pass (3 representative pages) has not
+  been run, same blocker as above.
 - The business hero variant is built and shipped, but only tested on
   `/whistleblowing/` as a local scratch page. The 9 `/business/` subsidiary
   pages are 1.7.0-plus scope, per the PRD (icon marks were dropped from the
   business variant per a mid-build request, see PROJECT_LOG).
-- Live staging has not been updated to 1.6.0/1.7.0 or had any Page's hero
-  applied yet.
+- Whether the Page Hero has been applied to the 16 real Pages on live staging
+  (as opposed to the theme code being live there) is unconfirmed.
 
 Closed on 2026-08-01: stale "Haraka" comments renamed to "MetCPT"; the missing
 `dropins/maintenance.php` added.

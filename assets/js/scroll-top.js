@@ -11,6 +11,14 @@
 		return;
 	}
 
+	// Re-parent to a direct child of <body>. A `transform` on any ancestor
+	// (common in mobile-menu slide animations) makes `position:fixed`
+	// position against that ancestor instead of the screen. This guarantees
+	// the button always positions against the real viewport.
+	if ( button.parentElement !== document.body ) {
+		document.body.appendChild( button );
+	}
+
 	var threshold    = window.innerHeight;
 	var ticking      = false;
 	var reduceMotion = window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;

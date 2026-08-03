@@ -17,6 +17,39 @@ finished theme was first pushed to GitHub. From here on, log as work happens.
 
 ---
 
+## 2026-08-03: v1.7.2, fix Scroll to Top missing on phone/tablet widths
+
+Ran the PRD's step-6 verification pass on both shipped features (Page Hero,
+Scroll to Top). No headless browser available in this environment, so this
+was done by fetching real pages from local `v2` over HTTP and inspecting the
+served HTML/CSS directly, plus computing WCAG contrast ratios from the actual
+hex values, rather than Lighthouse or a screenshot. Confirmed: one `<h1>` per
+page, correct `aria-label`/`aria-hidden`, served CSS matches the repo
+(specificity fix from the prior entry is live), keyboard/reduced-motion/
+screen-reader behaviour all correct, `44px+` touch target. Found the current
+live-staging accent colour (`#e0dd31`) fails WCAG AA badly against white
+(1.44:1), which is expected under D26's "not policed" design but worth
+knowing. Local only has 2 real Pages (`whistle-blowing`,
+`sample-page`), so `/board-charter/`, `/gallery/`, `/events/` and the
+Lighthouse pass could not be checked from here; user ran those manually.
+
+User's manual pass on live staging found a real bug: the Scroll to Top
+button was visible at laptop/desktop widths but missing at phone/tablet
+widths. Root cause: `position:fixed` positions against the nearest ancestor
+with a `transform` set, not the screen, if one exists between the button and
+`<body>`. Neither Hello Elementor's nor Elementor plugin's own core CSS sets
+a transform on `<body>` or a wrapper (checked both), so the culprit is most
+likely in the live site's own Theme Builder header/mobile-menu markup, not
+identified further since it did not need to be: the fix does not depend on
+knowing which element it is.
+
+Fixed by re-parenting the button to a direct child of `<body>` at runtime, as
+the first action in `assets/js/scroll-top.js`, before the scroll listener
+attaches. Full reasoning in [DECISIONS.md D26](DECISIONS.md#d26). Not yet
+retested on live staging.
+
+---
+
 ## 2026-08-03: v1.7.1 confirmed live: auto-updater worked, colour fix verified
 
 Retried the GitHub auto-updater on live staging for 1.7.1, this time with no

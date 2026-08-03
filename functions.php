@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Theme version. Bump this together with the header in style.css. Used for asset
  * cache-busting, and read by the update checker.
  */
-define( 'MET_HELLO_CHILD_VERSION', '1.7.1' );
+define( 'MET_HELLO_CHILD_VERSION', '1.7.2' );
 
 /**
  * Absolute path to the theme directory, with a trailing slash.

@@ -80,6 +80,15 @@ Maintenance during WordPress updates (drop-in):
 
 == Changelog ==
 
+= 1.7.2 =
+* Fix: Scroll to Top could go missing at some breakpoints (found: visible on
+  laptop/desktop widths, not on phone/tablet). Cause: a `transform` on some
+  ancestor element (commonly set by a mobile-menu slide animation) makes
+  `position:fixed` position against that ancestor instead of the real screen.
+  Fixed by moving the button to be a direct child of `<body>` at runtime via
+  JavaScript, so no ancestor markup can trap it again, regardless of what
+  built the header or at what breakpoint.
+
 = 1.7.1 =
 * Fix: Scroll to Top's Customizer colour could silently fail to show, two
   separate causes found and fixed.
