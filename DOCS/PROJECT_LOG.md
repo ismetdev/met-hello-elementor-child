@@ -17,6 +17,23 @@ finished theme was first pushed to GitHub. From here on, log as work happens.
 
 ---
 
+## 2026-08-03: Page Hero and Scroll to Top closed out on live staging
+
+Owner confirmed: 1.7.2's mobile-visibility fix works on staging. Page Hero
+standard variant applied to all 16 target Pages on staging. Business variant
+(no icon, per the earlier mid-build removal) rolled out to the 9
+`/business/` Pages, confirmed on local and staging. Current accent colour
+shows no visible problem to the owner; the computed WCAG contrast fail
+stands as a known fact, not something being changed.
+
+Owner abandoned the Lighthouse performance pass: most of each page's content
+is the owner's own Elementor build, not theme code, so the score would not
+reflect the theme's work. Not tracked further.
+
+No open items remain for either feature. See STATE.md.
+
+---
+
 ## 2026-08-03: v1.7.2, fix Scroll to Top missing on phone/tablet widths
 
 Ran the PRD's step-6 verification pass on both shipped features (Page Hero,

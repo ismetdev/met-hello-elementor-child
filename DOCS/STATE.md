@@ -44,8 +44,8 @@ Elementor pages, or the MetCPT custom post types.
 | 403 Forbidden | [error-403.php](../error-403.php) | Shipped 1.3.0, needs `.htaccess` wiring |
 | Maintenance drop-in | [dropins/maintenance.php](../dropins/maintenance.php) | Added 1.5.0, copy to `wp-content/` by hand |
 | Shared card partial | [template-parts/met-card.php](../template-parts/met-card.php) | Shipped 1.3.0 |
-| Page Hero (opt-in Elementor Page header) | [inc/page-hero.php](../inc/page-hero.php), [template-parts/page-hero.php](../template-parts/page-hero.php) | Shipped 1.6.0, applied to all 16 target Pages on local `v2` |
-| Scroll to Top (sitewide button) | [inc/scroll-top.php](../inc/scroll-top.php), [assets/css/scroll-top.css](../assets/css/scroll-top.css), [assets/js/scroll-top.js](../assets/js/scroll-top.js) | Shipped 1.7.0. Customizer: Appearance > Customize > Scroll to Top |
+| Page Hero (opt-in Elementor Page header) | [inc/page-hero.php](../inc/page-hero.php), [template-parts/page-hero.php](../template-parts/page-hero.php) | Shipped 1.6.0. Standard variant applied to all 16 target Pages on local `v2` and live staging. Business variant rolled out to the 9 `/business/` Pages, confirmed on both |
+| Scroll to Top (sitewide button) | [inc/scroll-top.php](../inc/scroll-top.php), [assets/css/scroll-top.css](../assets/css/scroll-top.css), [assets/js/scroll-top.js](../assets/js/scroll-top.js) | Shipped 1.7.0, fixed 1.7.1-1.7.2, confirmed working on live staging. Customizer: Appearance > Customize > Scroll to Top |
 | Design system CSS | [assets/css/theme.css](../assets/css/theme.css) | Tokens on `:root`, components under `.met-view` |
 | Auto-update pipeline | [inc/updater.php](../inc/updater.php), [release.yml](../.github/workflows/release.yml) | Shipped 1.4.0, verified by the 1.4.1 release |
 
@@ -88,37 +88,21 @@ Same site, separate repos, separate release cycles.
 
 ## Open items
 
-Scroll to Top (see [PLAN/PRD-scroll-top.md](../PLAN/PRD-scroll-top.md)) shipped
-in 1.7.0. Two bugs found and fixed since (see [DECISIONS.md D26](DECISIONS.md#d26)):
+None. Page Hero and Scroll to Top are both done and confirmed on live staging.
 
-- Colour lost under CSS optimisation and a selector-specificity tie: fixed in
-  1.7.1, confirmed working on live staging (2026-08-03).
-- Button missing at phone/tablet widths, present at laptop/desktop: fixed in
-  1.7.2 by re-parenting the button to `<body>` at runtime. **Not yet retested
-  on live staging.**
-- The 1.7.0 cURL 52 auto-updater failure was a one-off network blip, not a
-  persistent host block: closed, see PROJECT_LOG.
-- Step-6 accessibility pass done by code/HTTP inspection (no headless browser
-  in this environment): one `<h1>`, correct `aria-label`/`aria-hidden`,
-  keyboard/reduced-motion/screen-reader behaviour, 44px+ touch target all
-  confirmed on local. The live accent colour (`#e0dd31`) computes to 1.44:1
-  contrast against white, failing WCAG AA; not a bug (D26 leaves colour
-  unpoliced) but worth a note to the site owner.
-- Lighthouse pass (step 8) not run: no headless browser available; needs a
-  manual pass on `/board-charter/`, `/gallery/`, `/events/` on live staging.
+Work only starts here again if the site asks for something new, or if a
+WordPress, PHP, Hello Elementor, or Elementor update breaks something.
 
-Page Hero (see [PLAN/PRD-page-hero.md](../PLAN/PRD-page-hero.md)) shipped in
-1.6.0. All 16 target Pages now have it applied on local `v2`; one `<h1>` per
-page confirmed. Still open:
-
-- The PRD's step 6 responsive/Lighthouse pass (3 representative pages) has not
-  been run, same blocker as above.
-- The business hero variant is built and shipped, but only tested on
-  `/whistleblowing/` as a local scratch page. The 9 `/business/` subsidiary
-  pages are 1.7.0-plus scope, per the PRD (icon marks were dropped from the
-  business variant per a mid-build request, see PROJECT_LOG).
-- Whether the Page Hero has been applied to the 16 real Pages on live staging
-  (as opposed to the theme code being live there) is unconfirmed.
+Closed on 2026-08-03 (owner-confirmed, see PROJECT_LOG):
+Scroll to Top's phone/tablet visibility fix (1.7.2) confirmed on staging.
+Owner decided the Lighthouse performance pass is not a fair test of the
+theme, since 90%+ of each page's content is the owner's own Elementor build,
+not theme code: abandoned, not tracked further. Owner sees no visible colour
+problem with the current accent colour; the computed WCAG contrast fail
+stands as a known, unpoliced fact (D26) but is not being changed. Page Hero
+(standard variant) applied to all 16 target Pages on live staging, confirmed
+working. Page Hero business variant rolled out to the 9 `/business/` Pages,
+confirmed on both local and live staging.
 
 Closed on 2026-08-01: stale "Haraka" comments renamed to "MetCPT"; the missing
 `dropins/maintenance.php` added.
