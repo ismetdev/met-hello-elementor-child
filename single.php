@@ -28,7 +28,7 @@ while ( have_posts() ) :
 	// filterable Newsroom URL only when the post has no category.
 	$met_term_link = $met_primary_term ? get_term_link( $met_primary_term ) : '';
 	if ( $met_primary_term && ! is_wp_error( $met_term_link ) ) {
-		$met_back_url   = $met_term_link;
+		$met_back_url = $met_term_link;
 		/* translators: %s: category name. */
 		$met_back_label = sprintf( __( 'Back to %s', 'met-hello-child' ), $met_primary_term->name );
 	} else {

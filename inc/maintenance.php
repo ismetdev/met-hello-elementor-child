@@ -70,10 +70,12 @@ add_action( 'template_redirect', 'met_hello_child_maybe_maintenance' );
  * REST, and XML-RPC use their own handlers, so wp-admin AJAX and the REST API are
  * unaffected. Non-403 deaths fall back to the WordPress default handler.
  *
- * @param callable $handler Current handler.
+ * @param callable $handler Current handler. Unused: the filter contract requires
+ *                          accepting it, but this replacement handler does not
+ *                          need to fall back to it.
  * @return callable
  */
-function met_hello_child_set_wp_die_handler( $handler ) {
+function met_hello_child_set_wp_die_handler( $handler ) { // phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 	return 'met_hello_child_wp_die_handler';
 }
 add_filter( 'wp_die_handler', 'met_hello_child_set_wp_die_handler' );
@@ -84,7 +86,8 @@ add_filter( 'wp_die_handler', 'met_hello_child_set_wp_die_handler' );
  * @param string|WP_Error $message Death message.
  * @param string          $title   Death title.
  * @param array           $args    Death args (may include 'response').
- * @return void
+ * @return mixed The default handler's return value, when a 403 is not being
+ *               intercepted. The 403 branch exits directly.
  */
 function met_hello_child_wp_die_handler( $message, $title = '', $args = array() ) {
 	$parsed = wp_parse_args( $args );
@@ -121,6 +124,8 @@ function met_hello_child_wp_die_handler( $message, $title = '', $args = array() 
  * not present in these contexts. No header or footer, by design.
  *
  * @param array $args {
+ *     Page content. All keys are optional.
+ *
  *     @type string $code      Big status code label (e.g. "403"), optional.
  *     @type string $title     <title> text.
  *     @type string $heading   Main heading.
@@ -154,6 +159,7 @@ function met_hello_child_render_standalone( $args ) {
 	<title><?php echo esc_html( $args['title'] . ' - ' . $site_name ); ?></title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<?php // phpcs:ignore WordPress.WP.EnqueuedResources.NonEnqueuedStylesheet -- runs where the enqueue system is not available (see D7 in DOCS/DECISIONS.md). ?>
 	<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 	<style>
 		*,*::before,*::after{box-sizing:border-box;}

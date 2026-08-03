@@ -17,6 +17,57 @@ finished theme was first pushed to GitHub. From here on, log as work happens.
 
 ---
 
+## 2026-08-03: first phpcs run, config fixed, 9 findings fixed
+
+`composer install` and `phpcs` had never been run since the config shipped in
+1.5.0. Ran them for the first time. Composer and PHP CLI needed manual TLS,
+mbstring and zip extension flags to work on this machine's bundled PHP, since
+none of php.ini's extensions are enabled by default.
+
+Two defects in `phpcs.xml.dist` itself, found before any real code issue:
+
+- The registered prefix list only had `met_hello_child`, so the template-local
+  variables (`met_card_link` and similar, using the shorter `met_` convention)
+  all flagged as unprefixed. WPCS also rejects a plain `met` prefix as too short
+  (minimum 4 characters), so the fix is registering `met_` (with the trailing
+  underscore) rather than `met`.
+- `Generic.Files.LineEndings` flagged CRLF on every file, because git checks out
+  CRLF on Windows by policy. This would fail on both machines forever without
+  fixing anything real, so the sniff is now excluded, with `.gitattributes`
+  already doing the actual normalisation in the repository.
+
+After the config fix: 41 real violations in 9 files. `phpcbf` auto-fixed 32
+(inline CSS indentation and alignment in the standalone pages). The remaining 9,
+fixed by hand:
+
+- 2 missing `@package` tags, in `error-403.php` and `dropins/maintenance.php`.
+- 1 wrong `@return void` tag on a function that does return a value
+  (`met_hello_child_wp_die_handler`).
+- 1 param comment missing a full stop, on the `$args` array shape docblock.
+- 1 unused `$handler` parameter, required by the `wp_die_handler` filter
+  signature. Documented and ignored, not removed.
+- 1 missing enqueue version, on the fonts stylesheet. The `null` is deliberate,
+  documented and ignored.
+- 3 non-enqueued `<link rel="stylesheet">` tags, in the two standalone pages and
+  the shared renderer. All three run where `wp_enqueue_style()` is not
+  available, per D7. Documented and ignored, not restructured.
+
+`phpcs` is now clean. Verified against the running site after the fix: the 403
+file (served directly, bypassing WordPress), a single post, and the maintenance
+page (tested via a temporary mu-plugin, removed after) all render correctly with
+no PHP notices.
+
+`composer.lock` is now committed, so both machines lint against identical
+standard versions. No version bump: nothing user-facing changed.
+
+Also found and removed two zero-byte stray files at the repo root
+(`C:UsersIIUM`, `Holdings.claudeclaude-notify-signalsstop`), created by an
+unquoted path in a `claude-notify-signals` hook splitting on the space in
+`C:\Users\IIUM Holdings\...`. Not part of this repo's own tooling; worth fixing
+in the hook config, not here.
+
+---
+
 ## 2026-08-01: v1.5.0 restructure to the standard theme layout
 
 Structural refactor, no change to what the site renders.

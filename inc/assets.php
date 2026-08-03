@@ -42,7 +42,7 @@ function met_hello_child_enqueue_styles() {
 	}
 
 	// Fonts first (null version: Google serves its own cache headers).
-	wp_enqueue_style( 'met-hello-child-fonts', met_hello_child_fonts_url(), array(), null );
+	wp_enqueue_style( 'met-hello-child-fonts', met_hello_child_fonts_url(), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- null is deliberate, see the comment above.
 
 	wp_enqueue_style(
 		'met-hello-child',

@@ -3,7 +3,7 @@
 Where the project stands today. Update when the shipped version, the open work, or
 the environment changes.
 
-Last updated: 2026-08-01
+Last updated: 2026-08-03
 
 ## At a glance
 
@@ -92,12 +92,14 @@ Same site, separate repos, separate release cycles.
    return its URL.
 2. **No `languages/` directory yet.** The text domain is declared and strings are
    wrapped, but no `.pot` has been generated.
-3. **Lint has never been run.** `phpcs.xml.dist` and `composer.json` are in
-   place, but `composer install` has not been run on either machine, so the code
-   has not been checked against WordPress Coding Standards yet.
-
 Closed on 2026-08-01: stale "Haraka" comments renamed to "MetCPT"; the missing
 `dropins/maintenance.php` added.
+
+Closed on 2026-08-03: ran `composer install` and `phpcs` for the first time.
+Found and fixed two config defects (prefix list, CRLF line endings) and 9 real
+findings. `phpcs` is clean. See [PROJECT_LOG.md](PROJECT_LOG.md) for detail.
+`composer.lock` is committed so both machines lint against the same standard
+versions.
 
 ## How to cut the next release
 

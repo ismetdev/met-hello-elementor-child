@@ -21,17 +21,31 @@
 	<rule ref="WordPress"/>
 	<rule ref="PHPCompatibilityWP"/>
 
+	<!-- Git checks out CRLF on Windows; .gitattributes normalises line endings in
+	     the repository itself, so this sniff would fail permanently on both dev
+	     machines without fixing anything real. -->
+	<rule ref="Generic.Files.LineEndings">
+		<exclude-pattern>*</exclude-pattern>
+	</rule>
+
 	<!-- Every string must use the theme text domain. -->
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<property name="text_domain" type="array" value="met-hello-child"/>
+			<property name="text_domain" type="array">
+				<element value="met-hello-child"/>
+			</property>
 		</properties>
 	</rule>
 
-	<!-- Everything global must carry the theme prefix. -->
+	<!-- Everything global must carry a theme prefix. "met_" covers the local
+	     template variables (met_card_link and similar); met_hello_child_ /
+	     MET_HELLO_CHILD_ cover functions and constants. WPCS requires prefixes
+	     of at least 4 characters, so the plain 3-letter "met" is not registered
+	     on its own. -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
 		<properties>
 			<property name="prefixes" type="array">
+				<element value="met_"/>
 				<element value="met_hello_child"/>
 				<element value="MET_HELLO_CHILD"/>
 			</property>
