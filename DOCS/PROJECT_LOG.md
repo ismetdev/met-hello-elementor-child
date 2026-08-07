@@ -17,6 +17,104 @@ finished theme was first pushed to GitHub. From here on, log as work happens.
 
 ---
 
+## 2026-08-04: v1.8.0 code, sitewide token layer and the Elementor main-landmark fix
+
+GMD demo is 2026-08-07. PageSpeed baseline measured first, owner-supplied:
+mobile 61 on the homepage and Board of Directors (LCP 11.9s and 10.9s), 74 on
+IKOP Pharma. Desktop 89-96 on all three, no problem there. Total Blocking
+Time near zero on all three, so the loss is images and render-blocking CSS,
+not the JavaScript from Elementor, Essential Addons or Ultimate Addons.
+Accessibility 90 on all three, same four failing checks on every page.
+
+Reasoning and options: [PLAN/PROPOSAL-frontend-revamp.md](../PLAN/PROPOSAL-frontend-revamp.md).
+Build plan: [PLAN/PRD-design-tokens.md](../PLAN/PRD-design-tokens.md). Decided:
+Option A (govern Elementor from a token layer) now, Option C (block theme,
+`theme.json`) as the target, Option B (rebuild pages, Customizer-edited)
+rejected as below industry standard for a content team. Keep Essential Addons
+and Ultimate Addons, configure them, remove later under C.
+
+Shipped in code, verified on local `v2`, not yet on staging:
+
+- `assets/css/tokens.css`: the merged `:root` token set from `theme.css` and
+  the `CLAUDE DESIGN` reference files, no value changed, no name collision
+  found. Loads sitewide, no gate.
+- `assets/css/elementor-base.css`: base rules scoped to Elementor's own class
+  names, so the tokens reach Elementor-rendered content without any page
+  being edited. One `!important`, the `prefers-reduced-motion` block,
+  documented inline.
+- `theme.css` no longer defines its own `:root`, depends on `tokens.css`
+  instead. Confirmed on local `v2`: the single post view still renders
+  correctly, `theme.css`'s file has zero `:root {` blocks left.
+- Found, by reading Hello Elementor's and Elementor's own source, that every
+  Elementor Page on the site (Full Width or Canvas template) rendered with no
+  `<main>` landmark: the parent theme's header.php never prints one, and
+  Elementor's page templates call get_header()/get_footer() with nothing else
+  between. That also left the parent theme's skip link pointing at a target
+  that did not exist. Fixed from the child theme only, hooked on the same
+  before/after content actions Page Hero already uses. Verified on a live
+  Full Width Page (Whistle Blowing) on local `v2`: one `<main>` open, one
+  close, skip link now resolves. Not verified against a live Canvas Page, none
+  exists locally; same code path, read directly from Elementor's `canvas.php`.
+- phpcs clean.
+
+Full reasoning: [DECISIONS.md D27](DECISIONS.md#d27).
+
+Deliberately not done in code, since it is database/server state that does
+not travel with a release, or needs the live page to see: image optimisation,
+CSS delivery tuning, the Board of Directors 154 KiB unused-CSS outlier,
+footer social link accessible names, the desktop CLS 0.096 source, Elementor
+Global Colours/Fonts, and the responsive walk. Step-by-step for all of it:
+[PLAN/STAGING-CHECKLIST-1.8.0.md](../PLAN/STAGING-CHECKLIST-1.8.0.md).
+
+Not yet tagged or released. Owner reviews before `git push` and the tag.
+
+---
+
+## 2026-08-04: v1.8.0 correction, Elementor's own generated CSS beats a generic base layer
+
+Owner tested v1.8.0 live on local `v2` by building a real page with Elementor
+(Whistle Blowing). Confirmed working: the `<main>` landmark, present exactly
+once, in the right place. Disproved: the heading font-family rule in
+`elementor-base.css`, shown losing in DevTools to `post-86.css`, a CSS file
+Elementor generates per page that bakes the Kit's default typography into a
+rule scoped to that widget's own element ID, three classes deep. That beats
+a generic two-class rule on plain specificity, always, for every
+default-styled widget, which is nearly all of them.
+
+Removed the now-dead heading and text-editor font/size rules from
+`elementor-base.css`. What is left (focus outline, reduced motion,
+box-sizing, overflow safety) is not Kit-driven the same way and does survive.
+Container width rule kept with a caveat, not yet verified against the same
+override.
+
+Confirmed the real lever for Elementor-authored typography and colour is
+Elementor's own Global Fonts and Global Colours, PRD step 10, not a
+stylesheet. Then hit a second, separate problem trying to use it: Geist is
+not in Elementor Free's font list, and Elementor's custom-font upload is a
+Pro feature. Decided, owner's call: set Elementor Global Fonts to **Inter**
+instead of adding a plugin or a font-registration snippet this close to the
+demo. Native theme views keep true Geist, unaffected. Elementor pages and
+native views will not match exactly until Geist is registered for Elementor
+after the demo.
+
+Full reasoning and the correction to the original D27 entry:
+[DECISIONS.md D27](DECISIONS.md#d27).
+
+Still not tagged or released. Global Fonts/Colours (step 10) now needs doing
+before the release, not after, since it is load-bearing for the demo, not
+just a nice-to-have.
+
+**Update, same day:** owner set Elementor Global Fonts (Primary, Secondary,
+Text, Accent all Inter) and Global Colours (Primary, Secondary) on local
+`v2`. Confirmed in DevTools Computed panel: Inter now appears and wins for a
+default-styled heading. This is the first live proof that Global Fonts is
+the correct, working lever, not just a read of Elementor's source. Still
+needs doing again on staging separately: Elementor's Site Settings live in
+the database, so this does not travel with the theme release (PRD section
+3.4).
+
+---
+
 ## 2026-08-03: Page Hero and Scroll to Top closed out on live staging
 
 Owner confirmed: 1.7.2's mobile-visibility fix works on staging. Page Hero

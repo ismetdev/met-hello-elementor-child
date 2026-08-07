@@ -515,3 +515,135 @@ not control and that only applies at some breakpoints. `assets/js/scroll-top.js`
 now moves the button to be a direct child of `<body>` as its first action, the
 same technique modals and tooltips use for this exact class of bug, so no
 ancestor markup, on this site or the next redesign, can trap it again.
+
+---
+
+## D27: a sitewide token layer, and a `<main>` landmark the parent theme never gave Elementor Pages <a id="d27"></a>
+
+**Decision (2026-08-04, v1.8.0).** Two new files, `assets/css/tokens.css`
+and `assets/css/elementor-base.css`, load on every page of the site with no
+gate: not just the theme's own styled views, not just Pages with a Page Hero.
+`tokens.css` holds only the `:root` custom properties, merged from
+`theme.css` and the `CLAUDE DESIGN` reference files with no value changed.
+`elementor-base.css` is the one file in this theme that writes selectors
+targeting Elementor's own class names. What it can and cannot reach is
+narrower than first planned; see the correction below.
+
+`theme.css` no longer defines its own `:root`. It declares
+`met-hello-child-tokens` as a dependency in
+[inc/assets.php](../inc/assets.php) instead, so there is one token source,
+not two that could drift apart.
+
+**Why sitewide, like Scroll to Top ([D26](#d26)), not gated like `theme.css`.**
+The homepage and most Elementor Pages never load `theme.css`
+([D4](#d4)), so a token layer meant to reach every page cannot depend on it.
+Same constraint, same answer as Scroll to Top: a small, self-contained file
+with no dependency on the gated stylesheet.
+
+**Why this does not widen [D3](#d3) or [D25](#d25).** Those gates control
+three specific things: the main stylesheet, the font preconnect hints, and
+the full-width body class. `tokens.css` and `elementor-base.css` are a fourth,
+independent thing, enqueued by their own function
+(`met_hello_child_enqueue_tokens()`), not by widening
+`met_hello_child_is_styled_view()` or `met_hello_child_page_has_hero()`.
+Confirmed on local `v2` that the full-width body class still does not appear
+on Elementor Pages after this change. Not yet confirmed on staging, since
+1.8.0 has not been released there.
+
+**Why `elementor-base.css` cannot collide with `theme.css`.** `theme.css`
+scopes every component rule under `.met-view`, a class only the theme's own
+templates print. `elementor-base.css` scopes every rule to Elementor's own
+class names (`.elementor-widget-heading`, `.elementor-button`, `.e-con`, and
+so on). Neither file's selectors can match an element the other one targets,
+so the two layers cannot fight each other, and neither uses `!important`
+except the one documented exception below.
+
+**The one `!important`, and why it is there.** The
+`prefers-reduced-motion: reduce` block in `elementor-base.css` uses
+`!important` on every animation and transition property. It has to beat
+whatever duration Elementor, Essential Addons or Ultimate Addons set, inline
+or otherwise, for a visitor who has asked their OS to reduce motion. That
+request should always win, so this is the one place the rule in
+[PLAN/PRD-design-tokens.md](../PLAN/PRD-design-tokens.md) about not reaching
+for `!important` first gets a named exception.
+
+**The `<main>` landmark bug, found by reading the parent theme and Elementor's
+own source, not by guessing.** Hello Elementor's `template-parts/single.php`,
+`archive.php`, `search.php` and `404.php` each print
+`<main id="content" class="site-main">`. Its `header.php` does not: it only
+opens `<body>` and prints the site header. Elementor's own page templates,
+`header-footer.php` (Full Width, what [D25](#d25) says all 16 launch Pages
+use) and `canvas.php`, call `get_header()` then Elementor's content then
+`get_footer()`, with nothing else in between. The result: every Elementor
+Page on this site, confirmed by curling a live Full Width Page on local `v2`,
+shipped with no `<main>` element and no landmark for assistive technology to
+jump to. The parent theme's own skip link, which targets `#content`, was
+pointing at nothing on every one of those pages.
+
+**The fix, and why it is safe.** Two functions in
+[inc/setup.php](../inc/setup.php),
+`met_hello_child_open_elementor_main()` and
+`met_hello_child_close_elementor_main()`, print the opening and closing
+`<main>` tags. Hooked on `elementor/page_templates/header-footer/before_content`
+/ `after_content` and the matching `canvas` hooks, the same actions
+[D25](#d25)'s Page Hero already uses, at priority 5 for the open (so `<main>`
+opens before the hero band prints, keeping the hero inside the landmark as
+page content, not ahead of it) and priority 20 for the close. No Elementor or
+parent theme file is edited. Verified on a live Full Width Page on local `v2`:
+exactly one `<main>` open, exactly one close, header and footer unchanged,
+skip link now resolves to a real element. Not verified against a live Canvas
+Page, since none exists on local `v2`; the code path is the same function
+hooked to Elementor's documented `canvas` hooks, read directly from
+`elementor/modules/page-templates/templates/canvas.php`.
+
+**What stayed out, on purpose.** No page-level Elementor edit. No change to
+Essential Addons, Ultimate Addons, or which plugins the site runs. No change
+to the accent colour contrast fail ([D26](#d26)), still known and unpoliced.
+Full reasoning, the measured PageSpeed baseline, and the staging checklist
+for the parts that cannot be done from a repo (images, CSS delivery, Global
+Colours, the responsive walk) are in
+[PLAN/PRD-design-tokens.md](../PLAN/PRD-design-tokens.md) and
+[PLAN/STAGING-CHECKLIST-1.8.0.md](../PLAN/STAGING-CHECKLIST-1.8.0.md).
+
+**Where this is going.** `tokens.css` is written to become the token source
+if the site moves to a block theme with `theme.json`, the target direction
+recorded in [PLAN/PROPOSAL-frontend-revamp.md](../PLAN/PROPOSAL-frontend-revamp.md).
+Nothing in this decision commits to that move; it only avoids doing throwaway
+work ahead of it.
+
+**Correction, same day, found by testing live on local `v2`.** The first cut
+of `elementor-base.css` also set `font-family` and `font-size` on default
+Elementor heading and text-editor widgets, on the theory that a widget with
+no local styling would fall through to a generic cascade rule. Testing on a
+real page (Whistle Blowing) in DevTools disproved that: Elementor generates
+a CSS file per page (e.g. `post-86.css`) and bakes the Kit's typography
+default into a rule scoped to that exact widget's element ID, three class
+selectors deep with one of them unique to the widget. That beats a generic
+two-class rule like `.elementor-widget-heading .elementor-heading-title`
+every time, on plain CSS specificity, regardless of load order, and it does
+this whether or not the widget has been customised, because "Default" is
+itself a value Elementor resolves and bakes in. `!important` would work but
+was rejected: fighting Elementor's own generator forever, on every property,
+is not a stylesheet's job.
+
+**The actual lever for typography and colour on Elementor-authored content
+is Elementor's own Global Fonts and Global Colours (Site Settings, PRD step
+10).** That is where Elementor's generator reads the value it bakes in, so
+it is the only place that reaches every widget, including ones this file
+cannot touch. The heading and text-editor rules were removed from
+`elementor-base.css` as dead code, same day. What remains, focus outline,
+reduced motion, box-sizing, overflow safety, is not Kit-driven the same way
+and does survive the cascade. Container width is left in with a caveat, not
+yet verified against the same override.
+
+**The Geist font is not in Elementor Free's bundled font list**, found while
+trying to set Global Fonts to it. Elementor Free's picker only offers its own
+list plus system fonts; self-hosted custom fonts are an Elementor Pro
+feature. Decided: set Elementor's Global Fonts to **Inter**, already in the
+list and visually close, rather than add a new plugin or a font-registration
+snippet three days before the demo. The theme's own native views (blog,
+archive, search, author, 404) keep true Geist, unaffected, since they load
+it directly ([D15](#d15)). This means Elementor-authored pages and the
+theme's native views will not carry byte-identical typography until Geist is
+registered for Elementor after the demo, a known, accepted gap, not an
+oversight.

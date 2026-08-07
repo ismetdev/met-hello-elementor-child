@@ -3,13 +3,13 @@
 Where the project stands today. Update when the shipped version, the open work, or
 the environment changes.
 
-Last updated: 2026-08-03
+Last updated: 2026-08-04
 
 ## At a glance
 
 | | |
 |---|---|
-| Shipped version | **1.7.2** |
+| Shipped version | **1.8.0** (pending tag, see Open items) |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
 | Branch | `main` |
 | Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.7.1`, `v1.7.2` |
@@ -46,7 +46,9 @@ Elementor pages, or the MetCPT custom post types.
 | Shared card partial | [template-parts/met-card.php](../template-parts/met-card.php) | Shipped 1.3.0 |
 | Page Hero (opt-in Elementor Page header) | [inc/page-hero.php](../inc/page-hero.php), [template-parts/page-hero.php](../template-parts/page-hero.php) | Shipped 1.6.0. Standard variant applied to all 16 target Pages on local `v2` and live staging. Business variant rolled out to the 9 `/business/` Pages, confirmed on both |
 | Scroll to Top (sitewide button) | [inc/scroll-top.php](../inc/scroll-top.php), [assets/css/scroll-top.css](../assets/css/scroll-top.css), [assets/js/scroll-top.js](../assets/js/scroll-top.js) | Shipped 1.7.0, fixed 1.7.1-1.7.2, confirmed working on live staging. Customizer: Appearance > Customize > Scroll to Top |
-| Design system CSS | [assets/css/theme.css](../assets/css/theme.css) | Tokens on `:root`, components under `.met-view` |
+| Design system CSS | [assets/css/theme.css](../assets/css/theme.css) | Components under `.met-view`, gated to styled views. Tokens now live in tokens.css (below) |
+| Sitewide design tokens | [assets/css/tokens.css](../assets/css/tokens.css), [assets/css/elementor-base.css](../assets/css/elementor-base.css) | Added 1.8.0. Loads on every page, including every Elementor Page. See [DECISIONS D27](DECISIONS.md#d27) |
+| `<main>` landmark on Elementor Pages | [inc/setup.php](../inc/setup.php) | Added 1.8.0. Elementor's own page templates printed none. See D27 |
 | Auto-update pipeline | [inc/updater.php](../inc/updater.php), [release.yml](../.github/workflows/release.yml) | Shipped 1.4.0, verified by the 1.4.1 release |
 
 ## Scope boundary
@@ -88,10 +90,23 @@ Same site, separate repos, separate release cycles.
 
 ## Open items
 
-None. Page Hero and Scroll to Top are both done and confirmed on live staging.
+**v1.8.0 front-end revamp, in progress.** GMD demo is 2026-08-07. Full plan:
+[PLAN/PRD-design-tokens.md](../PLAN/PRD-design-tokens.md), options and
+reasoning in [PLAN/PROPOSAL-frontend-revamp.md](../PLAN/PROPOSAL-frontend-revamp.md).
 
-Work only starts here again if the site asks for something new, or if a
-WordPress, PHP, Hello Elementor, or Elementor update breaks something.
+Code done and verified on local `v2` (2026-08-04): the sitewide token layer,
+the Elementor `<main>` landmark fix, phpcs clean. See
+[DECISIONS D27](DECISIONS.md#d27). Not yet: tagged, released, or on staging.
+
+Remaining, tracked in [PLAN/STAGING-CHECKLIST-1.8.0.md](../PLAN/STAGING-CHECKLIST-1.8.0.md),
+owner's to do on live staging: image optimisation and CSS delivery
+(PRD steps 1-2), the Board of Directors 154 KiB unused-CSS outlier (step 3),
+footer social link accessible names, the desktop CLS 0.096 shared-chrome
+source, Elementor Global Colours/Fonts, the full responsive walk, and the
+re-measure against the 2026-08-04 PageSpeed baseline.
+
+Closed on 2026-08-03: Page Hero and Scroll to Top, both confirmed on live
+staging.
 
 Closed on 2026-08-03 (owner-confirmed, see PROJECT_LOG):
 Scroll to Top's phone/tablet visibility fix (1.7.2) confirmed on staging.

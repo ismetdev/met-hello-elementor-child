@@ -1,0 +1,82 @@
+/* =============================================================================
+   MET HELLO CHILD: base rules for Elementor-rendered content
+   -----------------------------------------------------------------------------
+   Loaded sitewide, alongside tokens.css. Every rule here is scoped to an
+   Elementor class name, so it can never collide with assets/css/theme.css,
+   which is scoped to `.met-view` and only loads on the theme's own templates
+   (see inc/setup.php, met_hello_child_is_styled_view()).
+
+   What this file cannot do, learned by testing on a live page (2026-08-04):
+   Elementor generates its own CSS per widget, per page (e.g. post-86.css),
+   and bakes the Kit's typography and colour defaults into it as literal
+   values scoped to that widget's own element ID. That selector is always
+   more specific than anything generic written here, so a rule like
+   `.elementor-widget-heading .elementor-heading-title { font-family: ... }`
+   is dead weight: it loads, and it always loses. Typography and colour for
+   default-styled Elementor widgets can only be reached through Elementor's
+   own Global Fonts and Global Colours (Site Settings), because that is
+   where Elementor's generator reads the value from. See DECISIONS D27.
+
+   What is left below is what survives that cascade: things Elementor does
+   not bake per widget. Nothing here uses !important except the documented
+   reduced-motion exception.
+   ========================================================================== */
+
+/* --- Box model and overflow safety --------------------------------------- */
+.elementor *,
+.elementor *::before,
+.elementor *::after {
+	box-sizing: border-box;
+}
+
+.elementor img {
+	max-width: 100%;
+	height: auto;
+}
+
+body.elementor-page,
+body.elementor-template-full-width,
+body.elementor-template-canvas {
+	overflow-x: hidden;
+}
+
+/* --- Container width, matches the token -----------------------------------
+   Unverified against the same per-widget override found for typography.
+   Elementor's Content Width setting can bake an explicit max-width the same
+   way it bakes typography, which would beat this rule for the same reason.
+   Keep, since it is harmless where it does apply and costs nothing where it
+   does not, but do not rely on it alone: set Elementor's own Content Width
+   to 1200px in Site Settings, Layout. */
+.elementor .e-con.e-con-boxed > .e-con-inner,
+.elementor .elementor-container {
+	max-width: var( --container, 1200px );
+}
+
+/* --- Links and buttons: a visible focus state ------------------------------
+   Not something Elementor's Kit bakes per widget, so this reaches every
+   page. Elementor's own reset removes the browser default outline on
+   several elements; this restores one, matching theme.css's own
+   :focus-visible rule for the theme's native views. */
+.elementor a:focus-visible,
+.elementor button:focus-visible,
+.elementor .elementor-button:focus-visible {
+	outline: 2px solid var( --gold, #B98A2E );
+	outline-offset: 3px;
+	border-radius: 6px;
+}
+
+/* --- Motion: respect the visitor's OS setting -----------------------------
+   The one deliberate use of !important in this file. It has to beat every
+   animation and transition duration Elementor, Essential Addons and Ultimate
+   Addons set inline or with their own specificity, for every visitor who has
+   asked their OS to reduce motion. That is what the flag is for. */
+@media ( prefers-reduced-motion: reduce ) {
+	.elementor *,
+	.elementor *::before,
+	.elementor *::after {
+		animation-duration: 0.001ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.001ms !important;
+		scroll-behavior: auto !important;
+	}
+}

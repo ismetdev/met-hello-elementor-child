@@ -80,6 +80,26 @@ Maintenance during WordPress updates (drop-in):
 
 == Changelog ==
 
+= 1.8.0 =
+* Add: sitewide design token layer. `assets/css/tokens.css` (`:root` custom
+  properties only) and `assets/css/elementor-base.css` (base rules scoped to
+  Elementor's own class names) load on every page of the site, including the
+  homepage and every Elementor Page, not just the theme's own styled views.
+  `assets/css/theme.css` now depends on `tokens.css` instead of defining its
+  own `:root` block, so there is one token source, not two. See DECISIONS D27.
+* Fix: every Elementor Page (Full Width or Canvas template) rendered with no
+  `<main>` landmark, since Hello Elementor's own header/footer templates
+  never print one for Elementor's page templates. That also left the parent
+  theme's skip link pointing at a target that did not exist. The child theme
+  now wraps Elementor Page content in `<main id="content" class="site-main">`
+  on both templates. No Elementor or parent theme file touched. See D27.
+* Fix: a visible keyboard focus outline and reduced-motion support now apply
+  on Elementor-rendered content, matching what the theme's own views already
+  had. Typography and colour on Elementor-authored pages are set through
+  Elementor's own Global Fonts and Global Colours (Site Settings), not this
+  stylesheet: Elementor bakes its Kit defaults into CSS scoped to each
+  widget, which always outranks a generic rule. See DECISIONS D27.
+
 = 1.7.2 =
 * Fix: Scroll to Top could go missing at some breakpoints (found: visible on
   laptop/desktop widths, not on phone/tablet). Cause: a `transform` on some

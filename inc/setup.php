@@ -70,3 +70,39 @@ function met_hello_child_body_class( $classes ) {
 	return $classes;
 }
 add_filter( 'body_class', 'met_hello_child_body_class' );
+
+/**
+ * Wrap Elementor Page content in a <main> landmark (D27).
+ *
+ * Hello Elementor's own template-parts (single.php, archive.php, search.php,
+ * 404.php) each print <main id="content" class="site-main">, but its Page
+ * templates do not: elementor/modules/page-templates/templates/header-footer.php
+ * calls get_header() then get_footer() with nothing in between but Elementor's
+ * content, and get_header() only opens <body> and prints the site header, no
+ * <main>. The Canvas template (canvas.php) has no header.php/footer.php call
+ * at all. Confirmed by reading both files: every Elementor Page on this site,
+ * Full Width or Canvas, ships with zero <main> element and no landmark for
+ * assistive technology to jump to. That is also why the parent theme's own
+ * skip link, which targets #content, points at nothing on these pages.
+ *
+ * Hooked on the same before/after "content" actions Page Hero
+ * (inc/page-hero.php) already uses, at a priority that puts the hero band
+ * inside <main> rather than ahead of it, since the hero heading is page
+ * content, not chrome. This does not touch any Elementor or parent theme
+ * file: the tag is added from the child theme only, the same pattern D25 and
+ * D26 already established for this codebase.
+ */
+function met_hello_child_open_elementor_main() {
+	echo '<main id="content" class="site-main">';
+}
+add_action( 'elementor/page_templates/header-footer/before_content', 'met_hello_child_open_elementor_main', 5 );
+add_action( 'elementor/page_templates/canvas/before_content', 'met_hello_child_open_elementor_main', 5 );
+
+/**
+ * Close the <main> landmark opened by met_hello_child_open_elementor_main().
+ */
+function met_hello_child_close_elementor_main() {
+	echo '</main>';
+}
+add_action( 'elementor/page_templates/header-footer/after_content', 'met_hello_child_close_elementor_main', 20 );
+add_action( 'elementor/page_templates/canvas/after_content', 'met_hello_child_close_elementor_main', 20 );

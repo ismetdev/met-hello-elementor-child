@@ -1,0 +1,38 @@
+/* =============================================================================
+   MET HELLO CHILD: sitewide design tokens
+   -----------------------------------------------------------------------------
+   Single source of truth for the design system, loaded on every page,
+   including every Elementor Page. Union of the token set already in
+   theme.css (gated to styled views only) and the CLAUDE DESIGN reference
+   files. :root only, no selectors, no components: see elementor-base.css
+   for rules that use these on Elementor-rendered content.
+
+   This is the file that becomes theme.json if the site moves to a block
+   theme. See PLAN/PRD-design-tokens.md.
+   ========================================================================== */
+
+:root {
+  --ink:#0F1419; --ink-soft:#5A6168; --ink-faint:#8A9098;
+  --paper:#F4EFE7; --paper-cool:#FFFFFF;
+  --petrol:#0E3B40; --petrol-soft:#1A5258; --petrol-deep:#0A0A0A;
+  --gold:#B98A2E; --gold-soft:#C99A3A;
+  --hairline:rgba(15,20,25,0.08); --hairline-strong:rgba(15,20,25,0.14);
+
+  --edu:#4A7BA8; --infra:#B98A2E; --health:#B5566F;
+
+  --font-sans:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --font-serif:"Instrument Serif",Georgia,serif;
+
+  --text-xs:12px; --text-sm:13px; --text-base:15px; --text-md:17px; --text-lg:19px; --text-xl:22px;
+  --text-2xl:clamp(24px,2.6vw,32px); --text-3xl:clamp(30px,3.4vw,42px);
+  --text-title:clamp(30px,4vw,52px);
+  --text-hero:clamp(44px,7vw,92px);
+
+  --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px;
+  --radius:10px; --radius-lg:16px;
+  --ease:cubic-bezier(0.2,0.8,0.2,1); --t-fast:180ms; --t-med:280ms;
+  --container:1200px; --gutter:clamp(20px,4vw,40px);
+  --reading:72ch;
+
+  --pattern-light:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="104" viewBox="0 0 60 104"><g fill="none" stroke="%23C99A3A" stroke-width="1" opacity="0.16"><path d="M30 2 L52 15 L52 41 L30 54 L8 41 L8 15 Z"/><path d="M30 50 L52 63 L52 89 L30 102 L8 89 L8 63 Z"/><path d="M0 28 L8 15 M52 15 L60 28 M0 76 L8 63 M52 63 L60 76"/></g></svg>');
+}
