@@ -219,3 +219,138 @@ neither exists on local:
 If the host ever gives shell access, Parts B, D and E collapse into scripted
 steps, and `inc/migration-tools.php` can be deleted (see D29). Until then this
 is the procedure.
+
+---
+
+# Comprehensive walkthrough for the 2026-08-09 deploy (steps 6 to 8)
+
+Written after v1.11.0 was released and the owner finished the theme update,
+footer menus, Customizer, chrome toggle, categories and housekeeping. What
+remains is the content: the posts, the Elementor page bodies, and the front page.
+
+The one fact that shapes all of it: **staging cannot reach the local site.**
+`http://v2` is not on the internet, so any importer that tries to pull an
+attachment from a local URL fails. Media therefore moves by hand.
+
+## Step 6: move the content posts
+
+Eight posts were authored on local and are not on staging. Recreate each on
+staging by hand. Eight posts is small enough that hand-entry is more reliable
+than any importer, and it sidesteps the attachment problem entirely.
+
+| Local ID | Title | Category | Featured image file | Facebook album |
+|---|---|---|---|---|
+| 329 | IIUM Holdings Expands Healthcare Collaboration to Support Pharmaceutical and Medical Services | press-releases | ikop-radiant-scaled.jpg | - |
+| 327 | IIUM Medical Specialist Centre Strengthens Integrity Commitment Through Corruption-Free Pledge Initiative | press-releases | IMSC-terajui-budaya-bebas-rasuah.webp | - |
+| 324 | IIUM Holdings Conducts Integrity Awareness Programme to Promote Ethical Workplace Practices Across the Group | press-releases | ikrar-bebas-rasuah-iium-holdings-scaled.jpg | - |
+| 339 | IIUM Gombak Iftar Pack: IIUM Holdings Group Sponsors SHAS Mosque | csr | IIUM-Gombak-Iftar-Pack.jpg | - |
+| 336 | Kasih Ramadan: IIUM Holdings Distributes Iftar Packs to Students and Community | csr | Pek-berbuka-puasa-IIUM-Holdings.jpg | - |
+| 333 | Sumbangan Duit Raya: IIUM Holdings Santuni Pelajar Asnaf UIAM dan IIC | csr | sumbangan-duit-raya.webp | - |
+| 321 | Integrity Day 1.0 at IMSC Gallery | gallery | IMSC-terajui-budaya-bebas-rasuah.webp | facebook.com/share/p/19AKmLXSRv/ |
+| 319 | Kenduri Durian at IMSC Gallery | gallery | makan-durian.webp | facebook.com/share/p/19KqGNcXnA/ |
+
+For each post:
+
+1. On **local** `http://v2`, open the post in the editor. Copy the body text.
+   From the Media Library, download its featured image (note the filename in the
+   table). Post 321 shares 327's image, so download it once.
+2. On **staging**, Posts, Add New. Paste the title and the body.
+3. Set the **Category** in the sidebar to the one in the table. The category must
+   already exist (done in step 5).
+4. **Featured image**, Set featured image, upload the file you downloaded.
+5. For the two **gallery** posts only, paste the Facebook link into the
+   **External album** box (the field the theme adds on the Post edit screen).
+6. Publish.
+
+Also check the News and Announcement content. That page lists every category, so
+it shows whatever posts staging already holds. If staging already has the
+announcement and activity posts, nothing to do. Recreate on staging, the same
+way, any that exist only on local.
+
+## Step 7: move the Elementor page bodies
+
+Same export and import mechanism for every page, but the pages split into two
+groups by whether they carry baked images.
+
+### The mechanism, one page at a time
+
+1. On **local**, open the page with Elementor. Top-left menu (the three lines),
+   **Save as Template**, name it after the page.
+2. Templates, Saved Templates, **Export** that row. You get a `.json` file.
+3. On **staging**, Templates, Saved Templates, **Import Templates**, upload the
+   `.json`.
+4. Edit the **existing** staging page with Elementor. Do not create a new page,
+   or you get a duplicate slug.
+5. In the widget panel, the folder icon (My Templates), **Insert** the template.
+   When asked **"Import documents settings?"**, answer **Yes**.
+6. Update. Purge LiteSpeed. Elementor, Tools, **Regenerate CSS & Data**.
+7. Open the page in a browser and check it.
+
+### Group A: no baked images, import and done
+
+These pages carry no images in their layout. Their pictures come from the posts
+at render time, or they are text and icons only. Nothing to rewrite.
+
+`/news-announcement/`, `/media/`, `/gallery/`, `/press-releases/`,
+`/csr-initiatives/`, `/sitemap/`.
+
+Two conditions for these to fill correctly, both already handled if steps 5 and 6
+are done first: the category must exist, and the posts must exist. The
+`[met_posts]` shortcode filters by slug, so it just works once the content is on
+staging. **Leave Page Hero as it is (standard)** on all six; these keep the
+theme hero.
+
+### Group B: baked images, import then fix the images
+
+`/iium-holdings-25th-anniversary/`, `/iium-holdings-group-of-companies/`,
+`/rise2030-strategy-blueprint/`.
+
+Do the import mechanism above, then:
+
+1. **Set Page Hero to None** on each. These three designs carry their own hero,
+   so the theme hero must be switched off in the Page Hero meta box.
+2. **Fix the images.** After inserting the template, some images will be broken,
+   because the local filenames do not always match staging. Walk the page in
+   Elementor, and for each broken image or background, click it and pick the
+   image from staging's Media Library. If it is not there, download it from the
+   local Media Library and upload it to staging first.
+3. **RISE2030 needs two uploads.** Its hero and closing backgrounds
+   (`rise2030-hero.jpg`, `rise2030-close.jpg`) exist only on local. Upload both
+   to staging, then set them as the section backgrounds on the hero and the
+   closing band.
+4. Group of Companies also uses `met-vision-pattern.svg` at the uploads root as a
+   faint background pattern. If it is missing on staging, upload it; if the
+   pattern does not show, the page is still fine.
+
+Image counts, so you know what to expect: anniversary about 14, group about 10
+(nine company logos plus the pattern), RISE2030 two.
+
+## Step 8: set the front page
+
+The homepage is a theme Page Template, not an Elementor page, so it does not move
+through Elementor at all. On staging:
+
+1. Pick or create the Page that will be home (a plain Page, no Elementor).
+2. Page Attributes, **Template**, choose **Homepage**.
+3. Set that page's **Page Hero to None** (the homepage template renders its own
+   hero).
+4. Settings, **Reading**, "A static page", set **Front page** to that page.
+5. Purge LiteSpeed. Open the site root and check.
+
+The homepage pulls its content from things already on staging: the announcements
+category, recent posts, the nine `/business/` child pages for the companies grid,
+and the stats and images from the Customizer (step 3). No hero slides exist yet,
+so the hero shows its static fallback, which is expected.
+
+The companies grid colour-codes each company from its `_met_sector` meta and
+falls back to reading the Page Hero eyebrow, so the nine pages show the right
+colour even before any backfill. Running the one-time sector backfill in
+`inc/migration-tools.php` on staging is optional tidying, not required.
+
+## Do it in this order
+
+1. Step 6, the posts, first. The listing pages need them.
+2. Step 7 Group A, the shortcode pages.
+3. Step 7 Group B, the image pages.
+4. Step 8, the front page, last. It is the most visible change.
+5. Purge LiteSpeed after each page, and do a browser check on each.
