@@ -12,7 +12,7 @@ Last updated: 2026-08-09
 | Shipped version | **1.11.0** in the working tree (pending tag, see Open items). Includes the never-tagged 1.8.0, 1.9.0 and 1.10.0 work, folded in rather than released separately |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
 | Branch | `main` |
-| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.7.1`, `v1.7.2` |
+| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.7.1`, `v1.7.2`, `v1.11.0` (1.8.0 to 1.10.0 folded into 1.11.0, never tagged separately) |
 | Parent theme | `hello-elementor` |
 | Requires | WordPress 6.0+ (tested to 6.5), PHP 7.4+ |
 | Text domain | `met-hello-child` (`/languages`) |
@@ -244,8 +244,14 @@ only the pages being built, never a copy of the site.
   the `announcements` category has 0 posts (empty state shows), and 0 of 9
   business Pages have a featured image (sector-tinted empty states show). The
   About image and the four stats are Customizer-editable.
-- **Nothing has shipped to staging. Staging is still on 1.7.2.**
-- Nothing is committed or tagged. Working tree only.
+- **Code released as v1.11.0** on 2026-08-09: committed to `main`, tagged, and
+  the GitHub Action published the theme zip. The staging site still needs the
+  manual application (theme update on the dashboard, then content, menus,
+  Customizer and front page), which only the owner can do on the live wp-admin.
+  See [DEPLOY-TO-STAGING.md](DEPLOY-TO-STAGING.md). Until that is done, staging
+  runs 1.7.2.
+- The chrome toggle default is off, so a theme update alone changes nothing on
+  staging until the owner turns it on.
 
 ### Elementor Google Fonts, deferred by the owner 2026-08-08
 

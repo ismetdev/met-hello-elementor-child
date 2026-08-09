@@ -20,6 +20,24 @@ transcripts, moved to the archive with those entries.
 
 ---
 
+## 2026-08-09: v1.11.0 released (code)
+
+Committed the folded 1.9.0, 1.10.0 and 1.11.0 work to `main` (commit 5e19747),
+tagged `v1.11.0`, and pushed. The release Action built and published the theme
+zip (451 KB), so the update is now offered on any site running this theme.
+phpcs was clean across all 45 files before the commit; `.mcp.json` stays
+gitignored and was verified out of the commit.
+
+This ships **code only**. The staging site (v2.iiumholdings.com.my) still runs
+1.7.2 until the owner applies the update on the live dashboard and then moves
+the content, menus, Customizer settings and front page by hand, per
+[DEPLOY-TO-STAGING.md](DEPLOY-TO-STAGING.md). The chrome toggle defaults off, so
+the theme update alone changes nothing on staging until it is switched on. The
+Novamira MCP is local only and HTTPS to staging is blocked from the shell, so
+none of the staging-side steps can be automated from here.
+
+---
+
 ## 2026-08-09: RISE2030 strategy page built in Elementor
 
 Built `/rise2030-strategy-blueprint/` (page 160) from the owner-approved design
