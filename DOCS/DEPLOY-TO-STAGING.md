@@ -2,7 +2,13 @@
 
 How work done on local `v2` reaches https://v2.iiumholdings.com.my.
 
-Last updated: 2026-08-09
+Last updated: 2026-08-10
+
+**This procedure was executed in full for the first time on 2026-08-10** (the
+1.7.2 to 1.11.1 deploy) and held up. The two things it did not originally warn
+about, now folded in below: purge before judging a moved page empty, and
+hardcoded page IDs like the `/business/` parent do not survive the move (fixed in
+v1.11.1). Treat the walkthrough at the end as the tested version.
 
 ## The rule
 

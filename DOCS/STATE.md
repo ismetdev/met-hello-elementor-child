@@ -3,13 +3,14 @@
 Where the project stands today. Update when the shipped version, the open work, or
 the environment changes.
 
-Last updated: 2026-08-09
+Last updated: 2026-08-10
 
 ## At a glance
 
 | | |
 |---|---|
-| Shipped version | **1.11.0** in the working tree (pending tag, see Open items). Includes the never-tagged 1.8.0, 1.9.0 and 1.10.0 work, folded in rather than released separately |
+| Shipped version | **1.11.1**, released and **live on staging**. Deploy completed 2026-08-10. Includes the never-tagged 1.8.0, 1.9.0 and 1.10.0 work, folded into 1.11.0 |
+| Staging status | **v2.iiumholdings.com.my is live on 1.11.1** with the full new design: custom chrome on, homepage as the front page, and all content pages moved. Presented to the Group MD/CEO on 2026-08-11 |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
 | Branch | `main` |
 | Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.7.1`, `v1.7.2`, `v1.11.0`, `v1.11.1` (1.8.0 to 1.10.0 folded into 1.11.0, never tagged separately) |
@@ -97,13 +98,20 @@ Same site, separate repos, separate release cycles.
 
 ## Open items
 
-**v1.9.0+, the block-system migration, in progress.** GMD demo postponed, no
-fixed date. Supersedes the v1.8.0 Option A token-layer approach, which hit its
-ceiling: Elementor bakes its Kit defaults into per-widget CSS that always
-outranks a generic stylesheet rule (D27). Full plan:
-[PLAN/PRD-block-system.md](../PLAN/PRD-block-system.md), design foundation in
-[PLAN/PRD-design-system.md](../PLAN/PRD-design-system.md), the visual review
-in [PLAN/DESIGN-SYSTEM-GALLERY.html](../PLAN/DESIGN-SYSTEM-GALLERY.html)
+**The frontend revamp is deployed.** As of 2026-08-10 the new design system,
+custom chrome, homepage and all rebuilt content pages are live on staging at
+1.11.1, presented to the Group MD/CEO on 2026-08-11. What remains is a short list
+of page designs and some content entry (see "Deploy: done" and "Not done" below).
+Start there.
+
+**Background on how the design is delivered.** Page bodies are built in Elementor
+(free plus Essential Addons and UAE) with `theme.json` token values written into
+each widget; listings use the theme's own `[met_posts]` shortcode. The block-
+editor migration once planned in
+[PLAN/PRD-block-system.md](../PLAN/PRD-block-system.md) is suspended for page
+bodies (D35); the design foundation is
+[PLAN/PRD-design-system.md](../PLAN/PRD-design-system.md), reviewed in
+[PLAN/DESIGN-SYSTEM-GALLERY.html](../PLAN/DESIGN-SYSTEM-GALLERY.html)
 (owner-approved 2026-08-07).
 
 ### The one rule to read before touching a page
@@ -202,10 +210,10 @@ heading order and Yoast left untouched in `wp_head()`; WCAG AA contrast with
 full keyboard operation and `prefers-reduced-motion` honoured; and verification
 at 390 / 768 / 1280 / 1920 with no horizontal scroll.
 
-### The six formerly-empty staging pages, all built on local 2026-08-09
+### The six formerly-empty staging pages, now live on staging
 
-These six were empty on staging (hero only). All are now built on local and need
-**moving, not building**:
+These were empty on staging (hero only). All were built on local and moved up on
+2026-08-10; they are now live. Local page IDs kept for reference:
 
 | Page | Local page ID | Content |
 |---|---|---|
@@ -214,44 +222,48 @@ These six were empty on staging (hero only). All are now built on local and need
 | `/gallery/` | 168 | `[met_posts category="gallery" layout="album"]`, 2 albums |
 | `/press-releases/` | 169 | `[met_posts category="press-releases"]`, 3 posts |
 | `/csr-initiatives/` | 167 | `[met_posts category="csr"]`, 3 posts |
-| `/sitemap/` | 163 | built earlier, needs moving |
+| `/sitemap/` | 163 | built earlier |
 
-Categories `press-releases` and `gallery` were created on local and must be
-created again on staging with the same slugs before these pages move, or the
-shortcodes list nothing. The content posts (news, press releases, CSR, gallery
-albums) also move to staging as named posts, each with its category, featured
-image, and for gallery albums the `_met_album_url` value.
-
-Two staging pages should be trashed or set to noindex: `/sample-page/`, the
-WordPress default, and `/board-of-directors/naaimah-backup/`, a published
-duplicate of `puan-naaimah-binti-mat-ahmad-radzi/` sitting in the sitemap. Both
-exist on staging and neither exists on local.
+The `press-releases` and `gallery` categories were recreated on staging with the
+same slugs, and the content posts (news, press releases, CSR, gallery albums)
+were moved as named posts with their categories, featured images, and for
+gallery albums the `_met_album_url` value. Housekeeping done: `/sample-page/` and
+`/board-of-directors/naaimah-backup/` cleared.
 
 **The working method, owner-set.** Staging is the reference, not local. A staging
 page with good design is finished and is left alone. A page that is empty, or has
 bad design, is rebuilt on local and then moved up. Local is a workshop holding
 only the pages being built, never a copy of the site.
 
-### Not done
+### Deploy: done 2026-08-10
 
-- Remaining page designs: Board of Directors, Management Team, and the 9
-  `/business/` subsidiary pages. (Homepage, 25th Anniversary, Group of Companies,
-  News & Announcement, Media, Gallery, Press Releases, CSR and RISE2030 are
-  done.)
-- All six content pages are now built on local (see the table above). None are
-  waiting on content.
-- Homepage content to populate: no hero slides exist yet (static fallback shows),
-  the `announcements` category has 0 posts (empty state shows), and 0 of 9
-  business Pages have a featured image (sector-tinted empty states show). The
-  About image and the four stats are Customizer-editable.
-- **Code released as v1.11.0** on 2026-08-09: committed to `main`, tagged, and
-  the GitHub Action published the theme zip. The staging site still needs the
-  manual application (theme update on the dashboard, then content, menus,
-  Customizer and front page), which only the owner can do on the live wp-admin.
-  See [DEPLOY-TO-STAGING.md](DEPLOY-TO-STAGING.md). Until that is done, staging
-  runs 1.7.2.
-- The chrome toggle default is off, so a theme update alone changes nothing on
-  staging until the owner turns it on.
+The first full deploy is complete. Staging went from 1.7.2 to **1.11.1**, the
+chrome was turned on, all content posts and Elementor pages were moved, and the
+homepage was set as the front page. Every page was verified one by one by the
+owner. The site was presented to the Group MD/CEO on 2026-08-11. The full,
+executed procedure is [DEPLOY-TO-STAGING.md](DEPLOY-TO-STAGING.md).
+
+A hotfix, **v1.11.1**, was released mid-deploy: the homepage companies grid
+hardcoded the local `/business/` page ID (172), which is 33 on staging, so it
+resolved empty. It now resolves the parent by slug. See the PROJECT_LOG entry.
+
+**Temporary staging access.** The owner created a throwaway admin
+(`admin-claude-temporary`) for the deploy and planned to delete it once done. If
+it still exists, it should be removed.
+
+### Not done, for a future session
+
+- **Remaining page designs**, still on their original staging design, not yet
+  redesigned: Board of Directors, Management Team, and the nine `/business/`
+  subsidiary pages. (Homepage, 25th Anniversary, Group of Companies, News,
+  Media, Gallery, Press Releases, CSR and RISE2030 are all done and live.)
+- **Homepage content to enrich over time**: no hero slides exist yet (the static
+  fallback shows), and the nine `/business/` pages have no featured image (the
+  sector-tinted placeholder shows). Both are content entry, not code. Hero slides
+  are added under the Hero Slides menu; the companies grid fills its images from
+  each business page's featured image.
+- **Elementor Google Fonts**, still deferred (see below).
+- **MetCPT items**, a separate repo (see below).
 
 ### Elementor Google Fonts, deferred by the owner 2026-08-08
 

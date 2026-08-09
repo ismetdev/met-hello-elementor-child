@@ -20,6 +20,47 @@ transcripts, moved to the archive with those entries.
 
 ---
 
+## 2026-08-10: first full deploy to staging, complete and verified
+
+Staging went live with the whole revamp. This was the first time any of the
+1.8.0-to-1.11.1 work reached v2.iiumholdings.com.my; the site had been on 1.7.2.
+
+What was done, in order, by the owner on the live wp-admin (the agent cannot
+reach staging: Novamira is local only and HTTPS to staging is blocked from the
+shell, so the whole staging side was owner-executed from a written guide):
+
+1. Updated the theme to 1.11.1 with the chrome toggle off, confirmed nothing
+   changed, then turned chrome on and verified header, footer, menu, drawer.
+2. Built the three footer menus and assigned their locations.
+3. Set the Customizer values (logo, homepage stats and images, anniversary logo).
+4. Recreated the `press-releases` and `gallery` categories with matching slugs.
+5. Moved the content posts (news, press releases, CSR, gallery albums) with their
+   categories, featured images, and album URLs.
+6. Moved every Elementor page via Save as Template, export, import onto the
+   existing page. Re-picked images on the image-heavy pages; uploaded RISE2030's
+   two backgrounds, which were local only.
+7. Set the homepage: assigned the Homepage template to a page, Page Hero None,
+   and made it the static front page.
+8. Housekeeping: cleared `/sample-page/` and the `naaimah-backup` duplicate.
+
+Every page was checked one by one and approved. The site was presented to the
+Group MD/CEO on 2026-08-11.
+
+**Two things caught during the deploy, worth keeping:**
+
+- The listing pages looked empty at first. The posts were correct (the category
+  archive proved it); the pages were serving stale LiteSpeed cache from before
+  the posts existed. Purge plus Regenerate Elementor CSS fixed it. Lesson: after
+  moving content, always purge before judging a page empty.
+- The homepage companies grid was empty because of the hardcoded `/business/` ID.
+  Fixed and released as v1.11.1 mid-deploy (entry below).
+
+The step-by-step procedure, now executed once, is in
+[DEPLOY-TO-STAGING.md](DEPLOY-TO-STAGING.md), including the comprehensive
+walkthrough for the posts, pages and front page.
+
+---
+
 ## 2026-08-09: v1.11.1 hotfix, /business/ parent resolved by slug
 
 While deploying, the homepage companies grid came up empty on staging. Cause:
