@@ -12,7 +12,7 @@ Last updated: 2026-08-09
 | Shipped version | **1.11.0** in the working tree (pending tag, see Open items). Includes the never-tagged 1.8.0, 1.9.0 and 1.10.0 work, folded in rather than released separately |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
 | Branch | `main` |
-| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.7.1`, `v1.7.2`, `v1.11.0` (1.8.0 to 1.10.0 folded into 1.11.0, never tagged separately) |
+| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.7.1`, `v1.7.2`, `v1.11.0`, `v1.11.1` (1.8.0 to 1.10.0 folded into 1.11.0, never tagged separately) |
 | Parent theme | `hello-elementor` |
 | Requires | WordPress 6.0+ (tested to 6.5), PHP 7.4+ |
 | Text domain | `met-hello-child` (`/languages`) |

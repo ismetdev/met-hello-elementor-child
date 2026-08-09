@@ -20,6 +20,19 @@ transcripts, moved to the archive with those entries.
 
 ---
 
+## 2026-08-09: v1.11.1 hotfix, /business/ parent resolved by slug
+
+While deploying, the homepage companies grid came up empty on staging. Cause:
+`met_hello_child_get_companies()` and the sector backfill hardcoded
+`post_parent => 172`, the /business/ page ID on local. On staging that page is
+ID 33 (confirmed via the public REST API). Added
+`met_hello_child_business_parent_id()` in `inc/sectors.php`, which resolves the
+parent by slug (`get_page_by_path('business')`) and is filterable; both callers
+now use it. Same class of bug as the term IDs (D44) and attachment IDs (D42):
+hardcoded local IDs do not survive the move. Released as v1.11.1.
+
+---
+
 ## 2026-08-09: v1.11.0 released (code)
 
 Committed the folded 1.9.0, 1.10.0 and 1.11.0 work to `main` (commit 5e19747),
