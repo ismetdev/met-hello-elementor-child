@@ -1,0 +1,1238 @@
+/**
+ * Homepage styles. Loaded only on the Homepage template view
+ * (met_hello_child_is_home_view(), inc/homepage.php).
+ *
+ * Reads theme.json custom properties directly (the patterns.css precedent), not
+ * the tokens.css aliases. Everything is scoped under .met-home so it cannot
+ * touch .met-view, .met-page or .elementor. Mobile-first: base rules are the
+ * narrow layout, min-width queries widen it.
+ *
+ * Headings are Geist bold sans (design system decision, DECISIONS D35 note 5);
+ * the serif face is reserved for numerals and emblems (the "25", stat figures,
+ * RISE letters, the revenue figure).
+ *
+ * rgba() literals appear only as gradient scrims over photos or dark bands; each
+ * derives from a palette token noted alongside it.
+ */
+
+/* --------------------------------------------------------------------------
+   Ground and shared primitives
+   -------------------------------------------------------------------------- */
+.met-home {
+	background: var(--wp--preset--color--surface-raised);
+	color: var(--wp--preset--color--text);
+	font-family: var(--wp--preset--font-family--sans);
+	line-height: 1.6;
+	overflow-x: hidden;
+}
+
+.met-home *,
+.met-home *::before,
+.met-home *::after {
+	box-sizing: border-box;
+}
+
+.met-container {
+	max-width: var(--wp--style--global--wide-size, 1280px);
+	margin-inline: auto;
+	padding-inline: var(--wp--custom--gutter, clamp(20px, 4vw, 40px));
+}
+
+.met-home h1,
+.met-home h2,
+.met-home h3,
+.met-home h4 {
+	margin: 0;
+	font-family: var(--wp--preset--font-family--sans);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	line-height: 1.1;
+	/* Inherit the section's colour so headings on dark bands (hero, RISE,
+	   actions) come out light and headings on light bands come out dark, with no
+	   per-section overrides fighting a fixed value. */
+	color: inherit;
+}
+
+.met-home p {
+	margin: 0;
+}
+
+.met-home img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+/* Fill images: every image that has to cover its frame is listed here and
+   scoped under .met-home so it outranks the `.met-home img { height: auto }`
+   primitive above. That primitive is one class plus one element (0,1,1), so a
+   single-class rule like `.met-hero-home__bg` (0,1,0) loses to it and the image
+   collapses to its own natural height, leaving a gap under the hero as the
+   window narrows. Keeping the whole set in one scoped block stops that from
+   coming back one component at a time. */
+.met-home .met-hero-home__bg,
+.met-home .met-poster__frame img,
+.met-home .met-co-card__media img,
+.met-home .met-news-feat__media img,
+.met-home .met-news-item__thumb img,
+.met-home .met-about__visual img,
+.met-home .met-action__bg img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.met-home a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.met-section {
+	padding-block: var(--wp--custom--section-y, clamp(72px, 10vw, 128px));
+}
+
+.met-band {
+	background: var(--wp--preset--color--surface);
+}
+
+.met-section__head {
+	max-width: 60ch;
+	margin-bottom: clamp(30px, 5vw, 56px);
+}
+
+.met-section__head h2 {
+	font-size: clamp(28px, 4.4vw, 50px);
+	margin: 12px 0 10px;
+}
+
+.met-section__head p {
+	color: var(--wp--preset--color--text-secondary);
+	font-size: var(--wp--preset--font-size--lg);
+}
+
+/* Eyebrow */
+.met-eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.65rem;
+	font-size: 0.76rem;
+	font-weight: 700;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--accent-text);
+}
+
+.met-eyebrow::before {
+	content: "";
+	width: 26px;
+	height: 1.5px;
+	background: currentColor;
+}
+
+.met-eyebrow--on-dark {
+	color: var(--wp--preset--color--accent-soft);
+}
+
+/* Buttons */
+.met-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+	font-weight: 600;
+	font-size: 0.95rem;
+	line-height: 1.2;
+	padding: 0.8rem 1.5rem;
+	border-radius: 999px;
+	cursor: pointer;
+	border: 1.5px solid transparent;
+	transition: transform var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease),
+		background var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease),
+		border-color var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease),
+		color var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-btn:hover {
+	transform: translateY(-2px);
+}
+
+.met-btn--gold {
+	background: var(--wp--preset--color--accent);
+	color: var(--wp--preset--color--text-on-dark);
+}
+
+.met-btn--gold:hover {
+	background: var(--wp--preset--color--accent-soft);
+}
+
+.met-btn--ghost {
+	border-color: var(--wp--custom--border--hairline-strong);
+	color: var(--wp--preset--color--text);
+	background: transparent;
+}
+
+.met-btn--ghost:hover {
+	border-color: var(--wp--preset--color--text);
+}
+
+.met-btn--ghost-light {
+	border-color: rgba(255, 255, 255, 0.4); /* text-on-dark at 40% */
+	color: var(--wp--preset--color--text-on-dark);
+	background: transparent;
+}
+
+.met-btn--ghost-light:hover {
+	border-color: var(--wp--preset--color--text-on-dark);
+	background: rgba(255, 255, 255, 0.08); /* text-on-dark at 8% */
+}
+
+.met-btn--dark {
+	background: var(--wp--preset--color--surface-deepest);
+	color: var(--wp--preset--color--text-on-dark);
+}
+
+.met-btn--dark:hover {
+	background: var(--wp--preset--color--surface-dark);
+}
+
+/* Button text colour, scoped so it beats the `.met-home a { color: inherit }`
+   primitive. Without this, a gold or dark button on a light band inherits the
+   dark band text and the label goes dark. */
+.met-home a.met-btn--gold,
+.met-home a.met-btn--dark,
+.met-home a.met-btn--ghost-light {
+	color: var(--wp--preset--color--text-on-dark);
+}
+
+.met-home a.met-btn--ghost {
+	color: var(--wp--preset--color--text);
+}
+
+.met-home__arrow {
+	width: 20px;
+	height: 11px;
+	flex: none;
+}
+
+.met-empty-note {
+	color: var(--wp--preset--color--text-secondary);
+	font-size: var(--wp--preset--font-size--md);
+}
+
+/* Empty-state media: sector-tinted gradient over surface, with the geometric
+   pattern token. No <img>, so never a broken image. */
+.met-home__empty {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background-color: var(--wp--preset--color--surface);
+	background-image: var(--pattern-light);
+	background-repeat: repeat;
+	background-position: center;
+}
+
+.met-home__empty--education {
+	background-color: color-mix(in srgb, var(--wp--preset--color--sector-education) 12%, var(--wp--preset--color--surface));
+}
+
+.met-home__empty--infrastructure {
+	background-color: color-mix(in srgb, var(--wp--preset--color--sector-infrastructure) 12%, var(--wp--preset--color--surface));
+}
+
+.met-home__empty--healthcare {
+	background-color: color-mix(in srgb, var(--wp--preset--color--sector-healthcare) 12%, var(--wp--preset--color--surface));
+}
+
+/* Reveal-on-scroll. Base is visible, so no-JS and reduced-motion show content. */
+.met-home .met-reveal {
+	opacity: 1;
+	transform: none;
+}
+
+.met-home.met-home--js .met-reveal {
+	opacity: 0;
+	transform: translateY(22px);
+	transition: opacity var(--wp--custom--motion--slow, 520ms) var(--wp--custom--motion--ease, ease),
+		transform var(--wp--custom--motion--slow, 520ms) var(--wp--custom--motion--ease-out, ease);
+}
+
+.met-home.met-home--js .met-reveal.is-in {
+	opacity: 1;
+	transform: none;
+}
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+.met-hero-home {
+	position: relative;
+	background: var(--wp--preset--color--surface-deepest);
+	color: var(--wp--preset--color--text-on-dark);
+	overflow: hidden;
+}
+
+.met-hero-home__track {
+	position: relative;
+	min-height: clamp(480px, 72vh, 680px);
+}
+
+.met-hero-home__slide {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity var(--wp--custom--motion--slow, 520ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-hero-home__slide.is-active {
+	opacity: 1;
+	visibility: visible;
+}
+
+/* With JS off, only the first (active) slide is present; keep it in flow so the
+   band has height even without absolute siblings stacking. */
+.met-home:not(.met-home--js) .met-hero-home__slide {
+	position: relative;
+}
+
+.met-home:not(.met-home--js) .met-hero-home__slide:not(.is-active) {
+	display: none;
+}
+
+.met-hero-home__bg {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	z-index: 0;
+}
+
+.met-hero-home__slide::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	/* scrim from surface-deepest #082226 */
+	background: linear-gradient(90deg, rgba(8, 34, 38, 0.92), rgba(8, 34, 38, 0.72) 42%, rgba(8, 34, 38, 0.35));
+}
+
+.met-hero-home__inner {
+	position: relative;
+	z-index: 2;
+	width: 100%;
+	padding-block: 60px;
+}
+
+.met-hero-home__copy {
+	max-width: 34rem;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: clamp(1.1rem, 2vw, 1.7rem);
+}
+
+.met-hero-home__title {
+	font-size: clamp(2.2rem, 5vw, 3.9rem);
+	color: var(--wp--preset--color--text-on-dark);
+	margin: 0;
+	font-weight: 700;
+	line-height: 1.08;
+}
+
+.met-hero-home__body {
+	font-size: clamp(1.02rem, 1.5vw, 1.22rem);
+	color: rgba(255, 255, 255, 0.82); /* text-on-dark at 82% */
+	margin: 0;
+}
+
+.met-hero-home__cta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.9rem;
+}
+
+.met-hero-home__ui {
+	position: absolute;
+	z-index: 5;
+	left: 0;
+	right: 0;
+	bottom: 26px;
+}
+
+.met-hero-home__ui-inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.met-hero-home__dots {
+	display: flex;
+	gap: 0.55rem;
+}
+
+.met-hero-home__dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	border: 0;
+	background: rgba(255, 255, 255, 0.4); /* text-on-dark at 40% */
+	cursor: pointer;
+	padding: 0;
+	transition: width var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease),
+		background var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-hero-home__dot.is-active {
+	background: var(--wp--preset--color--accent-soft);
+	width: 30px;
+	border-radius: 999px;
+}
+
+.met-hero-home__nav {
+	display: none;
+	gap: 0.5rem;
+}
+
+.met-hero-home__arrow-btn {
+	width: 46px;
+	height: 46px;
+	border-radius: 50%;
+	border: 1px solid rgba(255, 255, 255, 0.28); /* text-on-dark at 28% */
+	background: rgba(255, 255, 255, 0.06);
+	color: var(--wp--preset--color--text-on-dark);
+	font-size: 1.2rem;
+	line-height: 1;
+	cursor: pointer;
+	transition: background var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-hero-home__arrow-btn:hover {
+	background: rgba(255, 255, 255, 0.16);
+}
+
+@media (min-width: 721px) {
+	.met-hero-home__nav {
+		display: flex;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   Announcements
+   -------------------------------------------------------------------------- */
+.met-ann__head {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	gap: 1.5rem;
+	flex-wrap: wrap;
+	margin-bottom: clamp(30px, 4vw, 50px);
+}
+
+.met-ann__head .met-section__head {
+	margin-bottom: 0;
+}
+
+.met-ann__grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--wp--custom--gutter, clamp(20px, 4vw, 40px));
+}
+
+.met-poster {
+	background: var(--wp--preset--color--surface-raised);
+	border: 1px solid var(--wp--custom--border--hairline);
+	border-radius: var(--wp--custom--radius--xl, 20px);
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	transition: transform var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease),
+		box-shadow var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-poster:hover {
+	transform: translateY(-5px);
+	box-shadow: var(--wp--custom--shadow--3);
+}
+
+.met-poster__frame {
+	position: relative;
+	aspect-ratio: 4 / 5;
+	overflow: hidden;
+	background: var(--wp--preset--color--surface);
+}
+
+.met-poster__frame img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform var(--wp--custom--motion--slow, 520ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-poster:hover .met-poster__frame img {
+	transform: scale(1.04);
+}
+
+.met-poster__tag {
+	position: absolute;
+	top: 12px;
+	left: 12px;
+	z-index: 2;
+	font-size: 0.64rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--text-on-dark);
+	background: var(--wp--preset--color--surface-dark);
+	padding: 0.3rem 0.6rem;
+	border-radius: 999px;
+}
+
+.met-poster__body {
+	padding: 16px 18px 20px;
+}
+
+.met-poster__title {
+	font-size: 1.04rem;
+	line-height: 1.25;
+	margin-bottom: 0.4rem;
+}
+
+.met-poster:hover .met-poster__title {
+	color: var(--wp--preset--color--surface-dark);
+}
+
+.met-poster__date {
+	font-size: 0.78rem;
+	color: var(--wp--preset--color--text-secondary);
+}
+
+@media (min-width: 521px) {
+	.met-ann__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (min-width: 941px) {
+	.met-ann__grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+/* --------------------------------------------------------------------------
+   Quick actions
+   -------------------------------------------------------------------------- */
+.met-actions {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: var(--wp--custom--gutter, clamp(20px, 4vw, 40px));
+}
+
+.met-action {
+	position: relative;
+	overflow: hidden;
+	border-radius: var(--wp--custom--radius--xl, 20px);
+	padding: clamp(28px, 4vw, 44px);
+	color: var(--wp--preset--color--text-on-dark);
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	align-items: flex-start;
+	gap: clamp(0.75rem, 1.4vw, 1.05rem);
+	min-height: 230px;
+	isolation: isolate;
+}
+
+/* Card text white, scoped so it beats the `.met-home a { color: inherit }`
+   primitive that otherwise drags it to the dark band colour. */
+.met-home a.met-action {
+	color: var(--wp--preset--color--text-on-dark);
+}
+
+.met-action::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+}
+
+/* Optional background photo behind the gradient. Sits at the very back so the
+   gradient keeps the text readable over any image. */
+.met-action__bg {
+	position: absolute;
+	inset: 0;
+	z-index: -2;
+}
+
+.met-action__bg img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.met-action--tender::after {
+	/* surface-dark #0E3B40 */
+	background: linear-gradient(120deg, rgba(14, 59, 64, 0.95), rgba(14, 59, 64, 0.7));
+}
+
+.met-action--career::after {
+	/* accent-text #85621E */
+	background: linear-gradient(120deg, rgba(133, 98, 30, 0.95), rgba(133, 98, 30, 0.7));
+}
+
+.met-action__title {
+	font-size: 1.7rem;
+	color: var(--wp--preset--color--text-on-dark);
+	margin: 0;
+}
+
+.met-action p {
+	color: rgba(255, 255, 255, 0.85); /* text-on-dark at 85% */
+	font-size: 0.98rem;
+	max-width: 38ch;
+	margin: 0;
+}
+
+.met-action__go {
+	margin: 0;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-weight: 600;
+	font-size: 0.95rem;
+}
+
+.met-action__go .met-home__arrow {
+	transition: transform var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-action:hover .met-action__go .met-home__arrow {
+	transform: translateX(4px);
+}
+
+@media (min-width: 721px) {
+	.met-actions {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   About
+   -------------------------------------------------------------------------- */
+.met-about__grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(30px, 5vw, 72px);
+	align-items: center;
+}
+
+.met-about__title {
+	font-size: clamp(2rem, 4vw, 2.9rem);
+	margin: 1rem 0 1.3rem;
+}
+
+.met-about__lead {
+	font-size: 1.15rem;
+	color: var(--wp--preset--color--text);
+	margin-bottom: 1.1rem;
+}
+
+.met-about__body {
+	color: var(--wp--preset--color--text-secondary);
+	margin-bottom: 1.6rem;
+}
+
+.met-about__visual {
+	position: relative;
+	border-radius: var(--wp--custom--radius--xl, 20px);
+	overflow: hidden;
+	aspect-ratio: 4 / 3;
+	box-shadow: var(--wp--custom--shadow--3);
+}
+
+.met-about__visual img,
+.met-about__visual .met-home__empty {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.met-about__emblem {
+	position: absolute;
+	right: 18px;
+	bottom: 18px;
+	background: rgba(255, 255, 255, 0.94); /* surface-raised at 94% */
+	border-radius: 14px;
+	padding: 14px 18px;
+	text-align: center;
+	box-shadow: var(--wp--custom--shadow--3);
+}
+
+.met-about__emblem-n {
+	font-family: var(--wp--preset--font-family--serif);
+	font-size: 1.9rem;
+	color: var(--wp--preset--color--accent-text);
+	line-height: 1;
+}
+
+.met-about__emblem-t {
+	font-size: 0.66rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--text-secondary);
+	margin-top: 0.15rem;
+}
+
+@media (min-width: 901px) {
+	.met-about__grid {
+		grid-template-columns: 1.05fr 0.95fr;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   Stats
+   -------------------------------------------------------------------------- */
+.met-stats {
+	background: var(--wp--preset--color--surface-dark);
+	color: var(--wp--preset--color--text-on-dark);
+}
+
+.met-stats__row {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1px;
+	background: var(--wp--custom--border--hairline-light);
+	border-radius: var(--wp--custom--radius--xl, 20px);
+	overflow: hidden;
+}
+
+.met-stat {
+	background: var(--wp--preset--color--surface-dark);
+	padding: clamp(26px, 3.5vw, 42px) clamp(18px, 2.5vw, 30px);
+	text-align: center;
+}
+
+.met-stat__n {
+	font-family: var(--wp--preset--font-family--serif);
+	font-size: clamp(2.4rem, 4.5vw, 3.4rem);
+	color: var(--wp--preset--color--accent-soft);
+	line-height: 1;
+}
+
+.met-stat__t {
+	font-size: 0.92rem;
+	color: rgba(255, 255, 255, 0.78); /* text-on-dark at 78% */
+	margin-top: 0.6rem;
+}
+
+@media (min-width: 721px) {
+	.met-stats[data-count="3"] .met-stats__row {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.met-stats[data-count="4"] .met-stats__row {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+/* --------------------------------------------------------------------------
+   Companies
+   -------------------------------------------------------------------------- */
+.met-companies__filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.55rem;
+	margin-bottom: clamp(26px, 4vw, 42px);
+}
+
+.met-companies__filters button {
+	font-family: var(--wp--preset--font-family--sans);
+	font-weight: 600;
+	font-size: 0.9rem;
+	border: 1px solid var(--wp--custom--border--hairline-strong);
+	background: var(--wp--preset--color--surface-raised);
+	color: var(--wp--preset--color--text);
+	padding: 0.55rem 1.1rem;
+	border-radius: 999px;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-height: 44px;
+	transition: transform var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease),
+		background var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-companies__filters button:hover {
+	transform: translateY(-2px);
+}
+
+.met-companies__filters button[aria-pressed="true"] {
+	background: var(--wp--preset--color--surface-dark);
+	color: var(--wp--preset--color--text-on-dark);
+	border-color: var(--wp--preset--color--surface-dark);
+}
+
+.met-cdot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	flex: none;
+}
+
+.met-cdot--education {
+	background: var(--wp--preset--color--sector-education);
+}
+
+.met-cdot--infrastructure {
+	background: var(--wp--preset--color--sector-infrastructure);
+}
+
+.met-cdot--healthcare {
+	background: var(--wp--preset--color--sector-healthcare);
+}
+
+.met-companies__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: var(--wp--custom--gutter, clamp(20px, 4vw, 40px));
+}
+
+.met-co-card {
+	position: relative;
+	background: var(--wp--preset--color--surface-raised);
+	border: 1px solid var(--wp--custom--border--hairline);
+	border-radius: var(--wp--custom--radius--xl, 20px);
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	transition: transform var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease),
+		box-shadow var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-co-card:hover {
+	transform: translateY(-6px);
+	box-shadow: var(--wp--custom--shadow--3);
+}
+
+.met-co-card.is-hidden {
+	display: none;
+}
+
+.met-co-card__media {
+	position: relative;
+	aspect-ratio: 16 / 10;
+	overflow: hidden;
+	background: var(--wp--preset--color--surface);
+}
+
+.met-co-card__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform var(--wp--custom--motion--slow, 520ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-co-card:hover .met-co-card__media img {
+	transform: scale(1.05);
+}
+
+.met-co-badge {
+	position: absolute;
+	top: 13px;
+	left: 13px;
+	z-index: 2;
+	font-size: 0.66rem;
+	font-weight: 700;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--text-on-dark);
+	padding: 0.32rem 0.65rem;
+	border-radius: 999px;
+	background: var(--wp--preset--color--surface-dark);
+}
+
+.met-co-card--education .met-co-badge {
+	background: var(--wp--preset--color--sector-education);
+}
+
+.met-co-card--infrastructure .met-co-badge {
+	background: var(--wp--preset--color--sector-infrastructure);
+}
+
+.met-co-card--healthcare .met-co-badge {
+	background: var(--wp--preset--color--sector-healthcare);
+}
+
+.met-co-card__body {
+	padding: 20px 22px 24px;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+}
+
+.met-co-card__title {
+	font-size: 1.16rem;
+	margin-bottom: 0.4rem;
+}
+
+.met-co-card__desc {
+	color: var(--wp--preset--color--text-secondary);
+	font-size: 0.92rem;
+	flex: 1;
+}
+
+.met-co-card__link {
+	margin-top: 1.1rem;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	font-weight: 600;
+	font-size: 0.9rem;
+	color: var(--wp--preset--color--accent-text);
+	align-self: flex-start;
+	transition: gap var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-co-card--education .met-co-card__link {
+	color: var(--wp--preset--color--sector-education-text);
+}
+
+.met-co-card--healthcare .met-co-card__link {
+	color: var(--wp--preset--color--sector-healthcare-text);
+}
+
+.met-co-card:hover .met-co-card__link {
+	gap: 0.8rem;
+}
+
+.met-co-card::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 3px;
+	z-index: 3;
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease);
+	background: var(--wp--preset--color--accent);
+}
+
+.met-co-card--education::before {
+	background: var(--wp--preset--color--sector-education);
+}
+
+.met-co-card--infrastructure::before {
+	background: var(--wp--preset--color--sector-infrastructure);
+}
+
+.met-co-card--healthcare::before {
+	background: var(--wp--preset--color--sector-healthcare);
+}
+
+.met-co-card:hover::before {
+	transform: scaleX(1);
+}
+
+/* --------------------------------------------------------------------------
+   RISE2030
+   -------------------------------------------------------------------------- */
+.met-rise {
+	background: var(--wp--preset--color--surface-deepest);
+	color: var(--wp--preset--color--text-on-dark);
+}
+
+.met-rise__grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(30px, 5vw, 64px);
+	align-items: center;
+}
+
+.met-rise__title {
+	font-size: clamp(2rem, 4vw, 3rem);
+	color: var(--wp--preset--color--text-on-dark);
+	/* More breathing room from the eyebrow above and the lead below. The gap to
+	   the target line (set on .met-rise__target) is intentionally left alone. */
+	margin: 1.6rem 0 1.2rem;
+}
+
+.met-rise__lead {
+	color: rgba(255, 255, 255, 0.78); /* text-on-dark at 78% */
+	margin-bottom: 2rem;
+	font-size: 1.1rem;
+}
+
+.met-rise__target {
+	margin-top: 1.8rem;
+	padding-top: 1.6rem;
+	border-top: 1px solid var(--wp--custom--border--hairline-light);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1.4rem;
+	align-items: baseline;
+}
+
+.met-rise__big {
+	font-family: var(--wp--preset--font-family--serif);
+	font-size: 2rem;
+	color: var(--wp--preset--color--accent-soft);
+}
+
+.met-rise__lbl {
+	color: rgba(255, 255, 255, 0.74); /* text-on-dark at 74% */
+	font-size: 0.98rem;
+}
+
+.met-rise__thrusts {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 14px;
+}
+
+.met-thrust {
+	background: rgba(255, 255, 255, 0.05); /* text-on-dark at 5% */
+	border: 1px solid var(--wp--custom--border--hairline-light);
+	border-radius: var(--wp--custom--radius--lg, 14px);
+	padding: 20px;
+}
+
+.met-thrust__l {
+	width: 42px;
+	height: 42px;
+	border-radius: 11px;
+	background: var(--wp--preset--color--accent);
+	color: var(--wp--preset--color--surface-deepest);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: var(--wp--preset--font-family--serif);
+	font-size: 1.3rem;
+	margin-bottom: 0.9rem;
+}
+
+.met-thrust__t {
+	font-family: var(--wp--preset--font-family--sans);
+	font-size: 0.98rem;
+	font-weight: 600;
+	color: var(--wp--preset--color--text-on-dark);
+	line-height: 1.35;
+	margin: 0;
+}
+
+@media (min-width: 521px) {
+	.met-rise__thrusts {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+@media (min-width: 901px) {
+	.met-rise__grid {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   Newsroom
+   -------------------------------------------------------------------------- */
+.met-news__head {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	gap: 1.5rem;
+	flex-wrap: wrap;
+	margin-bottom: clamp(30px, 4vw, 50px);
+}
+
+.met-news__head .met-section__head {
+	margin-bottom: 0;
+}
+
+.met-news__grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(24px, 4vw, 44px);
+}
+
+.met-news-feat {
+	border-radius: var(--wp--custom--radius--xl, 20px);
+	overflow: hidden;
+	background: var(--wp--preset--color--surface-raised);
+	border: 1px solid var(--wp--custom--border--hairline);
+	display: flex;
+	flex-direction: column;
+	transition: transform var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease),
+		box-shadow var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-news-feat:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--wp--custom--shadow--3);
+}
+
+.met-news-feat__media {
+	aspect-ratio: 16 / 9;
+	overflow: hidden;
+	background: var(--wp--preset--color--surface);
+}
+
+.met-news-feat__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform var(--wp--custom--motion--slow, 520ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-news-feat:hover .met-news-feat__media img {
+	transform: scale(1.04);
+}
+
+.met-news-feat__body {
+	padding: 24px clamp(22px, 3vw, 30px) 28px;
+}
+
+.met-news-feat__title {
+	font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+	margin: 0.7rem 0 0.6rem;
+	line-height: 1.15;
+}
+
+.met-news-feat__body p {
+	color: var(--wp--preset--color--text-secondary);
+}
+
+.met-news__list {
+	display: flex;
+	flex-direction: column;
+}
+
+.met-news-item {
+	display: grid;
+	grid-template-columns: 104px 1fr;
+	gap: 18px;
+	padding: 22px 0;
+	border-bottom: 1px solid var(--wp--custom--border--hairline);
+	transition: padding var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-news-item:first-child {
+	padding-top: 0;
+}
+
+.met-news-item:last-child {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+
+.met-news-item:hover {
+	padding-left: 6px;
+}
+
+.met-news-item__thumb {
+	width: 104px;
+	height: 78px;
+	border-radius: 10px;
+	overflow: hidden;
+	background: var(--wp--preset--color--surface);
+}
+
+.met-news-item__thumb img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.met-news-item__body {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.met-news-item__title {
+	font-size: 1.02rem;
+	font-weight: 700;
+	line-height: 1.3;
+	margin: 0.35rem 0;
+}
+
+.met-news-item:hover .met-news-item__title {
+	color: var(--wp--preset--color--surface-dark);
+}
+
+.met-cat {
+	font-size: 0.68rem;
+	font-weight: 700;
+	letter-spacing: 0.07em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--accent-text);
+}
+
+.met-news-item__meta {
+	font-size: 0.8rem;
+	color: var(--wp--preset--color--text-secondary);
+}
+
+@media (min-width: 901px) {
+	.met-news__grid {
+		grid-template-columns: 1.15fr 0.85fr;
+	}
+}
+
+/* --------------------------------------------------------------------------
+   CTA
+   -------------------------------------------------------------------------- */
+.met-cta {
+	background: var(--wp--preset--color--accent);
+}
+
+.met-cta__inner {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.5rem 2rem;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.met-cta__title {
+	font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+	color: var(--wp--preset--color--surface-deepest);
+	max-width: 20ch;
+}
+
+.met-cta__lead {
+	color: rgba(8, 34, 38, 0.78); /* surface-deepest at 78% */
+	margin-top: 0.5rem;
+	max-width: 40ch;
+}
+
+/* --------------------------------------------------------------------------
+   Focus and reduced motion
+   -------------------------------------------------------------------------- */
+.met-home a:focus-visible,
+.met-home button:focus-visible {
+	outline: 2px solid var(--wp--preset--color--accent);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.met-home *,
+	.met-home *::before,
+	.met-home *::after {
+		transition-duration: 0.001ms !important;
+		animation-duration: 0.001ms !important;
+	}
+
+	.met-home.met-home--js .met-reveal {
+		opacity: 1;
+		transform: none;
+	}
+}

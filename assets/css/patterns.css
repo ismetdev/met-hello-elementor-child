@@ -1,0 +1,201 @@
+/* =============================================================================
+   MET HELLO CHILD: block content patterns
+   -----------------------------------------------------------------------------
+   Component styles for Page bodies authored in the block editor (page.php),
+   scoped under .met-page so nothing leaks into Elementor-rendered content or
+   the theme's own native views (.met-view, assets/css/theme.css).
+
+   Values are matched line for line against the approved design file
+   (whistleblowing.html and its siblings in CLAUDE DESIGN), not approximated.
+
+   NOTE, corrected 2026-08-08: an earlier version of this comment claimed
+   headings here are bold sans by default. That was never true of this file,
+   which sets font-family exactly once (.met-step__num, serif). Heading family
+   comes from theme.json styles.elements.heading, which specifies the SERIF
+   family at weight 400. Pages built in Elementor set their own heading
+   typography per widget and are unaffected either way. The wrong comment
+   caused a real mis-fix; see DECISIONS D36 for the related token bug.
+
+   Reads theme.json custom properties directly (--wp--preset--*,
+   --wp--custom--*), the same source tokens.css aliases for the rest of the
+   theme. See PLAN/PRD-block-system.md phase 1.
+   ========================================================================== */
+
+/* Single width authority for every block-authored Page. Page Hero
+   (template-parts/page-hero.php) uses the same --wp--custom--gutter and the
+   same --wp--style--global--wide-size value under its own .container class;
+   matching them here, rather than letting WordPress's native block "layout"
+   constrain to a different effective width, is what keeps the page's own
+   intro and every section below it lined up on one edge. */
+.met-page__content {
+  max-width: var(--wp--style--global--wide-size, 1280px);
+  margin-inline: auto;
+  padding-inline: var(--wp--custom--gutter);
+  padding-block: var(--wp--custom--section-y);
+}
+.met-page__content > * + * { margin-top: var(--wp--custom--section-y); }
+
+/* Blocks nested inside .met-page__content already sit inside its max-width.
+   Post content wrapper groups are given no "layout" type (default/flow) in
+   the block markup for exactly this reason: WordPress's own "constrained" or
+   "flex" layout types print their own width- and display-governing CSS
+   under .is-layout-constrained / .is-layout-flex, which would compete with
+   the explicit grid/flex rules below rather than cooperate with them. */
+.met-page__content > .is-layout-constrained { max-width: none; }
+
+/* Same rule as theme.css's .met-view .eyebrow, unscoped: this page carries
+   .met-page, never .met-view, so that rule never reaches here on its own. */
+.met-page .eyebrow {
+  display: inline-flex; align-items: center; gap: var(--wp--preset--spacing--3);
+  font-size: var(--wp--preset--font-size--sm); font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--wp--preset--color--accent-text);
+}
+.met-page .eyebrow::before { content: ""; width: 28px; height: 2px; background: var(--wp--preset--color--accent-text); }
+.met-page .eyebrow--on-dark { color: var(--wp--preset--color--accent-soft); }
+.met-page .eyebrow--on-dark::before { background: var(--wp--preset--color--accent-soft); }
+
+/* --- Page intro: plain background, no band. The design's own .intro,
+   .intro__title, .intro__lead, reproduced exactly. --------------------- */
+.met-page__intro {
+  max-width: var(--wp--style--global--wide-size, 1280px);
+  margin-inline: auto;
+  padding-inline: var(--wp--custom--gutter);
+  padding-top: clamp(56px, 9vw, 120px);
+  padding-bottom: clamp(36px, 5vw, 56px);
+}
+.met-page__title {
+  margin-top: var(--wp--preset--spacing--5);
+  font-size: var(--wp--preset--font-size--hero);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  max-width: 16ch;
+  color: var(--wp--preset--color--text);
+}
+.met-page__lede {
+  margin-top: var(--wp--preset--spacing--6);
+  font-size: var(--wp--preset--font-size--lg);
+  line-height: 1.6;
+  color: var(--wp--preset--color--text-secondary);
+  max-width: 68ch;
+}
+
+/* --- Contact channel: dark card with a grid of contact methods ---------- */
+.met-channel {
+  background: var(--wp--preset--color--surface-deepest);
+  color: #fff;
+  border-radius: var(--wp--custom--radius--lg);
+  padding: clamp(36px, 5vw, 64px);
+}
+.met-channel__head { max-width: 60ch; }
+.met-channel__title {
+  margin-top: var(--wp--preset--spacing--4);
+  font-size: var(--wp--preset--font-size--2-xl, clamp(28px, 3vw, 36px));
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.met-channel__sub { margin-top: var(--wp--preset--spacing--4); color: rgba(255,255,255,.7); line-height: 1.6; }
+.met-channel__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(16px, 2vw, 24px);
+  margin-top: clamp(28px, 4vw, 40px);
+}
+.met-contact-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--wp--preset--spacing--4);
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: var(--wp--custom--radius--default);
+  padding: clamp(24px, 3vw, 32px);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color var(--wp--custom--motion--med) var(--wp--custom--motion--ease),
+              background var(--wp--custom--motion--med) var(--wp--custom--motion--ease),
+              transform var(--wp--custom--motion--med) var(--wp--custom--motion--ease);
+}
+.met-contact-card:hover { border-color: var(--wp--preset--color--accent-soft); background: rgba(255,255,255,.08); transform: translateY(-3px); }
+.met-contact-card__icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background-color: var(--wp--preset--color--accent-soft);
+  background-repeat: no-repeat; background-position: center; background-size: 22px 22px;
+}
+.met-contact-card__icon--phone { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" fill="%23082226"/></svg>'); }
+.met-contact-card__icon--email { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="%23082226"/></svg>'); }
+.met-contact-card__label { font-size: var(--wp--preset--font-size--xs); letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.55); font-weight: 600; }
+.met-contact-card__value { font-size: clamp(20px, 2.4vw, 26px); font-weight: 700; letter-spacing: -.02em; color: #fff; word-break: break-word; }
+.met-contact-card:hover .met-contact-card__value { color: var(--wp--preset--color--accent-soft); }
+.met-contact-card__hint { font-size: var(--wp--preset--font-size--sm); color: rgba(255,255,255,.55); margin-top: auto; }
+
+/* --- "What you can report": 2-col grid, text left, checklist right ----- */
+.met-report__grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
+.met-report__title { margin-top: var(--wp--preset--spacing--5); font-size: var(--wp--preset--font-size--3-xl, clamp(36px, 4.5vw, 56px)); font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; }
+.met-report__text { margin-top: var(--wp--preset--spacing--5); color: var(--wp--preset--color--text-secondary); line-height: 1.7; max-width: 46ch; }
+
+.met-checklist { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--wp--preset--spacing--4); }
+.met-checklist__item {
+  display: flex; align-items: flex-start; gap: var(--wp--preset--spacing--4);
+  background: var(--wp--preset--color--surface-raised);
+  border-radius: var(--wp--custom--radius--default);
+  padding: var(--wp--preset--spacing--5);
+  box-shadow: var(--wp--custom--shadow--1);
+}
+.met-checklist__mark {
+  flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(185,138,46,.14); color: var(--wp--preset--color--accent-text);
+  display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px;
+}
+.met-checklist__text { font-size: var(--wp--preset--font-size--base); font-weight: 500; line-height: 1.4; }
+
+/* --- Assurance band: light card, gold left border, icon + text -------- */
+.met-assurance {
+  display: grid; grid-template-columns: auto 1fr; gap: clamp(24px, 4vw, 44px); align-items: center;
+  background: var(--wp--preset--color--surface-raised);
+  border-left: 4px solid var(--wp--preset--color--accent-soft);
+  border-radius: var(--wp--custom--radius--lg);
+  padding: clamp(32px, 5vw, 56px);
+  box-shadow: var(--wp--custom--shadow--2);
+}
+/* A CSS background icon, not an inline <svg> in post_content: wp_kses_post()
+   strips <svg> and <path> from saved content by default, so an icon typed
+   into the block editor would vanish on the next save. Painting it here
+   keeps it out of content entirely. Colours are hardcoded hex, not var(),
+   because a data-URI SVG cannot read CSS custom properties from outside
+   itself; they are hand-matched to the tokens they stand in for. */
+.met-assurance__icon {
+  width: 88px; height: 88px; border-radius: 22px;
+  background-color: rgba(185,138,46,.12);
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z" stroke="%2385621E" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="%2385621E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 40px 40px;
+}
+.met-assurance__title { font-size: var(--wp--preset--font-size--xl); font-weight: 700; letter-spacing: -.02em; }
+.met-assurance__text { margin-top: var(--wp--preset--spacing--3); color: var(--wp--preset--color--text-secondary); line-height: 1.7; max-width: 70ch; }
+
+/* --- "How it works": section head + numbered steps --------------------- */
+.met-process__head { max-width: 60ch; }
+.met-process__title { margin-top: var(--wp--preset--spacing--5); font-size: var(--wp--preset--font-size--3-xl, clamp(36px, 4.5vw, 56px)); font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; }
+.met-steps { margin-top: clamp(28px, 4vw, 48px); display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 2.4vw, 32px); }
+.met-step {
+  background: var(--wp--preset--color--surface-raised);
+  border-radius: var(--wp--custom--radius--lg);
+  padding: clamp(24px, 2.6vw, 36px);
+  box-shadow: var(--wp--custom--shadow--1);
+}
+.met-step__num { font-family: var(--wp--preset--font-family--serif); font-size: 34px; color: var(--wp--preset--color--accent-text); line-height: 1; }
+.met-step__title { margin-top: var(--wp--preset--spacing--4); font-size: var(--wp--preset--font-size--lg); font-weight: 700; letter-spacing: -.015em; }
+.met-step__text { margin-top: var(--wp--preset--spacing--3); color: var(--wp--preset--color--text-secondary); font-size: var(--wp--preset--font-size--base); line-height: 1.6; }
+
+@media (max-width: 900px) {
+  .met-channel__grid { grid-template-columns: 1fr; }
+  .met-report__grid { grid-template-columns: 1fr; }
+  .met-assurance { grid-template-columns: 1fr; text-align: left; }
+  .met-steps { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .met-checklist { grid-template-columns: 1fr; }
+}

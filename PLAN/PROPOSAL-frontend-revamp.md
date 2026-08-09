@@ -1,6 +1,17 @@
 # PROPOSAL: front-end revamp of v2.iiumholdings.com.my
 
-Status: options for review, not approved
+> **Decision changed 2026-08-07.** This document recommended Option A (govern
+> Elementor from a token layer) now, Option C (block system, `theme.json`) as
+> the target, and that recommendation was taken on 2026-08-04. Option A shipped
+> as the 1.8.0 code and hit its ceiling immediately: a stylesheet cannot govern
+> Elementor content ([D27](../DOCS/DECISIONS.md#d27)). The project moved to
+> Option C on 2026-08-07, once the GMD demo was postponed and the three-day
+> deadline that ruled C out no longer applied. Section 2.5's measured PageSpeed
+> baseline is still the reference for "done when". The option comparison in
+> section 3 is still accurate and worth reading. Section 4's recommendation is
+> not. Current plan: [PRD-block-system.md](PRD-block-system.md).
+
+Status: options reviewed, decision superseded, was: options for review, not approved
 Author: Ismet, with Claude
 Date: 2026-08-04
 Decision needed by: 2026-08-04, because the GMD demo is 2026-08-07

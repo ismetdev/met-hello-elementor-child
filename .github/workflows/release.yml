@@ -30,7 +30,7 @@ jobs:
           # wp-content/themes/met-hello-elementor-child/ on the target site.
           mkdir -p build/met-hello-elementor-child
           # Everything except development-only files, which no site needs.
-          for item in $(ls -A | grep -vE '^(\.git|\.github|\.gitattributes|\.gitignore|\.editorconfig|\.claude|DOCS|composer\.json|composer\.lock|phpcs\.xml\.dist|vendor|node_modules|build)$'); do
+          for item in $(ls -A | grep -vE '^(\.git|\.github|\.gitattributes|\.gitignore|\.editorconfig|\.claude|DOCS|PLAN|composer\.json|composer\.lock|phpcs\.xml\.dist|vendor|node_modules|build)$'); do
             cp -r "$item" build/met-hello-elementor-child/
           done
           cd build

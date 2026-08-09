@@ -1,13 +1,18 @@
 <?php
 /**
- * Front-end assets: fonts, the design stylesheet, and resource hints.
+ * Front-end assets: the design stylesheet and the token layer.
  *
- * The Google Fonts and theme.css enqueue below are gated by
- * met_hello_child_is_styled_view() or, for Elementor Pages carrying a Page
- * Hero, met_hello_child_page_has_hero() (inc/page-hero.php). Any other page
- * stays plain Hello Elementor and loads none of it. Note the full-width body
- * class in inc/setup.php stays tied to the narrower styled-view test only:
- * Elementor Full Width Pages already render edge to edge.
+ * Fonts (Geist, Instrument Serif) are self-hosted as of v1.9.0, declared in
+ * theme.json's fontFace entries (PLAN/PRD-design-system.md section 4.6). Core
+ * prints their @font-face rules as part of the global-styles stylesheet
+ * automatically; nothing in this file enqueues them.
+ *
+ * The theme.css enqueue below is gated by met_hello_child_is_styled_view() or,
+ * for Elementor Pages carrying a Page Hero, met_hello_child_page_has_hero()
+ * (inc/page-hero.php). Any other page stays plain Hello Elementor and loads
+ * none of it. Note the full-width body class in inc/setup.php stays tied to
+ * the narrower styled-view test only: Elementor Full Width Pages already
+ * render edge to edge.
  *
  * The token layer enqueued by met_hello_child_enqueue_tokens() is the one
  * exception to that gate, sitewide with no condition, same reasoning as
@@ -23,21 +28,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Google Fonts stylesheet URL for the editorial type (Geist + Instrument Serif).
- *
- * TODO: self-host fonts. To move off the Google Fonts CDN, drop the font files
- * into assets/fonts, ship a local @font-face stylesheet, and return its URL from
- * this one function. Nothing else needs to change.
- *
- * @return string
- */
-function met_hello_child_fonts_url() {
-	return 'https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap';
-}
-
-/**
- * Enqueue the design stylesheet and fonts, on the theme's styled views and on
- * any Page carrying a Page Hero (inc/page-hero.php).
+ * Enqueue the design stylesheet on the theme's styled views and on any Page
+ * carrying a Page Hero (inc/page-hero.php).
  *
  * Hello Elementor ships its CSS as reset.css (handle "hello-elementor") and
  * theme.css (handle "hello-elementor-theme-style"), both enqueued by the parent
@@ -52,9 +44,6 @@ function met_hello_child_enqueue_styles() {
 		return;
 	}
 
-	// Fonts first (null version: Google serves its own cache headers).
-	wp_enqueue_style( 'met-hello-child-fonts', met_hello_child_fonts_url(), array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- null is deliberate, see the comment above.
-
 	// Depends on met-hello-child-tokens (registered by
 	// met_hello_child_enqueue_tokens() above) for the :root custom properties
 	// this file's rules read. WP resolves style dependencies at print time,
@@ -62,7 +51,7 @@ function met_hello_child_enqueue_styles() {
 	wp_enqueue_style(
 		'met-hello-child',
 		MET_HELLO_CHILD_URI . 'assets/css/theme.css',
-		array( 'hello-elementor', 'hello-elementor-theme-style', 'met-hello-child-fonts', 'met-hello-child-tokens' ),
+		array( 'hello-elementor', 'hello-elementor-theme-style', 'met-hello-child-tokens' ),
 		MET_HELLO_CHILD_VERSION
 	);
 }
@@ -99,21 +88,22 @@ function met_hello_child_enqueue_tokens() {
 add_action( 'wp_enqueue_scripts', 'met_hello_child_enqueue_tokens' );
 
 /**
- * Preconnect to the Google Fonts hosts, but only where the fonts actually load.
- *
- * @param array  $urls          Resource-hint URLs for the given relation.
- * @param string $relation_type Current relation type.
- * @return array
+ * Enqueue the block content pattern styles, only on Pages that render through
+ * page.php (met_hello_child_is_block_page(), inc/setup.php) rather than
+ * Elementor. theme.json's global-styles stylesheet, which this file's
+ * var(--wp--preset--*) and var(--wp--custom--*) references depend on, is
+ * printed by core on every request, so no explicit dependency is needed here.
  */
-function met_hello_child_resource_hints( $urls, $relation_type ) {
-	if ( 'preconnect' === $relation_type && ( met_hello_child_is_styled_view() || met_hello_child_page_has_hero() ) ) {
-		$urls[] = 'https://fonts.googleapis.com';
-		$urls[] = array(
-			'href'        => 'https://fonts.gstatic.com',
-			'crossorigin' => 'anonymous',
-		);
+function met_hello_child_enqueue_patterns() {
+	if ( ! met_hello_child_is_block_page() ) {
+		return;
 	}
 
-	return $urls;
+	wp_enqueue_style(
+		'met-hello-child-patterns',
+		MET_HELLO_CHILD_URI . 'assets/css/patterns.css',
+		array(),
+		MET_HELLO_CHILD_VERSION
+	);
 }
-add_filter( 'wp_resource_hints', 'met_hello_child_resource_hints', 10, 2 );
+add_action( 'wp_enqueue_scripts', 'met_hello_child_enqueue_patterns' );

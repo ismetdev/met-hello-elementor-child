@@ -103,14 +103,14 @@ function met_hello_child_render_page_hero_meta_box( $post ) {
 	$met_hero_cta2_label = get_post_meta( $post->ID, '_met_hero_cta2_label', true );
 	$met_hero_cta2_url   = get_post_meta( $post->ID, '_met_hero_cta2_url', true );
 	?>
-	<p>
-		<label for="met_hero_variant"><strong><?php esc_html_e( 'Variant', 'met-hello-child' ); ?></strong></label><br>
-		<select name="met_hero_variant" id="met_hero_variant">
-			<option value=""><?php esc_html_e( 'None (no hero on this page)', 'met-hello-child' ); ?></option>
-			<option value="standard" <?php selected( $met_hero_variant, 'standard' ); ?>><?php esc_html_e( 'Standard: compact petrol band', 'met-hello-child' ); ?></option>
-			<option value="business" <?php selected( $met_hero_variant, 'business' ); ?>><?php esc_html_e( 'Business: tall hero with tag and buttons', 'met-hello-child' ); ?></option>
-		</select>
-	</p>
+	<fieldset>
+		<legend><strong><?php esc_html_e( 'Variant', 'met-hello-child' ); ?></strong></legend>
+		<p>
+			<label><input type="radio" name="met_hero_variant" value="" <?php checked( ! in_array( $met_hero_variant, met_hello_child_page_hero_variants(), true ) ); ?>> <?php esc_html_e( 'None (no hero on this page)', 'met-hello-child' ); ?></label><br>
+			<label><input type="radio" name="met_hero_variant" value="standard" <?php checked( $met_hero_variant, 'standard' ); ?>> <?php esc_html_e( 'Standard: compact petrol band', 'met-hello-child' ); ?></label><br>
+			<label><input type="radio" name="met_hero_variant" value="business" <?php checked( $met_hero_variant, 'business' ); ?>> <?php esc_html_e( 'Business: tall hero with tag and buttons', 'met-hello-child' ); ?></label>
+		</p>
+	</fieldset>
 	<p class="description">
 		<?php esc_html_e( 'The hero only renders when the Page Attributes layout is set to Elementor Full Width or Elementor Canvas.', 'met-hello-child' ); ?>
 	</p>
@@ -137,13 +137,17 @@ function met_hello_child_render_page_hero_meta_box( $post ) {
 	</div>
 	<script>
 	( function () {
-		var select = document.getElementById( 'met_hero_variant' );
+		var radios = document.querySelectorAll( 'input[name="met_hero_variant"]' );
 		var fields = document.getElementById( 'met_hero_business_fields' );
-		if ( ! select || ! fields ) {
+		if ( ! radios.length || ! fields ) {
 			return;
 		}
-		select.addEventListener( 'change', function () {
-			fields.style.display = 'business' === select.value ? '' : 'none';
+		function sync() {
+			var checked = document.querySelector( 'input[name="met_hero_variant"]:checked' );
+			fields.style.display = checked && 'business' === checked.value ? '' : 'none';
+		}
+		radios.forEach( function ( radio ) {
+			radio.addEventListener( 'change', sync );
 		} );
 	} )();
 	</script>

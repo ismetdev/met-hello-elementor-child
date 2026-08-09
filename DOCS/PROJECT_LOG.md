@@ -2,538 +2,579 @@
 
 What was built and when. Newest first.
 
-Reading this file: the newest entries are at the top, so the first 40 lines are
-usually enough. Read further only when you need older history. When this file
-passes about 200 lines, archive entries older than the current year into
-`DOCS/archive/PROJECT_LOG-<year>.md`.
+**Reading this file.** Newest first. Read the top entry whole, then stop,
+unless the task is about older history. Everything before v1.9.0 is in
+[archive/PROJECT_LOG-2026.md](archive/PROJECT_LOG-2026.md); there is an index
+of it at the bottom of this file, so you can tell whether you need to open it
+without opening it.
 
-**Provenance.** Reconstructed on 2026-08-01. Versions 1.0.0 to 1.4.2 were built on
-the home machine, and Claude Code transcripts do not sync between machines, so the
-office laptop has none of those sessions. The entries below come from the
-`readme.txt` changelog, git history, the code itself, and one cross-reference in
-the MetCPT session of 2026-07-29. Dates for 1.0.0 to 1.3.0 are phase attributions,
-not commit dates: all three commits in this repo were made on 2026-07-07, when the
-finished theme was first pushed to GitHub. From here on, log as work happens.
+**Archived 2026-08-07**, at 712 lines, down to 209. See
+[DECISIONS D23](DECISIONS.md#d23), which was amended the same day: the
+original rule said to archive entries older than the current year, and every
+entry was from the current year, so it could never fire. It now archives by
+version era.
 
----
-
-## 2026-08-04: v1.8.0 code, sitewide token layer and the Elementor main-landmark fix
-
-GMD demo is 2026-08-07. PageSpeed baseline measured first, owner-supplied:
-mobile 61 on the homepage and Board of Directors (LCP 11.9s and 10.9s), 74 on
-IKOP Pharma. Desktop 89-96 on all three, no problem there. Total Blocking
-Time near zero on all three, so the loss is images and render-blocking CSS,
-not the JavaScript from Elementor, Essential Addons or Ultimate Addons.
-Accessibility 90 on all three, same four failing checks on every page.
-
-Reasoning and options: [PLAN/PROPOSAL-frontend-revamp.md](../PLAN/PROPOSAL-frontend-revamp.md).
-Build plan: [PLAN/PRD-design-tokens.md](../PLAN/PRD-design-tokens.md). Decided:
-Option A (govern Elementor from a token layer) now, Option C (block theme,
-`theme.json`) as the target, Option B (rebuild pages, Customizer-edited)
-rejected as below industry standard for a content team. Keep Essential Addons
-and Ultimate Addons, configure them, remove later under C.
-
-Shipped in code, verified on local `v2`, not yet on staging:
-
-- `assets/css/tokens.css`: the merged `:root` token set from `theme.css` and
-  the `CLAUDE DESIGN` reference files, no value changed, no name collision
-  found. Loads sitewide, no gate.
-- `assets/css/elementor-base.css`: base rules scoped to Elementor's own class
-  names, so the tokens reach Elementor-rendered content without any page
-  being edited. One `!important`, the `prefers-reduced-motion` block,
-  documented inline.
-- `theme.css` no longer defines its own `:root`, depends on `tokens.css`
-  instead. Confirmed on local `v2`: the single post view still renders
-  correctly, `theme.css`'s file has zero `:root {` blocks left.
-- Found, by reading Hello Elementor's and Elementor's own source, that every
-  Elementor Page on the site (Full Width or Canvas template) rendered with no
-  `<main>` landmark: the parent theme's header.php never prints one, and
-  Elementor's page templates call get_header()/get_footer() with nothing else
-  between. That also left the parent theme's skip link pointing at a target
-  that did not exist. Fixed from the child theme only, hooked on the same
-  before/after content actions Page Hero already uses. Verified on a live
-  Full Width Page (Whistle Blowing) on local `v2`: one `<main>` open, one
-  close, skip link now resolves. Not verified against a live Canvas Page, none
-  exists locally; same code path, read directly from Elementor's `canvas.php`.
-- phpcs clean.
-
-Full reasoning: [DECISIONS.md D27](DECISIONS.md#d27).
-
-Deliberately not done in code, since it is database/server state that does
-not travel with a release, or needs the live page to see: image optimisation,
-CSS delivery tuning, the Board of Directors 154 KiB unused-CSS outlier,
-footer social link accessible names, the desktop CLS 0.096 source, Elementor
-Global Colours/Fonts, and the responsive walk. Step-by-step for all of it:
-[PLAN/STAGING-CHECKLIST-1.8.0.md](../PLAN/STAGING-CHECKLIST-1.8.0.md).
-
-Not yet tagged or released. Owner reviews before `git push` and the tag.
+**Writing here:** log as work happens, newest at the top. The provenance note
+for v1.0.0 to v1.4.2, which were built on the home machine with no synced
+transcripts, moved to the archive with those entries.
 
 ---
 
-## 2026-08-04: v1.8.0 correction, Elementor's own generated CSS beats a generic base layer
+## 2026-08-09: RISE2030 strategy page built in Elementor
 
-Owner tested v1.8.0 live on local `v2` by building a real page with Elementor
-(Whistle Blowing). Confirmed working: the `<main>` landmark, present exactly
-once, in the right place. Disproved: the heading font-family rule in
-`elementor-base.css`, shown losing in DevTools to `post-86.css`, a CSS file
-Elementor generates per page that bakes the Kit's default typography into a
-rule scoped to that widget's own element ID, three classes deep. That beats
-a generic two-class rule on plain specificity, always, for every
-default-styled widget, which is nearly all of them.
+Built `/rise2030-strategy-blueprint/` (page 160) from the owner-approved design
+(`rise2030-content.html`), choosing Hero Option A and Objectives Layout 1. Six
+sections: photo hero with the RISE2030 wordmark, About + a 2x2 KPI band, the
+four-thrust framework with all ten strategic objectives nested under R/I/S/E,
+divisional targets for the four divisions, five group-initiative cards, and a
+closing band. Page Hero set to None, since the design carries its own hero.
 
-Removed the now-dead heading and text-editor font/size rules from
-`elementor-base.css`. What is left (focus outline, reduced motion,
-box-sizing, overflow safety) is not Kit-driven the same way and does survive.
-Container width rule kept with a caveat, not yet verified against the same
-override.
+Built from native Elementor containers and widgets with theme.json hex baked per
+widget, per [D41](DECISIONS.md#d41). HTML widgets used only where the plugins
+cannot express the design: the two-tone headings (RISE2030, and the
+REALISE/IMPROVE/SECURE/ELEVATE thrust titles) and the four coloured letter
+badges. Everything else, including the nested objective grids with hairline
+dividers, the KPI and divisional grids, and the initiative icon cards, is native.
+The two background photos were imported into the media library, never hotlinked
+([D42](DECISIONS.md#d42)).
 
-Confirmed the real lever for Elementor-authored typography and colour is
-Elementor's own Global Fonts and Global Colours, PRD step 10, not a
-stylesheet. Then hit a second, separate problem trying to use it: Geist is
-not in Elementor Free's font list, and Elementor's custom-font upload is a
-Pro feature. Decided, owner's call: set Elementor Global Fonts to **Inter**
-instead of adding a plugin or a font-registration snippet this close to the
-demo. Native theme views keep true Geist, unaffected. Elementor pages and
-native views will not match exactly until Geist is registered for Elementor
-after the demo.
+**One Elementor flex quirk cost a fix:** container children default to
+`flex-grow: 1`, so the 56px letter badges stretched into wide bars inside their
+flex-row header. Setting `_flex_grow: 0` on the child did not take, so the badges
+were converted to fixed 56px HTML squares. Worth remembering for any fixed-size
+box inside a flex-row container.
 
-Full reasoning and the correction to the original D27 entry:
-[DECISIONS.md D27](DECISIONS.md#d27).
-
-Still not tagged or released. Global Fonts/Colours (step 10) now needs doing
-before the release, not after, since it is load-bearing for the demo, not
-just a nice-to-have.
-
-**Update, same day:** owner set Elementor Global Fonts (Primary, Secondary,
-Text, Accent all Inter) and Global Colours (Primary, Secondary) on local
-`v2`. Confirmed in DevTools Computed panel: Inter now appears and wins for a
-default-styled heading. This is the first live proof that Global Fonts is
-the correct, working lever, not just a read of Elementor's source. Still
-needs doing again on staging separately: Elementor's Site Settings live in
-the database, so this does not travel with the theme release (PRD section
-3.4).
+Verified at 390/768/1366/1920: no horizontal overflow, exactly one h1 (the hero),
+no broken images, badges square, two-tone titles correct. Novamira `check-design`
+returns no failures, two expected warnings: "elevate" (the actual name of Thrust
+4 in the R.I.S.E. framework, not filler) and off-palette colours (the approved
+design's petrol/gold/sand brand values plus the four intentional thrust and
+division accents, the same reason the sector colours warn). With this, the only
+remaining page designs are Board of Directors, Management Team, and the nine
+`/business/` subsidiary pages.
 
 ---
 
-## 2026-08-03: Page Hero and Scroll to Top closed out on live staging
+## 2026-08-09: content listing system (v1.11.0), Media and News pages built
 
-Owner confirmed: 1.7.2's mobile-visibility fix works on staging. Page Hero
-standard variant applied to all 16 target Pages on staging. Business variant
-(no icon, per the earlier mid-build removal) rolled out to the 9
-`/business/` Pages, confirmed on local and staging. Current accent colour
-shows no visible problem to the owner; the computed WCAG contrast fail
-stands as a known fact, not something being changed.
+Built the mechanism for the site's list-of-posts pages, then the two pages that
+have content today. The three that do not (press releases, gallery, CSR) wait on
+content; each is one Elementor page plus one shortcode when ready. Full plan:
+[PLAN/PRD-content-pages.md](../PLAN/PRD-content-pages.md).
 
-Owner abandoned the Lighthouse performance pass: most of each page's content
-is the owner's own Elementor build, not theme code, so the score would not
-reflect the theme's work. Not tracked further.
+**The `[met_posts]` shortcode** (`inc/listing.php`) renders a token-styled list
+of Posts filtered by category **slug**, dropped into an Elementor Shortcode
+widget on an otherwise native page. The reason it is a shortcode and not an
+Essential Addons Post Grid is the move to staging: addon query controls store
+category term IDs, which differ between local and staging, so an imported page
+would list the wrong posts while passing every check. A slug is identical on both
+sites. See [D44](DECISIONS.md#d44). Attributes: `category`, `exclude_category`,
+`count`, `layout` (grid/list/album), `columns`, `featured`, `paged`, `empty`.
+Card markup is `template-parts/listing-card.php`; styles are
+`assets/css/listing.css`, scoped under `.met-list`, reading `theme.json`
+properties directly. The stylesheet loads only when the page actually uses the
+shortcode, detected in both `post_content` and `_elementor_data`.
 
-No open items remain for either feature. See STATE.md.
+**Content model.** News, press releases, CSR and gallery are all the standard
+`post` type, separated by category, not new post types ([D45](DECISIONS.md#d45)).
+Created two categories, `press-releases` and `gallery`; `csr` already existed.
 
----
+**Gallery albums stay on Facebook.** A gallery Post holds a cover and a
+description; the photos live in a Facebook album, linked by a new `_met_album_url`
+meta key (`inc/albums.php`). `single.php` renders a "View the full album" button
+when it is set. This is the owner's three-year practice, kept deliberately to
+avoid refilling the hosting disk; it is written down as [D46](DECISIONS.md#d46)
+so a later session does not "fix" it by uploading the images. No new image size
+was added.
 
-## 2026-08-03: v1.7.2, fix Scroll to Top missing on phone/tablet widths
+**Two pages built** in Elementor from native widgets, both keeping the theme's
+standard Page Hero above the body:
 
-Ran the PRD's step-6 verification pass on both shipped features (Page Hero,
-Scroll to Top). No headless browser available in this environment, so this
-was done by fetching real pages from local `v2` over HTTP and inspecting the
-served HTML/CSS directly, plus computing WCAG contrast ratios from the actual
-hex values, rather than Lighthouse or a screenshot. Confirmed: one `<h1>` per
-page, correct `aria-label`/`aria-hidden`, served CSS matches the repo
-(specificity fix from the prior entry is live), keyboard/reduced-motion/
-screen-reader behaviour all correct, `44px+` touch target. Found the current
-live-staging accent colour (`#e0dd31`) fails WCAG AA badly against white
-(1.44:1), which is expected under D26's "not policed" design but worth
-knowing. Local only has 2 real Pages (`whistle-blowing`,
-`sample-page`), so `/board-charter/`, `/gallery/`, `/events/` and the
-Lighthouse pass could not be checked from here; user ran those manually.
+| Page | ID | Body |
+|---|---|---|
+| `/news-announcement/` | 170 | `[met_posts featured="yes" count="9" columns="3" paged="yes"]` plus a dark CTA band to Press Releases and Gallery |
+| `/media/` | 171 | A three-card hub (News, Press Releases, Gallery) plus a Media enquiries CTA to Contact us. No shortcode, so `listing.css` correctly does not load here |
 
-User's manual pass on live staging found a real bug: the Scroll to Top
-button was visible at laptop/desktop widths but missing at phone/tablet
-widths. Root cause: `position:fixed` positions against the nearest ancestor
-with a `transform` set, not the screen, if one exists between the button and
-`<body>`. Neither Hello Elementor's nor Elementor plugin's own core CSS sets
-a transform on `<body>` or a wrapper (checked both), so the culprit is most
-likely in the live site's own Theme Builder header/mobile-menu markup, not
-identified further since it did not need to be: the fix does not depend on
-knowing which element it is.
+**Verification.** phpcs clean across the new and changed PHP. Ten shortcode unit
+checks including a misspelled slug and a `'"><script>` injection, both of which
+return the empty state rather than every post or raw markup. Headless Chrome at
+390/768/1366/1920 on both pages: no horizontal overflow, exactly one `h1`, nine
+cards with nine images and zero broken on News, chrome responsive with the drawer
+at mobile. The two image-less posts render the sector-tinted fallback, not a
+broken image. Album button confirmed on a single post, then the test meta
+removed. Novamira `check-design` returns zero violations.
 
-Fixed by re-parenting the button to a direct child of `<body>` at runtime, as
-the first action in `assets/js/scroll-top.js`, before the scroll listener
-attaches. Full reasoning in [DECISIONS.md D26](DECISIONS.md#d26). Not yet
-retested on live staging.
+**Theme code this release:** new `inc/listing.php`, `inc/albums.php`,
+`template-parts/listing-card.php`, `assets/css/listing.css`; `single.php` gained
+the album button; `theme.css` gained `.post-album` rules; version to 1.11.0.
+Nothing committed or tagged.
 
----
+**Follow-ups the same day, after owner review:**
 
-## 2026-08-03: v1.7.1 confirmed live: auto-updater worked, colour fix verified
-
-Retried the GitHub auto-updater on live staging for 1.7.1, this time with no
-error. Confirms the earlier 1.7.0 cURL 52 "Empty reply from server" was a
-one-off network blip, not a persistent block from the host: no code or
-config change was made to the updater between the two attempts. Closing that
-as resolved; no further action unless it recurs.
-
-User confirmed on live staging: colour, position, and on/off all work
-correctly. Both fixes below hold up outside the local environment they were
-diagnosed in.
-
----
-
-## 2026-08-03: v1.7.1, fix Scroll to Top colour on live staging
-
-1.7.0 shipped and installed on live staging by manual upload (the built-in
-GitHub updater failed with a cURL 52 "Empty reply from server" against the
-GitHub release asset; not investigated further since the manual path worked
-and the user chose not to retry the auto-updater first).
-
-On staging, the button's on/off and position settings worked from the
-Customizer, but a custom colour did not visually apply, always showing the
-default petrol. View-source confirmed the correct hex value was present in
-the page (`--met-tt-accent:#d59f0f;` inside the
-`met-hello-child-scroll-top-inline-css` `<style>` block added by
-`wp_add_inline_style()`), which ruled out a save or page-cache problem and
-pointed at a CSS cascade/ordering issue instead. Staging runs LiteSpeed
-Cache; its CSS optimisation features (Combine/Critical CSS) can reorder
-`<link>`/`<style>` tags, letting `scroll-top.css`'s own file default win over
-our override despite the correct value being earlier in the raw HTML.
-
-Fixed by moving the colour from a `:root` `<style>` block to an inline
-`style` attribute on the button element itself
-([inc/scroll-top.php](../inc/scroll-top.php)), which no CSS-combining tool can
-touch. Updated the Customizer live-preview script to match (targets the
-button element, not `documentElement`).
-
-That fix alone was not enough: retested on local `v2` and the colour still
-did not show. View-source confirmed the correct value was now on the button's
-own `style=""` attribute, which meant the remaining problem was not caching
-or ordering at all. DevTools (screenshots from the user) showed the actual
-culprit: a generic `[type=button], [type=submit], button { border: 1px solid
-#c36; color: #c36; ... }` rule, source unidentified (not this theme's CSS),
-beating our `.met-to-top` rule. `[type=button]` is an attribute selector, the
-same specificity tier as a class, so it ties with `.met-to-top` rather than
-losing, and cascade order (which this theme does not control) broke the tie
-in the other rule's favour.
-
-Fixed by qualifying every selector in `assets/css/scroll-top.css` with the
-element type, `button.met-to-top` instead of `.met-to-top`, one specificity
-tier higher than any bare class or attribute selector, so it wins
-unconditionally rather than depending on load order. Both fixes are recorded
-together in [DECISIONS.md D26](DECISIONS.md#d26). `phpcs` clean; neither fix
-had shipped yet (v1.7.1 was not pushed or tagged until both were confirmed).
+- `/gallery/` (page 168) built once the owner created two `gallery` album posts,
+  using `[met_posts category="gallery" layout="album" columns="3" paged="yes"]`.
+  Verified clean at 390/768/1366: no overflow, one h1, two album cards with the
+  out-link badge, zero broken images.
+- Fixed a stale-primary-term bug in `met_hello_child_get_primary_term()`
+  (`inc/template-tags.php`). It honoured Yoast's `_yoast_wpseo_primary_category`
+  meta without checking the post is still in that term. Yoast does not clear that
+  meta when a post's categories change, so a post moved off "Uncategorized" still
+  showed "Uncategorized" on its card and single. Added a `has_term()` guard. Found
+  by the owner on one post; a scan showed it was the only affected post, but the
+  fix is generic. This is old shipped code, not new to 1.11.0.
+- Fixed a gap in `listing.css`: the column-count rules were written for
+  `.met-list--grid` only, so `layout="album"` would have rendered single-column.
+  Album now shares the same responsive column grid.
+- `/press-releases/` (page 169) and `/csr-initiatives/` (page 167) built once the
+  owner added three posts to each category, both `[met_posts columns="3"
+  paged="yes"]`. The redundant section heading was dropped from gallery, press
+  releases and CSR: the Page Hero already titles the page. Their stale Page Hero
+  subtitles ("There are no press releases at this time", "This page is currently
+  being updated") were replaced now that the pages have content. All three
+  verified at 390/768/1366/1920: no overflow, one h1, correct card counts, zero
+  broken images. With this, all six formerly-empty staging pages are built on
+  local and only need moving.
 
 ---
 
-## 2026-08-03: Page Hero applied to all 16 target Pages; v1.7.0, Scroll to Top
+## 2026-08-09: two pages rebuilt in Elementor, and the build method corrected
 
-Manually applied the 1.6.0 Page Hero to the remaining 15 of the 16 target
-Pages on local `v2` (`/whistleblowing/` was done first, see the entry below).
-All 16 now carry a hero.
+**The day started with a rejected build.** The 25th Anniversary page was first
+produced by pasting the approved design file's markup, `<style>` block included,
+into a single Elementor `html` widget. Its absolutely positioned sections fought
+Elementor's flex layout and the page collapsed: a huge blank band, the hero
+squashed into a narrow column, five sections missing. It had been reported as
+verified after checking only the HTML source. The owner rejected it immediately
+and was right to. See [D41](DECISIONS.md#d41).
 
-Then built and shipped Scroll to Top: a sitewide floating button, on by
-default, configurable (on/off, left/right, accent colour) under Appearance >
-Customize > Scroll to Top. Full design in
-[PLAN/PRD-scroll-top.md](../PLAN/PRD-scroll-top.md), reasoning in
-[DECISIONS.md D26](DECISIONS.md#d26).
+**Both pages were then rebuilt from real widgets.**
 
-New: `inc/scroll-top.php` (Customizer section/settings/sanitisers, sitewide
-enqueue gated on the on/off setting, the `wp_footer` render), and two
-self-contained assets, `assets/css/scroll-top.css` and
-`assets/js/scroll-top.js`, plus `assets/js/scroll-top-customizer.js` for the
-Customizer live preview only. This is the theme's first sitewide JS and CSS,
-and its first Customizer integration; see D26 for why it cannot depend on
-`assets/css/theme.css`.
+| Page | ID | Widgets | Containers | HTML widgets |
+|---|---|---|---|---|
+| `/iium-holdings-25th-anniversary/` | 161 | 163 | 101 | 0 |
+| `/iium-holdings-group-of-companies/` | 152 | 103 | 82 | 0 |
 
-The on/off setting uses the `refresh` Customizer transport rather than
-`postMessage`, unlike colour and position: turning the button off removes it
-from the page entirely (no CSS, JS, or markup), and there is no cheap way to
-simulate that removal live in the preview iframe without also rendering
-markup that is not really there. Colour and position preview live; on/off
-needs a preview reload.
+Both use `heading`, `text-editor`, `image`, `button`, `divider` and `icon`, with
+`theme.json` hex values baked per widget. Both have Page Hero set to None because
+each design carries its own hero. On Group of Companies the owner asked for the
+nine companies to be grouped by division in menu order rather than filtered, so
+the filter buttons were dropped in favour of three labelled groups with the same
+coloured dots as the mega menu.
 
-Measured file sizes against the PRD's 1KB-per-file performance budget:
-`scroll-top.js` is 914 bytes, under budget.
-`scroll-top.css` is 1418 bytes, about 400 bytes over, after trimming comments
-and shortening values once. The overage buys the accessibility and responsive
-requirements from the PRD (a `prefers-reduced-motion` branch, a mobile
-breakpoint, the left-position override) as real CSS rather than something cut
-to hit a number. Both are still small in absolute terms and gzip further.
+**A screenshot tool now exists**, and it changed the work. Headless Chrome driven
+over the DevTools Protocol from Node, full-page capture at a real viewport. Every
+defect below was found by looking at a picture; none were visible in the markup.
+See [D43](DECISIONS.md#d43).
 
-`phpcs` clean throughout.
+**Four Elementor defects, each of which had shipped looking fine to curl:**
 
----
+1. Grid containers default to `repeat(2, 1fr)` rows, so every single-row grid
+   reserved an empty row underneath. On Group of Companies that was about 370px
+   of dead space per grid; fixing it cut the page from 7650px to 4833px.
+   Deleting the setting is not enough, it falls back to the default. Set
+   `grid_rows_grid` to custom `auto` on every breakpoint.
+2. Background overlay opacity defaults to 0.5, so the gradient scrims over the
+   hero and the four era headers rendered at half strength and the text was
+   unreadable.
+3. Company logos had no width constraint. CSS grid items do not shrink below
+   their content, so a 1024px logo pushed the page to 1516px wide at a 1366
+   viewport.
+4. `fa-shield-halved` is a Font Awesome 6 name and this Elementor bundles FA 5.
+   It printed four PHP warnings into a mission card.
 
-## 2026-08-03: v1.6.0, Page Hero for Elementor Pages
+**All 24 images were hotlinked from staging and would have rendered blank.**
+Cloudflare hotlink protection returns 200 to a server fetch but blocks a browser
+sending a cross-origin referer, so every structural check passed while the
+emblem was visibly broken. All images are now imported into the local media
+library and both pages have zero external image references.
+See [D42](DECISIONS.md#d42).
 
-Built and shipped Page Hero: an opt-in header band for Elementor Pages,
-matching the design already shipped for blog Posts and archives. Full design in
-[PLAN/PRD-page-hero.md](../PLAN/PRD-page-hero.md), reasoning in
-[DECISIONS.md D25](DECISIONS.md#d25).
+**Theme code changed once today:** `scroll-padding-top` added to `chrome.css`, so
+the sticky header stops covering in-page anchor targets.
 
-New: `inc/page-hero.php` (gate, "Page Hero" meta box, save handler, the two
-Elementor `before_content` render hooks), `template-parts/page-hero.php`
-(Standard variant reuses `.met-hero` unchanged; Business variant is new
-markup and CSS in `assets/css/theme.css`). `inc/assets.php`'s stylesheet and
-preconnect gates now also fire on a Page with a hero set; the full-width body
-class was deliberately left alone, see D25.
-
-The business variant shipped with an icon mark (ported from the CLAUDE DESIGN
-reference), then the icon was removed at the user's request right after the
-first live test, since a generic placeholder icon wasn't wanted on every
-subsidiary page. Removed the markup and its now-dead CSS in the same session.
-
-Tested live on `/whistleblowing/` on the local site (renamed `github-test` ->
-`v2` this session). First attempt showed a completely bare page: no site
-header, no hero, no styling. Cause was a missed instruction, not a bug: the
-Page's Layout (Page Attributes) was not set to Elementor Full Width, so neither
-Elementor's own chrome nor the hero hook rendered. Once set, both the Standard
-and Business variants worked. `phpcs` clean throughout.
-
-Remaining work is tracked in [STATE.md](STATE.md#open-items): 15 of the 16
-target Pages still need the layout set, the meta box filled in, and the old
-Elementor header section removed by hand; the PRD's performance/responsive pass
-has not run; live staging has not been touched.
+**The deployment procedure was written down**, in
+[DEPLOY-TO-STAGING.md](DEPLOY-TO-STAGING.md). Code ships through the existing
+release pipeline; Elementor pages, media, menus, Customizer settings and page
+meta move as named items by hand. The database is never copied, because local
+and staging share slugs and a plain import would either overwrite live content
+or create `-2` duplicates. The step most likely to fail is images: a page
+exported from local carries `http://v2` URLs and local attachment IDs, both
+meaningless on staging, so the exported JSON needs its image URLs rewritten
+before import.
 
 ---
 
-## 2026-08-03: first phpcs run, config fixed, 9 findings fixed
+## 2026-08-08: v1.10.0 built, homepage and custom site chrome
 
-`composer install` and `phpcs` had never been run since the config shipped in
-1.5.0. Ran them for the first time. Composer and PHP CLI needed manual TLS,
-mbstring and zip extension flags to work on this machine's bundled PHP, since
-none of php.ini's extensions are enabled by default.
+Built the homepage and a custom header/footer on branch `feat/home-chrome`, from
+the owner-approved design. All seven planned steps done in one pass, each still
+independently revertible.
 
-Two defects in `phpcs.xml.dist` itself, found before any real code issue:
+**Homepage** is a Page Template (`page-templates/template-homepage.php`,
+[D37](DECISIONS.md#d37)), assigned to Page 156 and set as the front page. Nine
+section partials in `template-parts/home/`, styled by `assets/css/home.css`,
+behaviour in `assets/js/home.js`, with the view test, three `add_image_size`
+sizes, the data helpers and a "Homepage" Customizer section (four stats plus the
+About image) in `inc/homepage.php`. The design was mapped onto `theme.json`
+tokens with no new fonts: Geist bold for headings, Instrument Serif for numerals
+only. Every image is a real `<img>` with explicit dimensions; missing images
+render sector-tinted empty states from the existing pattern token, so there are
+no broken images and no CSS background images. First hero image is
+`fetchpriority="high"`; everything else is lazy.
 
-- The registered prefix list only had `met_hello_child`, so the template-local
-  variables (`met_card_link` and similar, using the shorter `met_` convention)
-  all flagged as unprefixed. WPCS also rejects a plain `met` prefix as too short
-  (minimum 4 characters), so the fix is registering `met_` (with the trailing
-  underscore) rather than `met`.
-- `Generic.Files.LineEndings` flagged CRLF on every file, because git checks out
-  CRLF on Windows by policy. This would fail on both machines forever without
-  fixing anything real, so the sniff is now excluded, with `.gitattributes`
-  already doing the actual normalisation in the repository.
+**Site chrome** ships behind a Customizer toggle, `met_hello_child_chrome_enabled`,
+default off ([D38](DECISIONS.md#d38)). Header (`header.php`), footer
+(`footer.php`) and their parts fall through to the parent theme when off, so the
+switch is a one-click rollback; confirmed byte-identical revert on the homepage,
+an Elementor Page and a Post. The mega/dropdown menu is built structurally from
+the assigned menu by `Met_Hello_Child_Nav_Walker`, with no hardcoded titles:
+against the live menu it yields Business = mega (three columns), About Us and
+Media = dropdowns, the rest flat. The drawer renders the same menu again through
+`Met_Hello_Child_Drawer_Walker` as `<details>` accordions that work with no JS.
+Yoast output in `wp_head()` is untouched; view-source shows one doctype, one
+`</head>`, one `wp_footer`, and exactly one scroll-to-top button (still owned by
+`inc/scroll-top.php`).
 
-After the config fix: 41 real violations in 9 files. `phpcbf` auto-fixed 32
-(inline CSS indentation and alignment in the standalone pages). The remaining 9,
-fixed by hand:
+**Hero slides** are `met_hero_slide`, a non-public CPT ([D39](DECISIONS.md#d39));
+**sector** is `_met_sector` Page meta ([D40](DECISIONS.md#d40)), and all nine
+`/business/` Pages were backfilled from their eyebrow. The **Page Hero** variant
+control became an explicit None / Standard / Business radio, default None, with
+no change to how existing heroes render.
 
-- 2 missing `@package` tags, in `error-403.php` and `dropins/maintenance.php`.
-- 1 wrong `@return void` tag on a function that does return a value
-  (`met_hello_child_wp_die_handler`).
-- 1 param comment missing a full stop, on the `$args` array shape docblock.
-- 1 unused `$handler` parameter, required by the `wp_die_handler` filter
-  signature. Documented and ignored, not removed.
-- 1 missing enqueue version, on the fonts stylesheet. The `null` is deliberate,
-  documented and ignored.
-- 3 non-enqueued `<link rel="stylesheet">` tags, in the two standalone pages and
-  the shared renderer. All three run where `wp_enqueue_style()` is not
-  available, per D7. Documented and ignored, not restructured.
+`phpcs` is clean across all 24 new and changed files. Novamira `check-design`
+returns one warn only, the two sector colours, which are canonical `theme.json`
+palette tokens the design snapshot did not capture. Nothing committed or tagged.
+The chrome toggle is left on locally so the owner can review the full design.
 
-`phpcs` is now clean. Verified against the running site after the fix: the 403
-file (served directly, bypassing WordPress), a single post, and the maintenance
-page (tested via a temporary mu-plugin, removed after) all render correctly with
-no PHP notices.
+**Owner review, and the bug that took four rounds.** The owner reviewed and
+listed twelve items. Most were straightforward: the Site Identity logo and a new
+25th Anniversary logo with its own link in the header, drawer and footer;
+optional background images for the Tenders, Careers and About bands; a
+per-slide vertical focal point for hero images with the recommended size noted
+in the editor; and spacing and colour corrections.
 
-`composer.lock` is now committed, so both machines lint against identical
-standard versions. No version bump: nothing user-facing changed.
+One item resisted three attempted fixes. The mobile hamburger stayed visible at
+full laptop width. The media query was correct, the file was served correctly,
+the braces balanced, the query was not nested, and the stylesheet was linked
+once. Lowering the breakpoint twice changed nothing. A temporary on-screen probe
+settled it: the query was matching (`true`) while the button still computed
+`display: block`. The parent theme's `reset.css` was printing **after** the
+child's `chrome.css`, and its
+`[type=button], button { border: 1px solid #c36; display: inline-block }` ties
+with `.met-menu-btn` on specificity, so it won on source order. The owner's
+screenshot is what cracked it: the pink `#c36` borders on exactly the `<button>`
+elements pointed at a stylesheet styling bare elements.
 
-Closed the last two open items the same day, both as decisions rather than work:
-stay on the Google Fonts CDN (D15), and ship English only with no translation
-catalogue (D24). The theme now has no open items.
+The same cause was behind the earlier run of "this text is the wrong colour"
+fixes, since that reset also sets `a { color: #c36 }`. Those had been patched one
+selector at a time. The real fix is one line per enqueue: declare
+`array( 'hello-elementor', 'hello-elementor-theme-style' )` as dependencies, as
+`inc/assets.php` already did for `theme.css`. Recorded in STATE.md so the next
+person reads load order before reaching for specificity.
 
-Also found and removed two zero-byte stray files at the repo root
-(`C:UsersIIUM`, `Holdings.claudeclaude-notify-signalsstop`), created by an
-unquoted path in a `claude-notify-signals` hook splitting on the space in
-`C:\Users\IIUM Holdings\...`. Not part of this repo's own tooling; worth fixing
-in the hook config, not here.
+A related hero bug had the same shape: `.met-home img { height: auto }` (0,1,1)
+outranked `.met-hero-home__bg { height: 100% }` (0,1,0), so the hero image sized
+itself and left a gap as the window narrowed. Fixed by scoping all fill images
+under `.met-home` in one block.
+
+**Deferred by the owner:** Elementor requests Inter and Roboto from Google on
+every page, from its Kit typography, which contradicts D15 and D28. Not changed,
+because the four built Elementor Pages use those fonts and switching them needs a
+visual review. See STATE.md.
 
 ---
 
-## 2026-08-01: v1.5.0 restructure to the standard theme layout
+## 2026-08-08: direction change back to Elementor, Novamira MCP, 42 pages, and a token bug that broke every hero
 
-Structural refactor, no change to what the site renders.
+**The day's headline: the block-system migration was abandoned for page bodies.**
+Owner reviewed the block-built `/whistleblowing/` and chose to rebuild it in
+Elementor instead, using the design system rather than fighting it. Pages are
+now built with Elementor free plus Essential Addons and UAE, governed by
+`theme.json` tokens. This does not revive D27's failed approach: the tokens are
+applied per widget at build time, not pushed at Elementor from a stylesheet.
+See [D35](DECISIONS.md#d35).
 
-- `functions.php` went from 549 lines to a bootstrap of about 45. Behaviour split
-  into `inc/setup.php`, `inc/updater.php`, `inc/assets.php`,
-  `inc/template-tags.php`, `inc/social.php`, `inc/maintenance.php`.
-- Design CSS moved to `assets/css/theme.css`. `style.css` now holds the theme
-  header only and is not enqueued. Both files kept git history through `git mv`.
-- `maintenance-template.php` moved to `template-parts/maintenance-page.php`.
-- Added `MET_HELLO_CHILD_DIR` and `MET_HELLO_CHILD_URI` so no file repeats
-  `get_stylesheet_directory()`.
-- The update checker is now built inside a function instead of leaving a global
-  variable behind.
-- Added `phpcs.xml.dist`, `composer.json`, `.editorconfig`, `.gitattributes`.
-  Added `/vendor/` to `.gitignore`.
-- `release.yml` now excludes DOCS, composer, phpcs and editor config from the
-  zip. Before this, users would have received all of them.
-- Fixed the last "Haraka" references, which were open item 1.
-- Added `dropins/maintenance.php`. `readme.txt` had been telling users to copy a
-  bundled file that did not exist. That was open item 4.
+**Novamira installed** (`wp-content/plugins/novamira`, v1.11.2), an MCP server
+giving the agent PHP execution and filesystem access on local. Dev only, never
+staging. Two real blockers were found and fixed: Local's nginx omits
+`HTTP_AUTHORIZATION` from its `fastcgi_param` list, so bearer tokens never
+reached PHP (fixed in `conf/nginx/site.conf.hbs`, backup kept); and the MCP
+client had to use the `mcp/novamira-oauth` endpoint, not the
+Application-Password-only `mcp/novamira`. Connected via an Application Password
+in a gitignored `.mcp.json`. This retires the curl-and-nonce scripting and
+satisfies D29's condition for deleting `inc/migration-tools.php` eventually.
 
-Checked: `php -l` clean on all 16 theme PHP files, and all 19 existing functions
-are present with unchanged names.
+**A design system was captured and activated** in Novamira as
+`iium-holdings-corporate`, synthesised from `theme.json` rather than invented,
+so `check-design` pre-flight now runs against the real tokens. Every page below
+passed it with zero violations.
 
-What did not move, because WordPress does not allow it: the template hierarchy
-files, `style.css`, `functions.php` and `screenshot.png` must sit at the theme
-root. `error-403.php` stays too, because deployed `.htaccess` files reference its
-path. See [DECISIONS.md](DECISIONS.md#d20).
+**Four pages built in Elementor**, all verified rendering, all pre-flight clean:
+`/whistleblowing/` (rebuilt), `/iium-holdings-group-of-companies/`,
+`/contact-us/` (WPForms 197 embedded via the native shortcode widget, form
+confirmed rendering 5 fields), and `/sitemap/`.
 
-Version bumped to 1.5.0 in `style.css` and `functions.php`, with a `readme.txt`
-changelog entry.
+**42 pages now exist**, matching the live staging sitemap. 40 were created in
+two batches with title, Page Hero eyebrow and subtitle, WordPress excerpt and
+three Yoast fields each; `/careers/`, `/tenders/` and `/events/` carry the
+MetCPT shortcodes. Parent/child hierarchy verified: 9 under `/business/`, 9
+under `/board-of-directors/`. `naaimah-backup` skipped as a duplicate.
 
-**Verified against the running Local site**, all clean, no PHP notices anywhere:
+**The main menu was restructured**, 28 placeholder custom links converted to
+real `post_type` page links. Only 4 remain custom, and correctly so: About Us,
+Education, Infrastructure and Healthcare have no page behind them and act as
+non-linking headers.
 
-| Check | Result |
+**The bug worth remembering.** `tokens.css` referenced
+`--wp--preset--font-size--2xl` and `--3xl`. WordPress does not generate those
+names: a slug starting with a digit gets a hyphen inserted, so the real
+properties are `--2-xl` and `--3-xl`. Both aliases resolved to nothing, so
+`font-size` was invalid and the browser fell back to its default. That silently
+shrank **every Page Hero title on all 16 pages** and **every `h2` in every blog
+post**. The owner caught it by eye; no structural check could, because a broken
+`var()` still renders text, just at the wrong size. Fixed in `tokens.css` and
+then found again in `patterns.css` (3 more rules). Both now carry literal
+fallbacks so a future slug rename degrades visibly instead of silently.
+See [D36](DECISIONS.md#d36).
+
+**Two documentation errors corrected.** `patterns.css` claimed in a comment that
+headings are bold sans; the file contains no such rule, and `theme.json` sets
+headings to serif. That wrong comment is what drove an earlier "fix" to the
+whistleblowing page. And `PRD-block-system.md` §3.5.2 says there is no header
+and footer builder installed, but Header Footer Elementor is active (currently
+with no templates assigned, so the parent theme renders the chrome).
+
+**Planned, not built: v1.10.0 homepage and site chrome.** Full plan agreed with
+the owner. See STATE.md "Open items" for the decisions and scope.
+
+---
+
+## 2026-08-07: v1.9.0 code, canonical design system and page.php, phase 0 of the block-system migration
+
+Direction changed from the 2026-08-04 plan. Option A (govern Elementor from a
+token layer, shipped as 1.8.0's code) hit its ceiling: D27's same-day
+correction found Elementor bakes its Kit defaults into per-widget CSS that
+always outranks a generic stylesheet rule, so typography and colour on
+Elementor pages could not be reached from `elementor-base.css` at all.
+Superseded by [PLAN/PRD-block-system.md](../PLAN/PRD-block-system.md): move
+page content into the block editor, governed by `theme.json`, migrated in
+batches, Elementor retired last. Full reasoning and the four rounds of scope
+discussion (MetCPT shortcodes, staging's real plugin list, Page Hero and
+Scroll to Top conflicts, the design-file corpus) are in that PRD and
+[PLAN/PRD-design-system.md](../PLAN/PRD-design-system.md).
+
+Found while reading the 40 design files for the token reconciliation: they are
+not 21 different systems as first estimated, but two, System A (32 files) and
+System B (8 files, a later revision), with 11 tokens conflicting between them
+and identical file membership on every one. Full findings, the contrast audit,
+and every locked value in
+[PLAN/DESIGN-SYSTEM-DECISIONS.md](../PLAN/DESIGN-SYSTEM-DECISIONS.md). Reviewed
+by the owner as a live, interactive gallery,
+[PLAN/DESIGN-SYSTEM-GALLERY.html](../PLAN/DESIGN-SYSTEM-GALLERY.html), approved
+2026-08-07 with no exceptions raised.
+
+Shipped in code, verified on local `v2`, phpcs clean (20 files, 0 errors):
+
+- `theme.json`: the canonical token set, colour (with a display/text split on
+  the accent and each sector colour, since the brighter display shade fails
+  WCAG AA as text), type scale, spacing, section rhythm, layout widths,
+  elevation, radius, z-index, motion, focus. `color.custom`,
+  `defaultPalette`, `customFontSize` and `customSpacingSize` all off, so the
+  block editor offers only this system.
+- Geist and Instrument Serif self-hosted (`assets/fonts/`), declared as
+  `theme.json` font faces. Downloaded from Google's own CDN response (the
+  `latin` subset, a single variable file for Geist covering all six weights)
+  and verified as valid WOFF2 before committing. Closes the D15 TODO. The
+  Google Fonts enqueue and its preconnect hints are removed from
+  `inc/assets.php`. `dropins/maintenance.php`, `error-403.php` and
+  `inc/maintenance.php` still load from the CDN, unchanged: they run outside
+  a booted WordPress (D7) and cannot read `theme.json`. Known, deliberate,
+  same pattern as the D27 Inter-vs-Geist gap.
+- `tokens.css` rewritten as an alias layer: every existing flat name now
+  points at the matching `theme.json` custom property, so `theme.css`,
+  `scroll-top.css` and `elementor-base.css` needed no rewrite.
+- `page.php` added. Hello Elementor ships none, so every Page fell through to
+  the template written for blog posts: a duplicate `<h1>` next to Page Hero's
+  own, an open comment form on corporate pages (Site Health confirms comments
+  are open by default), and a page that would have been squeezed into the
+  parent's 1140px blog-post width the moment it stopped being an Elementor
+  page. One file fixes all three: `id="content"` kept for the skip link,
+  `class="site-main"` dropped so the parent's width selector cannot match,
+  Page Hero called directly (its existing static guard already prevents a
+  double print), and a visible fallback `<h1>` on any Page with no hero
+  variant set, so a page is never left with zero headings either.
+- Contrast sweep of `theme.css`. Two confirmed bugs from the design-system PRD
+  (the eyebrow label, in-body post links, both display gold used as small
+  text) plus every other matching case found while checking: card title
+  hover, pagination hover and current-page state, the search field focus
+  ring, post-back hover, the 404 ghost button. The global focus-visible ring
+  needed a genuine split, not a blanket swap: the darker accent-text value
+  that fixes the light-background cases computes to 2.19:1 on the dark hero
+  bands, worse than the original. Fixed with a base rule plus a dark-context
+  override, verified by computing both directions rather than assuming one
+  fix covers both. The post-body link hover reused the darker text colour,
+  which would have collapsed hover and default to the same shade, so it
+  reuses the existing, already-approved `--petrol` token instead of inventing
+  an unreviewed new colour.
+- `style.css`, `functions.php`, `readme.txt` version bumped to 1.9.0.
+
+Phase 0a done the same day. The local site turned out to be reachable at
+`http://v2` (found via the hosts file; `localhost` and `github-test.local`,
+tried first, were both wrong). With owner-supplied admin credentials, logged
+in via `wp-login.php` and installed and activated Essential Addons for
+Elementor and Ultimate Addons for Elementor (UAE) through the ordinary
+nonce-protected wp-admin screens, scripted with curl, no WP-CLI. Versions
+6.7.2 and 2.9.2, an exact match to staging. Confirmed no fatal error on the
+homepage, a sample Page, or the plugins screen afterward.
+
+Phase 1 started the same day: `/whistle-blowing/` (post 86) migrated end to
+end and confirmed live on local `v2`. Built `inc/migration-tools.php`, a
+temporary `manage_options`-gated tool (admin-post actions, no WP-CLI) to flip
+the meta a migration needs, and `assets/css/patterns.css`, the first
+block-content component styles scoped under `.met-page`. Content built from
+`whistleblowing.html` (structure) and the live staging page (copy, already
+read in an earlier session, matched what the design file had). Pushed to the
+Page via the REST API, authenticated with the owner-supplied admin
+credentials.
+
+Two real bugs found and fixed by reading the actual rendered response after
+each change, not by assuming the code was correct:
+
+1. The PRD's migration mechanism (section 4.5) was incomplete. Clearing
+   `_elementor_edit_mode` alone was not enough: that meta only governs
+   Elementor's own admin UI, not front-end template selection, which reads
+   the separate `_wp_page_template` post meta. Left at
+   `elementor_header_footer`, the Page fell through past `page.php` to
+   `index.php`'s generic fallback, rendering with the wrong `<main>` class
+   and the exact width bug page.php exists to prevent. Fixed:
+   `inc/migration-tools.php` now clears both keys and backs up the original
+   template value under `_met_migration_original_template` for a clean
+   rollback.
+2. `page.php` never called `get_header()` or `get_footer()`, so the page
+   rendered as a bare fragment: no `<head>`, no enqueued styles, no site
+   chrome, confirmed by an empty grep for every stylesheet handle that should
+   have been there. Both calls added.
+
+Verified after the fix: full valid document, all five stylesheet handles
+present including the new `patterns.css`, `theme.json` global styles present
+(`--wp--preset--color--accent` found), `<main id="content" class="met-page">`
+exactly once, one `<h1>` ("Whistle Blowing", from Page Hero), the hero
+subtitle "Speak up. We're listening.", every body section present (contact
+channel, checklist, assurance band, three process steps), zero Elementor
+markup, zero comment form, zero fatal errors, Scroll to Top still present.
+All checked structurally via curl and grep.
+
+**Then the owner opened it in a browser, and it was wrong twice.** This is
+the part of the day worth keeping.
+
+**Round 2, real body-content bugs.** All shipped as "verified" by the
+structural checks above, all visibly wrong:
+
+- Section headings used Instrument Serif. This design system sets headings in
+  **bold sans**, and reserves the serif for two specific accents (a step
+  number, a blockquote). Backwards.
+- The "What you can report" two-column grid (text left, checklist right) had
+  been collapsed to one column.
+- The phone and email icon tiles in the contact cards were missing entirely.
+- `.eyebrow` labels had **no styling at all**. `theme.css` scopes that rule
+  under `.met-view`, and a block-authored Page carries `.met-page`, so the
+  rule never reached them. Fixed by an unscoped copy in `patterns.css`.
+- Several content groups carried WordPress `layout` types
+  (`is-layout-constrained`, `is-layout-flex`), which generate their own width
+  and display CSS, competing with the explicit grid rules in `patterns.css`.
+  Removed from the block markup; `blockGap` turned off in `theme.json` for
+  the same reason.
+
+Also learned, and worth remembering for every remaining page: **WordPress
+strips raw `<svg>` from `post_content` on save** (`wp_kses_post`), so an icon
+authored into page content silently disappears. Icons are now painted as CSS
+`background-image` data URIs in `patterns.css`, which sidesteps it entirely.
+The first cut had used emoji as placeholders, which rendered in full colour
+and looked worse than nothing.
+
+**Round 3, the design misjudgement, not a bug.** The top of the page had been
+rebuilt as a plain light intro, faithfully reproducing `whistleblowing.html`'s
+own opening section, in place of Page Hero's petrol band. Owner correction:
+Page Hero is the site's fixed header, already deployed on 16 Pages precisely
+so no page's header differs from any other's. A design file is a full-page
+mockup and carries its own top-of-page treatment; reproducing each one would
+hand the site 30 different headers, which is the inconsistency this project
+exists to remove. Reverted, and recorded as [D30](DECISIONS.md#d30): **design
+files supply body content only, Page Hero is never redesigned per page.**
+
+Net: `/whistleblowing/` is live and correct on local `v2`. It took three
+rounds and two owner screenshots. The other 9 pages in batch 1, phase 0b, and
+phases 2-4 remain undone.
+
+**The lesson, stated plainly because it will apply to all 29 remaining pages:
+structural verification is not visual verification.** curl and grep confirmed
+every round above as correct, including both wrong ones. Only a browser
+caught them. Pages should not be built in a batch without a screenshot
+between each one.
+
+### Documentation and repo housekeeping, same day
+
+Docs brought in line with what was actually built and decided:
+
+- **[D28](DECISIONS.md#d28), [D29](DECISIONS.md#d29), [D30](DECISIONS.md#d30)**
+  added. D30 is the owner rule above: Page Hero is the fixed header, design
+  files supply body content only.
+- **[PRD-block-system.md](../PLAN/PRD-block-system.md) corrected** where the
+  plan itself was wrong: section 4.5's one-meta-key migration, and section
+  3.7.6's `page.php` sketch with no `get_header()`. Both wrong versions left
+  visible as corrections rather than quietly rewritten, since each is the
+  plausible assumption the next person would also make.
+- **Superseded markers** on `PRD-design-tokens.md`,
+  `PROPOSAL-frontend-revamp.md` and `STAGING-CHECKLIST-1.8.0.md`, each saying
+  what in it is still valid rather than just "outdated".
+- **Five broken internal links fixed.** `#d2`, `#d4`, `#d7`, `#d15` and `#d23`
+  were linked to but had no anchors. Every `#dNN` reference across all docs
+  now resolves.
+- **`PROJECT_LOG.md` archived**, 712 lines to 209. See D23 below.
+- **`STATE.md` condensed** from a growing narrative back to a short status
+  file, which is what it is for. Detail moved here and to DECISIONS.
+
+Two real repo problems found while checking the archive would not ship in the
+release zip:
+
+1. **`PLAN/` was shipping to every site that installs the theme.** 228 KB of
+   internal PRDs and the design gallery, in the distributed package. Against
+   [D21](DECISIONS.md), which says dev files stay out of the zip via
+   `.gitattributes` and the `release.yml` exclude list; `PLAN/` was simply
+   missing from both, and had been since it was created in 1.6.0. Added to
+   both, along with `composer.lock`, which was in one list but not the other.
+2. **Three empty junk files in the repo root**, named `C:UsersIIUM`,
+   `Holdings.claudeclaude-notify-signalspermission` and
+   `...signalsstop`. A notify hook is writing to a Windows path with the
+   backslashes stripped, so the whole path becomes one filename. All three
+   were empty and untracked; removed, and `.gitignore` patterns added so a
+   `git add -A` cannot commit the next ones. **The root cause is in the hook
+   config, outside this repo, and is not fixed.** Worth fixing there, or they
+   keep appearing.
+
+The `.gitignore` pattern for the first one needed care: Windows forbids `:` in
+filenames, so the character in that name is U+F03A, a colon lookalike. A
+pattern with an ASCII colon does not match it, and the obvious broad
+alternative (`/C*`) would have swallowed `CLAUDE.md`. The committed pattern
+uses the real U+F03A byte, verified against a decoy file and confirmed not to
+catch `CLAUDE.md`.
+
+---
+
+## Older entries
+
+Everything before v1.9.0, which is v1.0.0 through v1.8.0 and covers 2026-07-07
+to 2026-08-04, is in
+[archive/PROJECT_LOG-2026.md](archive/PROJECT_LOG-2026.md). Twenty entries,
+moved unedited on 2026-08-07.
+
+Quick index of what is in there, so you can tell whether you need to open it:
+
+| Entry | What it covers |
 |---|---|
-| Single post, category, search, author, 404 | Render, correct `.met-view` modifier, correct body class |
-| Stylesheet URL | `assets/css/theme.css?ver=1.5.0`, served, 18.5 KB |
-| `style.css` | Served as header only, 1 KB, never enqueued |
-| Home and Pages | No child CSS, no full-width class. Scope gate holds |
-| Share buttons | X, Facebook, LinkedIn, WhatsApp, Telegram, Threads |
-| Back link | Resolves to the post's category archive |
-| Author link | Resolves to the author archive |
-| Font preconnect | Both hints present, on styled views only |
-| Maintenance page | 503, `Retry-After: 3600`, noindex, no home button, renders from its new path |
-
-The maintenance check used a temporary mu-plugin gated behind a query string,
-removed straight after. Tagged and released as v1.5.0.
-
----
-
-## 2026-08-01: project docs added (office laptop)
-
-Added `DOCS/STATE.md`, `DOCS/DECISIONS.md`, `DOCS/PROJECT_LOG.md` and
-`DOCS/WRITING_RULES.md`. Triggered by losing access to the earlier chat sessions:
-the design reasoning existed only in transcripts on the home machine, so it was
-rebuilt from the artifacts and committed where both machines can see it.
-
-Searched every Claude Code transcript on this laptop (`~/.claude/projects/`): no
-theme sessions, only today's. The MetCPT session `d3a31ece` held seven useful
-references to this theme, which is where the scope-boundary check and the "Haraka"
-comment issue came from.
-
-`WRITING_RULES.md` sets the writing standard for replies, docs, commits and plans.
-
-No code changed.
-
----
-
-## 2026-07-29: cross-checked against MetCPT (from the plugin session)
-
-While auditing the MetCPT plugin, the theme was read to settle which component
-owns which archive page. Findings:
-
-- The theme reads no MetCPT options. The two are fully decoupled.
-- Ownership is clean. The plugin owns `/events/`, `/tenders/`, `/careers/` and the
-  raw CPT archive fallback. The theme owns news and blog category, tag and date
-  archives, scoped by `is_category() || is_tag() || is_date()`.
-- Found: about 4 comments still say "Haraka", the plugin's former name, in
-  `functions.php`, `README.md`, `readme.txt`, `style.css`. Cosmetic only.
-- Decided: do not fix it from the plugin session. Separate repo, separate release
-  cycle. See [DECISIONS.md](DECISIONS.md#d17). Still open.
-
-No code changed in this repo.
-
----
-
-## 2026-07-07: v1.4.2, single post share, back and author links (`6c3dcef`)
-
-- Share row extended to X, Facebook, LinkedIn, WhatsApp, Telegram and Threads,
-  built from a reusable `met_hello_child_get_share_links()` helper and an extended
-  inline SVG icon set.
-- Back button now targets the post's own category archive, falling back to the
-  Newsroom URL only when the post has no category.
-- Author name now links to the author archive page.
-
-`functions.php`, `single.php`, `style.css`, `readme.txt`. +89 / -12.
-
----
-
-## 2026-07-07: v1.4.1, real branded screenshot (`f5de4f8`)
-
-Replaced the 1x1 placeholder `screenshot.png` (70 bytes) with a rendered 1200x900
-branded thumbnail (83 KB). Small change, real purpose: it ran the whole release
-pipeline end to end (tag, Action, zip, Release, WordPress update screen) on a
-change where failure cost nothing.
-
----
-
-## 2026-07-07: v1.4.0, GitHub auto-updates and first public release (`b6d6583`)
-
-First commit in the repo. The accumulated 1.0.0 to 1.4.0 work published as a
-public repo: 133 files, about 12,987 lines, most of it the bundled update library.
-
-- Bundled YahnisElsts Plugin Update Checker v5 in theme mode, pointed at
-  `ismetdev/met-hello-elementor-child`, branch `main`, with
-  `enableReleaseAssets()` so updates come from the workflow-built zip instead of
-  GitHub's auto-generated source archive.
-- Optional private-repo auth via `MET_HELLO_CHILD_GITHUB_TOKEN`, read from
-  `wp-config.php` and never committed.
-- Added `.github/workflows/release.yml`: fires on `v*` tags, builds the zip on
-  Linux inside a correctly named folder, checks `style.css`, `functions.php` and
-  the update library are present, publishes the Release with the zip attached.
-- Theme author set to ismetdev.
-
----
-
-## v1.3.0: search, author, 404, standalone pages, shared design system
-
-The largest step. Three new views plus the refactor needed to support them.
-
-- **New views:** `search.php`, `author.php`, `404.php`, all reusing one design.
-- **Refactor:** CSS reorganised into a shared `.met-view` scope with a reusable
-  `.met-hero` band and `.met-listing` / `.met-card` grid. The card moved to
-  `template-parts/met-card.php` and is shared by archive, search and author.
-  `single.php` and `archive.php` migrated to the shared classes with no intended
-  visual change.
-- **Scope plumbing:** enqueue scope, preconnect hints and the full-width body
-  class unified behind `met_hello_child_is_styled_view()`. Per-view body classes
-  collapsed into one `met-hello-child-fullwidth`.
-- **Author header:** avatar, name, post count, biography, website and social links
-  (Yoast aware), degrading cleanly when fields are empty.
-- **Standalone pages:** maintenance toggle (503 plus cache bypass, admins exempt),
-  a `wp-content/maintenance.php` update drop-in, an `ErrorDocument` 403 file, and
-  a styled `wp_die()` handler for application-level 403s, all with inlined CSS.
-
----
-
-## v1.2.1: phase 4 hardening
-
-Escaping audit, conditional-asset check, i18n, cross-plugin and accessibility
-review. One real bug found and fixed: double-escaped featured image `alt` text in
-`single.php` and `archive.php`, because `the_post_thumbnail()` already escapes
-attributes. Everything else passed with no changes.
-
----
-
-## v1.2.0: phase 3, archives
-
-`archive.php` for category, tag and date archives. Compact petrol header band plus
-a uniform responsive card grid (`auto-fill minmax(320px, 1fr)`, single column on
-mobile). Cards show a featured image, with a petrol pattern fallback when absent
-so the grid stays even, a primary-category eyebrow, linked title, date, reading
-time and a trimmed excerpt. Styled pagination with gold accents. CSS scoped under
-`.met-archive`. Enqueue scope widened to these archives only.
-
----
-
-## v1.1.0: phase 2, the single post
-
-`single.php` in the new editorial design: petrol hero, feature image frame,
-article body, share and back row. Geist and Instrument Serif loaded from the
-Google Fonts CDN behind one function, ready to self-host. Design CSS enqueued and
-full width forced ("Option A") on single Posts only. Added the reading-time,
-primary-term and filterable back-link helpers. Header and footer come from
-Elementor via `get_header()` and `get_footer()`, and the CSS is scoped to the
-article region so it never affects them.
-
----
-
-## v1.0.0: phase 1, scaffold
-
-Child theme scaffold. Enqueues parent then child stylesheet, defines the version
-constant, loads the text domain. Renders identically to plain Hello Elementor: no
-custom templates, no design CSS. A deliberate no-op baseline to prove the child
-theme was wired correctly before any design landed.
+| 2026-08-04 | v1.8.0 sitewide token layer, Elementor `<main>` landmark fix, and the same-day correction that Elementor's generated CSS beats a generic base layer ([D27](DECISIONS.md#d27)) |
+| 2026-08-03 | v1.6.0 Page Hero, v1.7.0 Scroll to Top, v1.7.1 and v1.7.2 fixes, first phpcs run |
+| 2026-08-01 | v1.5.0 restructure to the standard theme layout, project docs added |
+| 2026-07-29 | Cross-check against the MetCPT plugin |
+| 2026-07-07 | v1.4.0 GitHub auto-updates and first public release, v1.4.1, v1.4.2 |
+| v1.0.0 to v1.3.0 | Original build: scaffold, single post, archives, search, author, 404 |

@@ -1,6 +1,17 @@
 # Staging checklist: v1.8.0
 
-What to do on live staging after the 1.8.0 update lands, in order. This is the
+> **Still open, and now applies to 1.9.0.** 1.8.0 was never released. Staging
+> is still on 1.7.2 and will receive 1.8.0 and 1.9.0 together whenever the
+> next release ships. Every item below still needs doing.
+>
+> **Two items are now moot for migrated pages.** Setting Elementor's Global
+> Colours and Global Fonts only affects pages Elementor still renders. Pages
+> migrated under [PRD-block-system.md](PRD-block-system.md) get their
+> typography and colour from `theme.json` instead, so do those two steps only
+> for pages still on Elementor, and skip them entirely once phase 4 removes
+> Elementor. See [DECISIONS D28](../DOCS/DECISIONS.md#d28).
+
+What to do on live staging after the update lands, in order. This is the
 part only you can do, since it needs the live site and DevTools.
 
 ## 1. Update and purge

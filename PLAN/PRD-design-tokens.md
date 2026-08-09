@@ -1,6 +1,17 @@
 # PRD: sitewide design token layer and demo-week performance pass
 
-Status: draft, awaiting approval
+> **SUPERSEDED 2026-08-07 by [PRD-block-system.md](PRD-block-system.md) and
+> [PRD-design-system.md](PRD-design-system.md).** The approach here, govern
+> Elementor from a sitewide CSS token layer, shipped as the 1.8.0 code and hit
+> its ceiling the same week: Elementor bakes its Kit defaults into per-widget
+> CSS that outranks any generic rule, so typography and colour could not be
+> reached from a stylesheet at all. See [DECISIONS D27](../DOCS/DECISIONS.md#d27)
+> for the finding and [D28](../DOCS/DECISIONS.md#d28) for what replaced it.
+> `tokens.css` still exists but is now an alias layer over `theme.json`, not a
+> value source. Kept for the reasoning and the measured PageSpeed baseline,
+> which are still accurate. Do not build from the steps.
+
+Status: superseded, was: draft, awaiting approval
 Author: Ismet, with Claude
 Date: 2026-08-04
 Target version: 1.8.0

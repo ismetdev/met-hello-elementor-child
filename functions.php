@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Theme version. Bump this together with the header in style.css. Used for asset
  * cache-busting, and read by the update checker.
  */
-define( 'MET_HELLO_CHILD_VERSION', '1.8.0' );
+define( 'MET_HELLO_CHILD_VERSION', '1.11.0' );
 
 /**
  * Absolute path to the theme directory, with a trailing slash.
@@ -45,7 +45,17 @@ require_once MET_HELLO_CHILD_DIR . 'inc/setup.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/updater.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/page-hero.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/scroll-top.php';
+require_once MET_HELLO_CHILD_DIR . 'inc/sectors.php';
+require_once MET_HELLO_CHILD_DIR . 'inc/hero-slides.php';
+require_once MET_HELLO_CHILD_DIR . 'inc/chrome.php';
+require_once MET_HELLO_CHILD_DIR . 'inc/homepage.php';
+require_once MET_HELLO_CHILD_DIR . 'inc/listing.php';
+require_once MET_HELLO_CHILD_DIR . 'inc/albums.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/assets.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/template-tags.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/social.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/maintenance.php';
+
+// TEMPORARY, see the file header: remove once phase 4 of
+// PLAN/PRD-block-system.md ships or WP-CLI/DB access is available.
+require_once MET_HELLO_CHILD_DIR . 'inc/migration-tools.php';

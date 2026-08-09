@@ -22,7 +22,7 @@ its overrides win without `!important`.
 
 ---
 
-## D2: Elementor keeps the chrome, the theme keeps the content
+## D2: Elementor keeps the chrome, the theme keeps the content <a id="d2"></a>
 
 **Decision.** Templates call `get_header()` and `get_footer()`, so the live header
 and footer come from Elementor. The design source template's hardcoded `<footer>`
@@ -53,7 +53,7 @@ theme reads no MetCPT options.
 
 ---
 
-## D4: conditional asset loading
+## D4: conditional asset loading <a id="d4"></a>
 
 **Decision.** The stylesheet and the Google Fonts load only on styled views. Every
 other page stays plain Hello Elementor
@@ -97,7 +97,7 @@ classes with no intended visual change.
 
 ---
 
-## D7: standalone pages inline their own CSS
+## D7: standalone pages inline their own CSS <a id="d7"></a>
 
 **Decision.** The maintenance and 403 pages render through
 `met_hello_child_render_standalone()`
@@ -218,7 +218,7 @@ failed build.
 
 ---
 
-## D15: fonts from the Google CDN for now, behind one function
+## D15: fonts from the Google CDN for now, behind one function <a id="d15"></a>
 
 **Decision.** Geist and Instrument Serif load from the Google Fonts CDN through
 one function, `met_hello_child_fonts_url()`
@@ -326,6 +326,15 @@ and keep dev files out of the release zip through `.gitattributes` and the
 same way. The dependencies should not be, because a WordPress theme is deployed
 by copying files and no site needs phpcs.
 
+**Corrected 2026-08-07.** `PLAN/` was missing from both exclude lists and had
+been shipping in every release zip since it was created in 1.6.0: 228 KB of
+internal PRDs and the design gallery, delivered to every site that installs
+the theme. `composer.lock` was in the `release.yml` list but not
+`.gitattributes`. Both added to both lists. The two lists are easy to let
+drift apart because only one of them, `release.yml`, actually builds the
+published zip; `.gitattributes` `export-ignore` only affects `git archive`.
+`.gitattributes` now carries a comment saying to keep them in step.
+
 ---
 
 ## D22: plan on Opus, code on Sonnet 5 <a id="d22"></a>
@@ -359,7 +368,7 @@ change it in both places.
 
 ---
 
-## D23: read these docs partially, and cap the log
+## D23: read these docs partially, and cap the log <a id="d23"></a>
 
 **Decision (2026-08-01).** `CLAUDE.md` states how much of each doc to read.
 `PROJECT_LOG.md` defaults to its top 40 lines. `DECISIONS.md` is searched by
@@ -376,6 +385,30 @@ reading them fully would cost more in missed context than it saves in tokens.
 `CLAUDE.md` about 630 tokens and the only file loaded automatically,
 `DECISIONS.md` about 4,100, `PROJECT_LOG.md` about 2,600, `STATE.md` about 1,500,
 `WRITING_RULES.md` about 830.
+
+**Amended 2026-08-07, because the rule could not fire.** The original trigger
+was "entries older than the current year". `PROJECT_LOG.md` reached 712 lines
+with every entry dated 2026, so there was nothing older than the current year
+to move and the cap never applied. The rule assumed a project that spans
+years; this one did a year's work in five weeks.
+
+**The rule now.** When `PROJECT_LOG.md` passes about 200 lines, move
+everything **older than the current version era** into
+`DOCS/archive/PROJECT_LOG-<year>.md`, keeping the live file to the active
+release and its immediate context. Append to the existing year file rather
+than creating a second one. Leave an index table at the bottom of the live
+log naming what each archived period covers, so a reader can decide whether
+to open the archive without opening it.
+
+**Also amended: the "top 40 lines" default.** That held while entries were
+short. A single entry can now run past 150 lines. The instruction in
+`CLAUDE.md` is now "read the newest entry whole, then stop", which is what
+the 40-line rule was always approximating.
+
+**First archive, 2026-08-07.** v1.0.0 through v1.8.0, twenty entries,
+2026-07-07 to 2026-08-04, moved unedited into
+[archive/PROJECT_LOG-2026.md](archive/PROJECT_LOG-2026.md). Live log went from
+712 lines to 209.
 
 ---
 
@@ -647,3 +680,476 @@ it directly ([D15](#d15)). This means Elementor-authored pages and the
 theme's native views will not carry byte-identical typography until Geist is
 registered for Elementor after the demo, a known, accepted gap, not an
 oversight.
+
+---
+
+## D28: theme.json is the canonical design system, superseding the D27 token layer <a id="d28"></a>
+
+**Decision (2026-08-07, v1.9.0).** `theme.json` at the theme root holds the
+design system: colour, type scale, spacing, section rhythm, layout widths,
+elevation, radius, z-index, motion and focus. `assets/css/tokens.css` no longer
+holds values. It is now an alias layer, mapping every old flat name
+(`--gold`, `--ink`, `--space-5`) onto the matching `--wp--preset--*` or
+`--wp--custom--*` property, so `theme.css`, `scroll-top.css` and
+`elementor-base.css` keep working with no rewrite.
+
+**Why this replaces [D27](#d27)'s approach.** D27 shipped a sitewide token
+layer meant to govern Elementor from CSS. Its own same-day correction proved
+that cannot work: Elementor generates a stylesheet per page and bakes the Kit
+default into a rule scoped to each widget's element ID, which outranks any
+generic rule on plain specificity, whatever the load order. A stylesheet
+cannot govern Elementor content. The only way to govern the content is to own
+it, which is what the block-system migration does
+([PLAN/PRD-block-system.md](../PLAN/PRD-block-system.md)).
+
+**Two-layer naming, and why the slugs matter.** Primitives name the paint
+(`--gold-500`). Semantics name the job (`--color-accent`). Everything
+references semantics, never primitives. This is not style preference: the
+block editor writes the palette **slug** into every saved page as
+`has-{slug}-color`, so a palette named after paint would bake the paint name
+into 30 pages of content and make a future rebrand a database find and
+replace. Named after the job, a rebrand is one value in one file.
+
+**Display and text are separate tokens for every accent.** `--color-accent`
+`#B98A2E` stays for headings, icons, borders and decoration. A darker sibling
+`--color-accent-text` `#85621E` is used for body text, labels and small
+links, because the display shade computes to 2.72:1 on the paper background
+and fails WCAG AA. The same split exists for the three sector colours. The
+brand looks unchanged; only small text moves.
+
+**The system was approved visually before it was built.**
+[PLAN/DESIGN-SYSTEM-GALLERY.html](../PLAN/DESIGN-SYSTEM-GALLERY.html) renders
+every token, every component and every open A/B choice as real markup, opened
+in a browser and signed off 2026-08-07. The findings behind it, including the
+discovery that the 40 design files contain two systems rather than the 21 first
+estimated, are in
+[PLAN/DESIGN-SYSTEM-DECISIONS.md](../PLAN/DESIGN-SYSTEM-DECISIONS.md).
+
+**Fonts are self-hosted through `theme.json`** `fontFace` entries, closing the
+[D15](#d15) TODO. The standalone death-path pages (`dropins/maintenance.php`,
+`error-403.php`, `inc/maintenance.php`) still load from the Google CDN,
+unchanged and on purpose: they run outside a booted WordPress ([D7](#d7)) and
+cannot read `theme.json`.
+
+---
+
+## D29: Pages render through the theme's own page.php, and migration is two meta keys <a id="d29"></a>
+
+**Decision (2026-08-07, v1.9.0).** The child theme ships `page.php`. A Page
+moves off Elementor by clearing **both** `_elementor_edit_mode` and
+`_wp_page_template`. `_elementor_data` is never touched, so the move is
+reversible.
+
+**Why `page.php` had to exist.** Neither Hello Elementor nor this theme had
+one, so every Page fell through `index.php` to
+`hello-elementor/template-parts/single.php`, a template written for blog
+posts. That gave any non-Elementor Page three faults at once: a second `<h1>`
+alongside Page Hero's, an open comment form (Site Health confirms comments
+default to open on this site), and a `<main class="site-main">` that the
+parent's `body:not([class*=elementor-page-]) .site-main{max-width:1140px}`
+rule squeezes to blog-post width the moment the Elementor body class goes
+away.
+
+**How `page.php` beats the width rule without a fight.** The parent's rule
+keys on the **class** `.site-main`. The parent's skip link keys on the **id**
+`#content`. Keeping `id="content"` and dropping the class removes the
+constraint and keeps the skip link working, with no `!important` and no
+specificity contest. Same philosophy as [D26](#d26): win by structure, not by
+force.
+
+**Two meta keys, not one, found by testing.** The first cut of
+[PLAN/PRD-block-system.md](../PLAN/PRD-block-system.md) section 4.5 said
+clearing `_elementor_edit_mode` was enough. It is not. That meta only decides
+whether Elementor's **editor** treats the Page as builder content. Front-end
+template selection reads `_wp_page_template`, the Page Attributes "Template"
+value, which stays at `elementor_header_footer` and sends WordPress past
+`page.php` to `index.php`'s generic fallback, reintroducing the exact width
+bug `page.php` exists to prevent. `inc/migration-tools.php` now clears both
+and stores the original template under `_met_migration_original_template`, so
+rollback restores the real previous value rather than a guess.
+
+**`page.php` calls `get_header()` and `get_footer()`.** Obvious, and it was
+missing from the first cut, which rendered every migrated Page as a bare HTML
+fragment with no `<head>`, no enqueued stylesheets and no site chrome. Caught
+by fetching the real page and grepping for stylesheet handles that were not
+there. Recorded because it is the clearest example of the rule this migration
+runs on: verify by reading rendered output, not by reasoning about code.
+
+**`inc/migration-tools.php` is temporary.** It exists because this migration
+is driven from an environment with no WP-CLI and no database client, and the
+meta it flips is not exposed through the REST API. It is `manage_options`
+gated and nonce checked. Remove it, and its `require_once` in
+`functions.php`, when phase 4 ships or WP-CLI access arrives.
+
+---
+
+## D30: Page Hero is the fixed sitewide header. Design files supply body content only <a id="d30"></a>
+
+**Decision (2026-08-07, owner instruction).** Every migrated Page keeps the
+Page Hero band from [D25](#d25) as its header, unchanged. The per-page design
+files in `CLAUDE DESIGN` supply the **body content below the header** and
+nothing else. Page Hero is never redesigned, replaced or removed to match an
+individual page's mockup.
+
+**Why.** Page Hero is already deployed on all 16 target Pages on local and
+live staging, and it exists precisely so no page's header looks different
+from any other's. Each design file is a full-page mockup carrying its own
+top-of-page treatment, and those treatments differ from each other: some open
+with a plain light intro, some with a coloured band. Reproducing each one
+faithfully would give the site 30 different headers, which is the exact
+inconsistency this whole project exists to remove. Fidelity to one file is
+worth less than consistency across all of them.
+
+**What this means in practice.**
+
+- The `<h1>` is always `get_the_title()`, printed by Page Hero. A design
+  file's own display headline ("Speak up. We're listening.") becomes the hero
+  **subtitle**, or is dropped if the hero already reads well without it. It
+  never becomes a second heading.
+- A design file's opening intro section is not rebuilt. Its body copy moves
+  into the first block of page content.
+- Anything in a design file above its first real content section is header
+  material, and header material is Page Hero's, not the page's.
+
+**How this was found.** The first migrated Page reproduced
+`whistleblowing.html`'s light intro section literally, which put a plain
+intro where every other Page on the site has a petrol band. Corrected on
+owner review the same day. The `met-page__intro`, `met-page__title` and
+`met-page__lede` rules in `assets/css/patterns.css` and the fallback intro
+markup in `page.php` remain, and are correct, but they only ever apply to a
+Page that has **no** hero variant set, which no migrated Page in this project
+should have.
+
+**This does not weaken [D25](#d25).** Page Hero stays opt-in per Page through
+its meta box, and a Page with no variant set still renders no hero. The rule
+here is about the migration: every Page in it opts in, with the standard or
+business variant, and the variant is a content decision made in the meta box,
+not a design decision remade in CSS per page.
+
+---
+
+## D35: Page bodies are built in Elementor again, governed by the token system <a id="d35"></a>
+
+**Decision (2026-08-08, owner instruction).** Page bodies are built with
+Elementor free plus Essential Addons and UAE. The block-editor migration in
+[PRD-block-system.md](../PLAN/PRD-block-system.md) is suspended for page bodies.
+
+**Why this is not a return to [D27](#d27)'s failed approach.** D27 tried to
+govern Elementor from a stylesheet and failed, because Elementor bakes its Kit
+defaults into per-widget CSS scoped to element IDs, which outranks any generic
+rule. This decision accepts that and inverts it: the tokens are written **into
+each widget's own settings at build time**, so they win on the same specificity
+Elementor uses. The design system is still the single source of truth; only the
+delivery mechanism changed.
+
+**What made it viable.** Novamira's `execute-php` lets `_elementor_data` be
+written programmatically, so a page is authored as a data structure with token
+values rather than clicked together by hand. Without that this would be
+unmaintainable.
+
+**The cost, stated plainly.** Elementor stays a dependency, which was the thing
+the block migration existed to remove. Phase 4 of the PRD (chrome into the
+theme) still stands and is being brought forward as v1.10.0, so the header,
+footer and homepage leave Elementor even though page bodies do not.
+
+**Addon defaults must be overridden, every time.** Essential Addons ships its
+own brand colours (`#f56a6a` coral, `#ff622a` orange, `#333` grey) that bleed
+into any widget left at defaults. On the Group of Companies page 22 colour
+controls had to be set explicitly. Treat every addon widget as hostile to the
+design system until proven otherwise, and run `check-design` to catch it.
+
+---
+
+## D36: theme.json font-size slugs that start with a digit get a hyphen <a id="d36"></a>
+
+**Decision (2026-08-08, found by owner review).** Every alias of a
+`theme.json` preset must be verified against the CSS custom property WordPress
+actually generates, and must carry a literal fallback value.
+
+**The bug.** `theme.json` defines font sizes with slugs `2xl` and `3xl`.
+WordPress does not generate `--wp--preset--font-size--2xl`. It inserts a hyphen
+between the digit and the letters, producing `--wp--preset--font-size--2-xl`.
+`tokens.css` aliased the names that do not exist, so `--text-2xl` and
+`--text-3xl` resolved to nothing, every `font-size` using them was invalid, and
+the affected elements silently fell back to the browser default size.
+
+**What it broke.** The Page Hero title on all 16 Pages, and every `h2` in every
+blog post. Later found again in `patterns.css`, affecting three more headings.
+
+**Why it survived so long.** A broken `var()` still renders the text. curl and
+grep see correct markup, correct classes and correct stylesheet links. Only a
+human eye or a computed-style check catches it. This is the same lesson as the
+migration's "structural verification is not visual verification", arriving from
+a new direction: the markup was never wrong, the cascade was.
+
+**The rule now.** Every `var(--wp--preset--*)` reference carries a fallback:
+`var(--wp--preset--font-size--3-xl, clamp(36px, 4.5vw, 56px))`. A future slug
+rename then degrades to a visibly wrong size rather than a silently absent one.
+
+---
+
+## D37: the homepage is a Page Template, not front-page.php <a id="d37"></a>
+
+**Decision (2026-08-08, owner instruction, for v1.10.0).** The homepage design
+ships as `page-templates/template-homepage.php` carrying a
+`Template Name: Homepage` header, assigned per Page in Page Attributes, with the
+front page then chosen in Settings, Reading.
+
+**Why not `front-page.php`.** It would work, but it takes the choice away from
+the owner: `front-page.php` outranks both the Page Template dropdown and the
+Reading setting, so the dropdown would list a template that never applies. The
+owner asked to control this from the admin, which is also the more conventional
+WordPress answer. A Page Template can additionally be applied to any Page, not
+only the front one.
+
+**Consequence.** `front-page.php` must never be added to this theme while this
+decision stands, or it will silently override the template.
+
+---
+
+## D38: the new header and footer ship behind a Customizer toggle <a id="d38"></a>
+
+**Decision (2026-08-08, for v1.10.0).** The custom site chrome is gated by a
+Customizer checkbox, `met_hello_child_chrome_enabled`, default off. When off,
+`header.php` and `footer.php` fall through to the parent theme's versions.
+
+**Why.** Switching the chrome changes every page on the site at once. A toggle
+makes that reversible in one click with no file deletion and no deploy.
+
+**Header Footer Elementor is installed but currently owns nothing.**
+`get_hfe_header_id()` and `get_hfe_footer_id()` both return false, so the parent
+Hello Elementor templates render the chrome today. The toggle still adds
+`hfe_header_enabled` and `hfe_footer_enabled` filters as insurance, because if a
+template is ever assigned, `HFE_Default_Compat::override_header()` runs
+`remove_all_actions('wp_head')` and discards the theme's `header.php` output
+entirely. Note the fallback must use `require get_template_directory()`, not
+`locate_template()`, which would find the child file and recurse.
+
+**Menu locations stay content-only.** Assigning a menu in Appearance, Menus
+never switches the chrome on or off. Coupling them would give a routine content
+action a sitewide structural side effect and would destroy the rollback.
+
+---
+
+## D39: hero slides are a non-public theme CPT, not a MetCPT type <a id="d39"></a>
+
+**Decision (2026-08-08, built in v1.10.0).** The homepage hero carousel reads
+`met_hero_slide`, a custom post type registered in `inc/hero-slides.php` with
+`public => false`, `show_in_rest => false`, no archive and no single view. The
+featured image is the slide background; the copy is classic meta fields shaped
+like the Page Hero fields.
+
+**Why here and not in MetCPT.** MetCPT owns the site's *public* content types
+(Events, Tenders, Careers), which have their own URLs, archives and REST
+exposure. A hero slide is presentation furniture for one theme template: it has
+no public URL and no meaning outside the homepage. Putting it in the theme keeps
+it with the template that consumes it, and `show_in_rest => false` deliberately
+forces the classic editor so the classic meta box is the correct tool. Zero
+slides falls back to one static slide from the site identity; one slide renders
+with no dots or arrows.
+
+---
+
+## D40: business sector is Page meta, not a taxonomy <a id="d40"></a>
+
+**Decision (2026-08-08, built in v1.10.0).** A `/business/` child Page's division
+is stored in a single `_met_sector` Page meta key, sanitised against
+`education / infrastructure / healthcare` (`inc/sectors.php`). It is read by the
+homepage companies grid and the header mega menu to colour-code cards and
+columns.
+
+**Why not a taxonomy.** A real taxonomy is content shape, with its own archive,
+REST surface and admin UI, and that belongs in the MetCPT plugin, not in this
+presentation theme. A meta key is enough for colour-coding and keeps the theme
+from owning content structure it should not.
+
+**The eyebrow fallback is a convenience, then a backfill.**
+`met_hello_child_get_page_sector()` resolves saved meta first, then parses the
+Page Hero eyebrow ("Education Division" -> education), then returns ''. The
+parse means the nine Pages render with the right colour on day one with zero
+data entry; the one-time backfill in `inc/migration-tools.php` then writes the
+real meta so the parse is no longer relied on. All nine were backfilled on
+2026-08-08.
+
+---
+
+## D41: pages are built from real Elementor widgets, never one HTML widget <a id="d41"></a>
+
+**Decision (2026-08-09, owner instruction, after a rejected build).** A design
+file is a *reference*, not a payload. Every page is composed from Elementor
+containers and real widgets: `heading`, `text-editor`, `image`, `button`,
+`icon`, `divider`, plus the two addon plugins where they earn their place. The
+`html` widget is reserved for the one thing Elementor and the addons genuinely
+cannot express, and even then it holds a fragment, not a page.
+
+**What went wrong.** The first 25th Anniversary build pasted the approved design
+file's markup, `<style>` block included, into a single `html` widget. It looked
+efficient. It was not a build. The design's absolutely positioned sections and
+`min-height:82vh` hero collided with Elementor's own flex layout and destroyed
+the page: a giant blank band, the hero squashed into a narrow column, and five
+sections missing entirely. The owner rejected it on sight. Worse, it had been
+reported as verified after checking only the HTML source, which is precisely the
+failure STATE.md already warns about.
+
+**Why it matters beyond that one page.** A page shipped as pasted markup is not
+editable by the owner in Elementor, does not inherit Elementor's responsive
+controls, and cannot be maintained by anyone who is not editing raw HTML. The
+whole reason for D35 was to build *with* the tool rather than against it.
+
+**Token values are baked per widget at build time**, matching the pattern the
+Whistleblowing page already used: hex values from `theme.json`, and
+`typography_font_family: "Geist"`. Do not write `var(--wp--preset--*)` into
+widget settings.
+
+### Elementor gotchas that have each cost a rebuild
+
+Check these four before declaring any Elementor page done. Every one was found
+by looking at a screenshot, never by reading the markup.
+
+1. **Grid containers default to two rows.** `container_type: grid` emits
+   `grid-template-rows: repeat(2, 1fr)` from Elementor's own base CSS, so a grid
+   holding a single row of cards reserves an equal empty row beneath it. On the
+   Group of Companies page that added roughly 370px of dead space under every
+   grid. Fix: set `grid_rows_grid` to `array('unit'=>'custom','size'=>'auto')`
+   on every breakpoint. Deleting the setting is not enough; it falls back to the
+   two-row default.
+2. **Background overlay opacity defaults to 0.5.** A gradient scrim set through
+   `background_overlay_*` renders at half strength, so text over photos comes out
+   unreadable. Always set
+   `background_overlay_opacity => array('unit'=>'px','size'=>1)`.
+3. **Images in grid cells need an explicit width.** CSS grid items do not shrink
+   below their content, so a 1024px logo forces its column wide and the page
+   gains horizontal scroll. Set `image_size` to a registered size, a real
+   attachment `id`, and an explicit `width`.
+4. **Font Awesome is version 5 here**, not 6. `fa-shield-halved` and other FA6
+   names do not exist and make Elementor print PHP warnings into the rendered
+   card. Use `fa-shield-alt` and check
+   `plugins/elementor/assets/lib/font-awesome/css/all.css` before inventing a
+   name.
+
+---
+
+## D42: page images are imported into the media library, never hotlinked <a id="d42"></a>
+
+**Decision (2026-08-09).** Any image a design file points at on
+`v2.iiumholdings.com.my` is imported into the local media library with
+`media_handle_sideload()` before the page is built, and the page references the
+local attachment.
+
+**Why.** Staging sits behind Cloudflare with hotlink protection. Those URLs
+return `200` to a server-side fetch and to `curl`, so they look fine in every
+structural check, but a browser loading them from a page on `http://v2` sends a
+cross-origin `Referer` and gets blocked. The result is a page full of broken
+images that passes every automated test. The 25th Anniversary emblem failed this
+way in front of the owner.
+
+**Consequence.** A built page has zero external image references. That is also
+what we want when the page eventually moves to staging, since the media then
+lives in the site's own library rather than depending on another origin.
+
+---
+
+## D43: visual verification means a screenshot, and the agent takes it <a id="d43"></a>
+
+**Decision (2026-08-09).** Before reporting any page as done, render it in
+headless Chrome and look at it. `curl` and `grep` do not count.
+
+**How.** Chrome is installed at
+`C:/Program Files/Google/Chrome/Application/chrome.exe`. Node 24 drives it over
+the DevTools Protocol: launch with `--headless=new --remote-debugging-port`,
+connect to the target's WebSocket, call `Emulation.setDeviceMetricsOverride` for
+a real viewport, then `Page.captureScreenshot` with `captureBeyondViewport:true`
+for a full page. Scripts live in the session scratchpad.
+
+**Two things to know about the capture.**
+`min-height` in `vh` follows the emulated window height, so a tall capture
+window inflates any `vh` hero and the screenshot lies about its height. Judge
+`vh` sections at a real viewport height. And `captureBeyondViewport` does not
+trigger `loading="lazy"` images below the fold, so they photograph blank; scroll
+to them with `Runtime.evaluate` before concluding an image is broken.
+
+**Also worth running every time:** measure `document.documentElement.scrollWidth`
+against `clientWidth` at 390, 768, 1366 and 1920, and count `h1` elements. Both
+are one line of JavaScript and both have caught real defects.
+
+---
+
+## D44: post listings are a theme shortcode, not an addon widget <a id="d44"></a>
+
+**Decision (2026-08-09, built in v1.11.0).** A list of Posts on a page comes from
+the theme's own `[met_posts]` shortcode (`inc/listing.php`), dropped into an
+Elementor Shortcode widget. Not Essential Addons Post Grid, and not MetCPT's
+`news_grid`.
+
+**The deciding reason is the move to staging.** Elementor and Essential Addons
+query controls store category **term IDs**. Local term IDs are not staging term
+IDs, so a page exported from local and imported to staging lists the wrong posts,
+or none, and every structural check still passes. This is the same class of
+failure as the attachment IDs in [D42](#d42) and the image URLs in
+[DEPLOY-TO-STAGING.md](DEPLOY-TO-STAGING.md). A shortcode written
+`category="announcements"` is a **slug**, and slugs are identical on both sites,
+so it survives the move as plain text.
+
+**Two more reasons.** Essential Addons ships coral and orange brand defaults that
+bleed into any control left alone ([D35](#d35) records 22 colour controls needing
+explicit values on one page); a shortcode keeps the listing design in one
+stylesheet instead of re-entered per page. And MetCPT already delivers listings
+on this site as shortcodes, so this keeps one idiom, not two. MetCPT's own
+styling was rejected because `.mcpt-v2` defines its own `--mcpt-*` variables,
+reads no theme tokens, and still imports Google Fonts, against D15 and D28.
+
+**The cost, stated plainly.** The listing itself is not visually editable in
+Elementor; it is configured by shortcode attributes (`category`, `count`,
+`layout`, `columns`, `featured`, `paged`). That is the trade for portability and
+one-place styling. The rest of the page is still built from native widgets, so
+D41 holds.
+
+**Implementation notes worth keeping.** A misspelled or unknown slug returns the
+empty state, never the whole blog: `met_hello_child_listing_tax_query()` returns
+`false` when an include slug matched no term, and the renderer treats that as
+"show nothing". The stylesheet is enqueued only when the page actually uses the
+shortcode, detected by `met_hello_child_page_has_shortcode()`, which checks both
+`post_content` and the `_elementor_data` blob, because Elementor stores widget
+content in meta, not in `post_content`. `listing.css` reads `theme.json`
+properties directly like `home.css`, not the `tokens.css` alias layer that
+`theme.css` uses; keeping the two layers apart is the D36 lesson.
+
+---
+
+## D45: news, press releases, CSR and gallery are one post type by category <a id="d45"></a>
+
+**Decision (2026-08-09, owner instruction, built in v1.11.0).** News,
+announcements, press releases, CSR items and gallery albums are all the standard
+`post` type, separated by **category**, not by post type. New categories
+`press-releases` and `gallery` were created; `csr` already existed.
+
+**Why not custom post types.** A CPT earns its place when its fields differ from
+a post. These do not: each is a title, a date, a featured image and a body. As
+plain posts they share `single.php`, the archive templates, RSS, Yoast and the
+search index with no extra code. If a field ever does diverge, it belongs in
+MetCPT, which owns the site's public content types ([D39](#d39)), not in this
+presentation theme.
+
+---
+
+## D46: gallery albums live on Facebook, WordPress holds the pointer <a id="d46"></a>
+
+**Decision (2026-08-09, owner practice made a feature, built in v1.11.0).** A
+gallery item is a Post in the `gallery` category with a cover image and a
+description. The photos themselves stay in a Facebook album. A new post meta key
+`_met_album_url` holds the external album link; `single.php` renders a "View the
+full album" button when it is set, and `[met_posts layout="album"]` marks the
+card.
+
+**Why this is right, not a workaround.** The owner has done this for three years
+after filling the hosting disk in year one by uploading hundreds of
+high-resolution event photos to the media library. Facebook hosts the images;
+the site carries an indexable page on its own domain with the description and
+share row. Adding image sizes or bulk-importing those photos would work directly
+against the reason this decision exists. **A future session must not "fix" this
+by uploading the album images.** No new `add_image_size` was added; listings
+reuse `met-card` and `met-thumb`.
+
+**The card links to the post, not straight to Facebook.** The post is the
+on-domain, indexable surface. Sending the card directly to the external album is
+a one-attribute change if that is ever wanted.

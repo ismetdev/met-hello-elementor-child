@@ -122,6 +122,20 @@ while ( have_posts() ) :
 								'after'  => '</div>',
 							)
 						);
+
+						// External photo album (Facebook etc.), when set. See D46.
+						$met_album_url = met_hello_child_get_album_url();
+						if ( '' !== $met_album_url ) :
+							?>
+							<p class="post-album">
+								<a class="post-album__link" href="<?php echo esc_url( $met_album_url ); ?>" target="_blank" rel="noopener noreferrer">
+									<?php esc_html_e( 'View the full album', 'met-hello-child' ); ?>
+									<svg viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M7 17L17 7M17 7H9M17 7v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+									<span class="screen-reader-text"><?php esc_html_e( '(opens in a new tab)', 'met-hello-child' ); ?></span>
+								</a>
+							</p>
+							<?php
+						endif;
 						?>
 					</div>
 

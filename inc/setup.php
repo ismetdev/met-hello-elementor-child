@@ -106,3 +106,27 @@ function met_hello_child_close_elementor_main() {
 }
 add_action( 'elementor/page_templates/header-footer/after_content', 'met_hello_child_close_elementor_main', 20 );
 add_action( 'elementor/page_templates/canvas/after_content', 'met_hello_child_close_elementor_main', 20 );
+
+/**
+ * Whether the given (or current) Page renders through page.php, the block
+ * editor template, rather than through Elementor.
+ *
+ * Elementor owns a Page's front-end rendering whenever its
+ * `_elementor_edit_mode` post meta is `builder` (set by the plugin itself,
+ * read here, never written by the theme). Anything else, including a Page
+ * that has never been touched by Elementor, falls through to page.php. See
+ * PLAN/PRD-block-system.md section 4.5 for the full migrate/rollback story.
+ *
+ * @param int|null $post_id Page ID. Defaults to the current queried object.
+ * @return bool
+ */
+function met_hello_child_is_block_page( $post_id = null ) {
+	if ( null === $post_id ) {
+		if ( ! is_page() ) {
+			return false;
+		}
+		$post_id = get_queried_object_id();
+	}
+
+	return 'builder' !== get_post_meta( $post_id, '_elementor_edit_mode', true );
+}

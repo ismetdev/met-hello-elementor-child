@@ -13,10 +13,14 @@
 *.mo  binary
 
 # Development files. Not part of a theme install.
+# Keep this list in step with the exclude list in .github/workflows/release.yml,
+# which is what actually builds the published zip. See DECISIONS D21.
 /.editorconfig   export-ignore
 /.gitattributes  export-ignore
 /.github         export-ignore
 /.gitignore      export-ignore
 /composer.json   export-ignore
+/composer.lock   export-ignore
 /phpcs.xml.dist  export-ignore
 /DOCS            export-ignore
+/PLAN            export-ignore

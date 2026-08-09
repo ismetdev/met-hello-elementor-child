@@ -1,0 +1,166 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"settings": {
+		"appearanceTools": true,
+		"layout": {
+			"contentSize": "880px",
+			"wideSize": "1280px"
+		},
+		"color": {
+			"custom": false,
+			"customDuotone": false,
+			"customGradient": false,
+			"defaultPalette": false,
+			"defaultGradients": false,
+			"defaultDuotone": false,
+			"palette": [
+				{ "slug": "text", "name": "Text", "color": "#0F1419" },
+				{ "slug": "text-secondary", "name": "Text secondary", "color": "#5A6168" },
+				{ "slug": "text-muted", "name": "Text muted", "color": "#646B72" },
+				{ "slug": "text-on-dark", "name": "Text on dark", "color": "#FFFFFF" },
+				{ "slug": "surface", "name": "Surface", "color": "#F7F3EC" },
+				{ "slug": "surface-raised", "name": "Surface raised", "color": "#FFFFFF" },
+				{ "slug": "surface-dark", "name": "Surface dark", "color": "#0E3B40" },
+				{ "slug": "surface-deepest", "name": "Surface deepest", "color": "#082226" },
+				{ "slug": "accent", "name": "Accent", "color": "#B98A2E" },
+				{ "slug": "accent-text", "name": "Accent text", "color": "#85621E" },
+				{ "slug": "accent-soft", "name": "Accent soft", "color": "#D4A547" },
+				{ "slug": "sector-education", "name": "Education", "color": "#4A7BA8" },
+				{ "slug": "sector-education-text", "name": "Education text", "color": "#3F6B93" },
+				{ "slug": "sector-healthcare", "name": "Healthcare", "color": "#B5566F" },
+				{ "slug": "sector-healthcare-text", "name": "Healthcare text", "color": "#A3465F" },
+				{ "slug": "sector-environment", "name": "Environment", "color": "#5B8C6E" },
+				{ "slug": "sector-environment-text", "name": "Environment text", "color": "#487256" },
+				{ "slug": "sector-infrastructure", "name": "Infrastructure", "color": "#B98A2E" }
+			]
+		},
+		"typography": {
+			"customFontSize": false,
+			"fontStyle": true,
+			"fontWeight": true,
+			"letterSpacing": true,
+			"lineHeight": true,
+			"fontFamilies": [
+				{
+					"slug": "sans",
+					"name": "Geist (sans)",
+					"fontFamily": "\"Geist\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+					"fontFace": [
+						{
+							"fontFamily": "Geist",
+							"fontStyle": "normal",
+							"fontWeight": "300 800",
+							"src": [ "file:./assets/fonts/geist-variable-latin.woff2" ]
+						}
+					]
+				},
+				{
+					"slug": "serif",
+					"name": "Instrument Serif",
+					"fontFamily": "\"Instrument Serif\", \"Iowan Old Style\", Georgia, serif",
+					"fontFace": [
+						{
+							"fontFamily": "Instrument Serif",
+							"fontStyle": "normal",
+							"fontWeight": "400",
+							"src": [ "file:./assets/fonts/instrument-serif-latin-400-normal.woff2" ]
+						},
+						{
+							"fontFamily": "Instrument Serif",
+							"fontStyle": "italic",
+							"fontWeight": "400",
+							"src": [ "file:./assets/fonts/instrument-serif-latin-400-italic.woff2" ]
+						}
+					]
+				}
+			],
+			"fontSizes": [
+				{ "slug": "xs", "name": "XS · 12px", "size": "12px" },
+				{ "slug": "sm", "name": "SM · 13px", "size": "13px" },
+				{ "slug": "base", "name": "Base · 15px", "size": "15px" },
+				{ "slug": "md", "name": "MD · 17px", "size": "17px" },
+				{ "slug": "lg", "name": "LG · 19px", "size": "19px" },
+				{ "slug": "xl", "name": "XL · 22px", "size": "22px" },
+				{ "slug": "2xl", "name": "2XL · section heading", "size": "clamp(28px, 3vw, 36px)" },
+				{ "slug": "3xl", "name": "3XL · page heading", "size": "clamp(36px, 4.5vw, 56px)" },
+				{ "slug": "4xl", "name": "4XL · stat figure", "size": "clamp(44px, 6vw, 80px)" },
+				{ "slug": "hero", "name": "Hero · placeholder, see PRD-design-system.md §6", "size": "clamp(44px, 7vw, 92px)" }
+			]
+		},
+		"spacing": {
+			"customSpacingSize": false,
+			"units": [ "px", "%", "em", "rem", "vh", "vw" ],
+			"padding": true,
+			"margin": true,
+			"blockGap": false,
+			"spacingSizes": [
+				{ "slug": "1", "name": "1 · 4px", "size": "4px" },
+				{ "slug": "2", "name": "2 · 8px", "size": "8px" },
+				{ "slug": "3", "name": "3 · 12px", "size": "12px" },
+				{ "slug": "4", "name": "4 · 16px", "size": "16px" },
+				{ "slug": "5", "name": "5 · 24px", "size": "24px" },
+				{ "slug": "6", "name": "6 · 32px", "size": "32px" },
+				{ "slug": "7", "name": "7 · 48px", "size": "48px" },
+				{ "slug": "8", "name": "8 · 64px", "size": "64px" },
+				{ "slug": "9", "name": "9 · 96px", "size": "96px" },
+				{ "slug": "10", "name": "10 · 128px", "size": "128px" }
+			]
+		},
+		"custom": {
+			"section-y": "clamp(72px, 10vw, 128px)",
+			"section-y-slow": "clamp(96px, 12vw, 160px)",
+			"container-narrow": "880px",
+			"gutter": "clamp(20px, 4vw, 40px)",
+			"reading": "72ch",
+			"radius": { "sm": "4px", "default": "8px", "lg": "14px", "xl": "20px" },
+			"border": {
+				"hairline": "rgba(15,20,25,.08)",
+				"hairline-strong": "rgba(15,20,25,.14)",
+				"hairline-light": "rgba(255,255,255,.12)"
+			},
+			"shadow": {
+				"1": "0 1px 2px rgba(10,10,10,.07), 0 1px 1px rgba(10,10,10,.04)",
+				"2": "0 4px 10px rgba(10,10,10,.09), 0 2px 4px rgba(10,10,10,.05)",
+				"3": "0 10px 24px rgba(10,10,10,.13), 0 4px 8px rgba(10,10,10,.06)",
+				"4": "0 24px 56px rgba(10,10,10,.20), 0 8px 16px rgba(10,10,10,.08)"
+			},
+			"z": {
+				"base": "0",
+				"raised": "10",
+				"sticky": "100",
+				"header": "200",
+				"overlay": "800",
+				"modal": "900",
+				"toast": "1000"
+			},
+			"motion": {
+				"ease": "cubic-bezier(0.2,0.8,0.2,1)",
+				"ease-out": "cubic-bezier(0.16,1,0.3,1)",
+				"fast": "180ms",
+				"med": "280ms",
+				"slow": "520ms"
+			}
+		}
+	},
+	"styles": {
+		"color": {
+			"background": "var(--wp--preset--color--surface)",
+			"text": "var(--wp--preset--color--text)"
+		},
+		"typography": {
+			"fontFamily": "var(--wp--preset--font-family--sans)",
+			"fontSize": "var(--wp--preset--font-size--base)",
+			"lineHeight": "1.6"
+		},
+		"elements": {
+			"link": {
+				"color": { "text": "var(--wp--preset--color--surface-dark)" },
+				":hover": { "color": { "text": "var(--wp--preset--color--accent-text)" } }
+			},
+			"heading": {
+				"typography": { "fontFamily": "var(--wp--preset--font-family--serif)", "fontWeight": "400" }
+			}
+		}
+	}
+}

@@ -21,6 +21,20 @@ node_modules/
 # Claude Code personal/local settings
 .claude/settings.local.json
 
+# Local MCP server registration. Carries an Application Password for the local
+# dev site only. Never commit it.
+/.mcp.json
+
+# Stray files from a notify hook writing to a Windows path with the
+# backslashes stripped, which lands them in the repo root as literal names
+# like "C:UsersIIUM" or "Holdings.claudeclaude-notify-signalsstop". Three
+# empty ones were removed on 2026-08-07. The real fix is in the hook config,
+# outside this repo; this only stops them being committed by a `git add -A`.
+/Holdings.claude*
+# Next line begins with C then U+F03A, a colon lookalike. Not an ASCII
+# colon: Windows forbids : in filenames, so git stores the substitute.
+/C*
+
 # Build output from the release workflow
 /build/
 *.zip

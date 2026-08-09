@@ -1,0 +1,306 @@
+/**
+ * Styles for the [met_posts] shortcode listing (inc/listing.php).
+ *
+ * Everything is scoped under .met-list so it cannot touch .met-view, .met-page,
+ * .met-home or .elementor. Reads theme.json custom properties directly, the way
+ * home.css does, always with a literal fallback (see DECISIONS D36). Mobile
+ * first, widened by min-width queries.
+ */
+
+.met-list {
+	display: grid;
+	gap: var(--wp--custom--gutter, clamp(20px, 3vw, 32px));
+}
+
+/* Card ------------------------------------------------------------------ */
+
+.met-list__card {
+	display: flex;
+	flex-direction: column;
+	background: var(--wp--preset--color--surface-raised, #ffffff);
+	border: 1px solid var(--wp--custom--border--hairline, rgba(15, 20, 25, 0.1));
+	border-radius: var(--wp--custom--radius--lg, 14px);
+	overflow: hidden;
+	color: inherit;
+	text-decoration: none;
+	transition: transform var(--wp--custom--motion--med, 240ms) var(--wp--custom--motion--ease, ease),
+		box-shadow var(--wp--custom--motion--med, 240ms) var(--wp--custom--motion--ease, ease),
+		border-color var(--wp--custom--motion--med, 240ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-list__card:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--wp--custom--shadow--3, 0 18px 40px rgba(15, 20, 25, 0.1));
+	border-color: var(--wp--custom--border--hairline-strong, rgba(15, 20, 25, 0.2));
+}
+
+.met-list__card:focus-visible {
+	outline: 2px solid var(--wp--preset--color--accent-text, #96701f);
+	outline-offset: 3px;
+}
+
+.met-list__media {
+	position: relative;
+	display: block;
+	aspect-ratio: 16 / 10;
+	overflow: hidden;
+	background: var(--wp--preset--color--surface, #f7f3ec);
+}
+
+.met-list__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform var(--wp--custom--motion--slow, 500ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-list__card:hover .met-list__media img {
+	transform: scale(1.04);
+}
+
+.met-list__media-fallback {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background-color: var(--wp--preset--color--surface, #f7f3ec);
+	background-image: var(--pattern-light);
+	background-repeat: repeat;
+	background-position: center;
+}
+
+.met-list__body {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: var(--wp--preset--spacing--40, 1.5rem);
+	flex: 1 1 auto;
+}
+
+.met-list__cat {
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--accent-text, #96701f);
+}
+
+.met-list__title {
+	font-family: var(--wp--preset--font-family--sans, sans-serif);
+	font-weight: 700;
+	font-size: var(--wp--preset--font-size--lg, 1.25rem);
+	line-height: 1.3;
+	letter-spacing: -0.01em;
+	margin: 0;
+	color: var(--wp--preset--color--text, #16211d);
+}
+
+.met-list__card:hover .met-list__title {
+	color: var(--wp--preset--color--accent-text, #96701f);
+}
+
+.met-list__meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem;
+	margin-top: auto;
+	padding-top: 0.35rem;
+	font-size: 0.85rem;
+	color: var(--wp--preset--color--text-secondary, #5c6660);
+}
+
+.met-list__meta-sep {
+	width: 3px;
+	height: 3px;
+	border-radius: 50%;
+	background: currentColor;
+	opacity: 0.6;
+}
+
+.met-list__excerpt {
+	margin: 0.25rem 0 0;
+	font-size: var(--wp--preset--font-size--md, 1rem);
+	line-height: 1.6;
+	color: var(--wp--preset--color--text-secondary, #5c6660);
+}
+
+/* Grid and album layouts share the same column behaviour ---------------- */
+
+.met-list--grid,
+.met-list--album {
+	grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+	.met-list--grid.met-list--cols-2,
+	.met-list--grid.met-list--cols-3,
+	.met-list--grid.met-list--cols-4,
+	.met-list--album.met-list--cols-2,
+	.met-list--album.met-list--cols-3,
+	.met-list--album.met-list--cols-4 {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (min-width: 900px) {
+	.met-list--grid.met-list--cols-3,
+	.met-list--album.met-list--cols-3 {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.met-list--grid.met-list--cols-4,
+	.met-list--album.met-list--cols-4 {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+/* Featured card: spans the full grid width and lays out side by side on wide
+   screens, matching the homepage newsroom feature. */
+@media (min-width: 900px) {
+	.met-list__card--feature {
+		grid-column: 1 / -1;
+		flex-direction: row;
+	}
+
+	.met-list__card--feature .met-list__media {
+		flex: 0 0 55%;
+		aspect-ratio: 16 / 10;
+	}
+
+	.met-list__card--feature .met-list__body {
+		justify-content: center;
+		padding: clamp(1.5rem, 3vw, 2.5rem);
+	}
+
+	.met-list__card--feature .met-list__title {
+		font-size: clamp(1.4rem, 2.2vw, 2rem);
+	}
+}
+
+/* List layout ---------------------------------------------------------- */
+
+.met-list--list {
+	grid-template-columns: 1fr;
+	gap: 1rem;
+}
+
+.met-list--list .met-list__card {
+	flex-direction: row;
+	align-items: stretch;
+}
+
+.met-list--list .met-list__media {
+	flex: 0 0 clamp(120px, 30%, 220px);
+	aspect-ratio: 4 / 3;
+}
+
+.met-list--list .met-list__body {
+	padding: clamp(0.85rem, 2vw, 1.25rem);
+}
+
+.met-list--list .met-list__title {
+	font-size: var(--wp--preset--font-size--md, 1.05rem);
+}
+
+/* Album layout --------------------------------------------------------- */
+
+.met-list--album .met-list__media {
+	aspect-ratio: 3 / 2;
+}
+
+.met-list__album-badge {
+	position: absolute;
+	top: 0.75rem;
+	right: 0.75rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 34px;
+	height: 34px;
+	border-radius: 999px;
+	background: var(--wp--preset--color--surface-deepest, #0f1a17);
+	color: var(--wp--preset--color--text-on-dark, #ffffff);
+}
+
+.met-list__album-badge svg {
+	width: 16px;
+	height: 16px;
+}
+
+.met-list__album-note {
+	font-weight: 600;
+	color: var(--wp--preset--color--accent-text, #96701f);
+}
+
+/* Pagination ----------------------------------------------------------- */
+
+.met-list__pagination {
+	grid-column: 1 / -1;
+}
+
+.met-list__pagination ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.4rem;
+}
+
+.met-list__pagination a,
+.met-list__pagination span {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 42px;
+	height: 42px;
+	padding: 0 0.75rem;
+	border-radius: 10px;
+	border: 1px solid var(--wp--custom--border--hairline-strong, rgba(15, 20, 25, 0.2));
+	background: var(--wp--preset--color--surface-raised, #ffffff);
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: var(--wp--preset--color--text, #16211d);
+	text-decoration: none;
+	transition: background var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease),
+		border-color var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease),
+		color var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-list__pagination a:hover {
+	border-color: var(--wp--preset--color--accent-text, #96701f);
+	color: var(--wp--preset--color--accent-text, #96701f);
+}
+
+.met-list__pagination .current {
+	background: var(--wp--preset--color--accent-text, #96701f);
+	border-color: var(--wp--preset--color--accent-text, #96701f);
+	color: var(--wp--preset--color--text-on-dark, #ffffff);
+}
+
+/* Empty state ---------------------------------------------------------- */
+
+.met-list__empty {
+	color: var(--wp--preset--color--text-secondary, #5c6660);
+	font-size: var(--wp--preset--font-size--md, 1rem);
+	margin: 0;
+}
+
+/* Reduced motion ------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+	.met-list__card,
+	.met-list__media img {
+		transition: none;
+	}
+
+	.met-list__card:hover {
+		transform: none;
+	}
+
+	.met-list__card:hover .met-list__media img {
+		transform: none;
+	}
+}

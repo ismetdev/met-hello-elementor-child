@@ -54,12 +54,17 @@ body.met-hello-child-fullwidth .site-main.met-view {
 .met-view p{margin:0;}
 .met-view ul{margin:0;padding:0;list-style:none;}
 .met-view ::selection{background:var(--gold);color:#fff;}
-.met-view a:focus-visible{outline:2px solid var(--gold);outline-offset:3px;border-radius:6px;}
+/* Base focus ring: gold-text passes 4.88:1 on the light paper background most
+   links sit on. It fails on the dark hero bands below (2.19:1 on petrol), so
+   those get their own override with gold-soft, which passes there (5.40:1).
+   No single gold shade clears 3:1 on both a light and a dark surface at once. */
+.met-view a:focus-visible{outline:2px solid var(--gold-text);outline-offset:3px;border-radius:6px;}
+.met-hero a:focus-visible,.post-hero a:focus-visible,.page-hero-business a:focus-visible,.met-author a:focus-visible{outline-color:var(--gold-soft);}
 
 .met-view .container{width:100%;max-width:var(--container);margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter);}
 
-.met-view .eyebrow{display:inline-flex;align-items:center;gap:var(--space-3);font-size:var(--text-sm);font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);}
-.met-view .eyebrow::before{content:"";width:28px;height:2px;background:var(--gold);}
+.met-view .eyebrow{display:inline-flex;align-items:center;gap:var(--space-3);font-size:var(--text-sm);font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold-text);}
+.met-view .eyebrow::before{content:"";width:28px;height:2px;background:var(--gold-text);}
 .met-view .eyebrow--on-dark{color:var(--gold-soft);}
 .met-view .eyebrow--on-dark::before{background:var(--gold-soft);}
 
@@ -92,7 +97,7 @@ body.met-hello-child-fullwidth .site-main.met-view {
 .met-view .met-card__eyebrow::before{width:20px;}
 .met-view .met-card__title{font-size:var(--text-lg);font-weight:700;letter-spacing:-0.015em;line-height:1.3;}
 .met-view .met-card__title a{transition:color var(--t-fast) var(--ease);}
-.met-view .met-card__title a:hover{color:var(--gold);}
+.met-view .met-card__title a:hover{color:var(--gold-text);}
 .met-view .met-card__meta{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);font-size:var(--text-xs);color:var(--ink-soft);}
 .met-view .met-card__meta-sep{width:3px;height:3px;border-radius:50%;background:var(--ink-faint);}
 .met-view .met-card__excerpt{font-size:var(--text-sm);line-height:1.7;color:var(--ink-soft);}
@@ -104,15 +109,17 @@ body.met-hello-child-fullwidth .site-main.met-view {
 .met-view .pagination{margin-top:var(--space-8);}
 .met-view .pagination .nav-links{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--space-2);}
 .met-view .pagination .page-numbers{display:inline-flex;align-items:center;justify-content:center;min-width:40px;height:40px;padding:0 var(--space-3);border-radius:9px;border:1px solid var(--hairline-strong);background:var(--paper-cool);font-size:var(--text-sm);font-weight:600;color:var(--ink);transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease);}
-.met-view .pagination .page-numbers:hover{border-color:var(--gold);color:var(--gold);}
-.met-view .pagination .page-numbers.current{background:var(--gold);border-color:var(--gold);color:#fff;}
+.met-view .pagination .page-numbers:hover{border-color:var(--gold-text);color:var(--gold-text);}
+/* White text needs the darker gold-text as the fill, not display gold: white
+   on gold is 3.12:1 and fails 4.5:1; white on gold-text is 5.58:1. */
+.met-view .pagination .page-numbers.current{background:var(--gold-text);border-color:var(--gold-text);color:#fff;}
 .met-view .pagination .page-numbers.dots{border-color:transparent;background:transparent;}
 
 /* --- Shared search form (core get_search_form markup) -------------------- */
 .met-view .search-form{display:flex;gap:var(--space-3);max-width:520px;flex-wrap:wrap;}
 .met-view .search-form label{flex:1 1 220px;margin:0;}
 .met-view .search-field{width:100%;height:46px;padding:0 var(--space-4);border-radius:10px;border:1px solid var(--hairline-strong);background:var(--paper-cool);font-size:var(--text-base);color:var(--ink);font-family:inherit;}
-.met-view .search-field:focus{outline:2px solid var(--gold);outline-offset:2px;border-color:var(--gold);}
+.met-view .search-field:focus{outline:2px solid var(--gold-text);outline-offset:2px;border-color:var(--gold-text);}
 .met-view .search-submit{height:46px;padding:0 var(--space-5);border-radius:10px;border:1px solid var(--petrol);background:var(--petrol);color:#fff;font-weight:600;font-size:var(--text-base);cursor:pointer;font-family:inherit;transition:background var(--t-fast) var(--ease);}
 .met-view .search-submit:hover{background:var(--petrol-soft);}
 
@@ -144,8 +151,11 @@ body.met-hello-child-fullwidth .site-main.met-view {
 .met-single .post-body__inner{max-width:var(--reading);margin:0 auto;}
 .met-single .post-body__inner p{color:var(--ink);line-height:1.85;font-size:var(--text-md);}
 .met-single .post-body__inner p + p{margin-top:var(--space-5);}
-.met-single .post-body__inner a{color:var(--gold);font-weight:600;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;transition:color var(--t-fast) var(--ease);}
-.met-single .post-body__inner a:hover{color:var(--gold-soft);}
+.met-single .post-body__inner a{color:var(--gold-text);font-weight:600;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;transition:color var(--t-fast) var(--ease);}
+/* gold-soft fails badly here (2.05:1 on this light background). Petrol is
+   already an approved, passing token and gives an obviously different hover
+   state without introducing an unreviewed new colour. */
+.met-single .post-body__inner a:hover{color:var(--petrol);}
 .met-single .post-body__inner h2{font-size:var(--text-2xl);font-weight:700;letter-spacing:-0.02em;margin-top:var(--space-8);margin-bottom:var(--space-4);}
 .met-single .post-body__inner h3{font-size:var(--text-xl);font-weight:700;letter-spacing:-0.015em;margin-top:var(--space-7);margin-bottom:var(--space-3);}
 .met-single .post-body__inner ul{margin:var(--space-5) 0;padding-left:0;display:flex;flex-direction:column;gap:var(--space-3);}
@@ -159,8 +169,14 @@ body.met-hello-child-fullwidth .site-main.met-view {
 .met-single .post-end{max-width:var(--reading);margin:0 auto;padding-top:var(--space-7);border-top:1px solid var(--hairline);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--space-5);}
 .met-single .post-back{display:inline-flex;align-items:center;gap:var(--space-3);font-size:var(--text-base);font-weight:600;color:var(--ink);transition:gap var(--t-fast) var(--ease),color var(--t-fast) var(--ease);}
 .met-single .post-back svg{width:18px;height:14px;transition:transform var(--t-fast) var(--ease);}
-.met-single .post-back:hover{color:var(--gold);}
+.met-single .post-back:hover{color:var(--gold-text);}
 .met-single .post-back:hover svg{transform:translateX(-3px);}
+/* External photo album button (single.php, D46). */
+.met-single .post-album{max-width:var(--reading);margin:var(--space-6) auto 0;}
+/* keep this selector above .post-body__inner a (0,2,1). */
+.met-single .post-body__inner .post-album__link{display:inline-flex;align-items:center;gap:var(--space-3);padding:var(--space-3) var(--space-5);border-radius:999px;background:var(--petrol);color:#fff;font-weight:600;font-size:var(--text-base);text-decoration:none;border:1.5px solid var(--petrol);transition:background var(--t-fast) var(--ease),transform var(--t-fast) var(--ease);}
+.met-single .post-body__inner .post-album__link:hover{background:var(--petrol-900,var(--petrol));transform:translateY(-2px);color:#fff;}
+.met-single .post-body__inner .post-album__link svg{width:18px;height:18px;flex:none;}
 .met-single .post-share{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3);}
 .met-single .post-share__label{font-size:var(--text-sm);color:var(--ink-soft);}
 .met-single .post-share a{width:36px;height:36px;border-radius:9px;background:var(--paper-cool);border:1px solid var(--hairline-strong);display:flex;align-items:center;justify-content:center;color:var(--ink-soft);transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease);}
@@ -190,7 +206,7 @@ body.met-hello-child-fullwidth .site-main.met-view {
 .met-404 .met-404__btn:hover{background:var(--petrol-soft);}
 .met-404 .met-404__btn svg{width:18px;height:14px;}
 .met-404 .met-404__btn--ghost{background:transparent;color:var(--ink);border-color:var(--hairline-strong);}
-.met-404 .met-404__btn--ghost:hover{border-color:var(--gold);color:var(--gold);background:transparent;}
+.met-404 .met-404__btn--ghost:hover{border-color:var(--gold-text);color:var(--gold-text);background:transparent;}
 
 /* =============================================================================
    PAGE HERO: opt-in header band for Elementor Pages (.met-page-hero)

@@ -1,0 +1,1059 @@
+<!doctype html>
+<html lang="en" data-system="a" data-a11y="raw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IIUM Holdings — Design System Gallery</title>
+<style>
+
+/* ============================================================
+   PRIMITIVES — System A values (the 32-file majority set)
+   ============================================================ */
+:root{
+  --ink-900:#0F1419; --ink-600:#5A6168; --ink-500:#646B72; --ink-400:#8A9098;
+  --paper-100:#F4EFE7; --paper-000:#FFFFFF;
+  --petrol-900:#0A0A0A; --petrol-700:#0E3B40; --petrol-500:#1A5258;
+  --gold-700:#85621E; --gold-500:#B98A2E; --gold-400:#C99A3A;
+  --edu-700:#3F6B93;   --edu-500:#4A7BA8;
+  --health-700:#A3465F; --health-500:#B5566F;
+  --green-700:#487256; --green-500:#5B8C6E;
+
+  --hairline: rgba(15,20,25,.08);
+  --hairline-strong: rgba(15,20,25,.14);
+  --hairline-light: rgba(255,255,255,.12);
+
+  --radius-sm:4px; --radius:10px; --radius-lg:16px; --radius-xl:20px;
+
+  --container:1200px;
+  --container-narrow:880px;
+  --gutter: clamp(20px,4vw,40px);
+
+  --text-xs:12px; --text-sm:13px; --text-base:15px; --text-md:17px; --text-lg:19px; --text-xl:22px;
+  --text-2xl: clamp(24px,2.6vw,32px);
+  --text-3xl: clamp(30px,3.4vw,42px);
+  --text-4xl: clamp(44px,6vw,80px);
+  --text-hero: clamp(44px,7vw,92px);
+  --text-mega: clamp(72px,14vw,200px);
+  --reading: 72ch;
+
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px;
+  --space-6:32px; --space-7:48px; --space-8:64px; --space-9:96px; --space-10:128px;
+  --section-y: clamp(72px,10vw,128px);
+  --section-y-slow: clamp(96px,12vw,160px);
+
+  --ease: cubic-bezier(0.2,0.8,0.2,1);
+  --ease-out: cubic-bezier(0.16,1,0.3,1);
+  --t-fast:180ms; --t-med:280ms; --t-slow:520ms;
+
+  --font-sans:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --font-serif:"Instrument Serif","Iowan Old Style",Georgia,serif;
+
+  --z-base:0; --z-raised:10; --z-sticky:100; --z-header:200; --z-overlay:800; --z-modal:900; --z-toast:1000;
+
+  --shadow-1: 0 1px 2px rgba(10,10,10,.07), 0 1px 1px rgba(10,10,10,.04);
+  --shadow-2: 0 4px 10px rgba(10,10,10,.09), 0 2px 4px rgba(10,10,10,.05);
+  --shadow-3: 0 10px 24px rgba(10,10,10,.13), 0 4px 8px rgba(10,10,10,.06);
+  --shadow-4: 0 24px 56px rgba(10,10,10,.20), 0 8px 16px rgba(10,10,10,.08);
+
+  /* semantic layer: everything else references these, never a primitive directly */
+  --color-text-primary: var(--ink-900);
+  --color-text-secondary: var(--ink-600);
+  --color-text-tertiary: var(--ink-400);
+  --color-text-on-dark: var(--paper-000);
+  --color-text-on-dark-secondary: rgba(255,255,255,.72);
+
+  --color-surface: var(--paper-100);
+  --color-surface-raised: var(--paper-000);
+  --color-surface-inverse: var(--petrol-700);
+  --color-surface-inverse-deep: var(--petrol-900);
+
+  --color-accent: var(--gold-500);
+  --color-accent-text: var(--gold-500);
+  --color-accent-soft: var(--gold-400);
+
+  --color-border: var(--hairline);
+  --color-border-strong: var(--hairline-strong);
+  --color-border-on-dark: var(--hairline-light);
+
+  --color-focus: var(--gold-500);
+
+  --color-sector-education: var(--edu-500);
+  --color-sector-infrastructure: var(--gold-500);
+  --color-sector-healthcare: var(--health-500);
+  --color-sector-environment: var(--green-500);
+
+  --color-success: #3F7D4F;
+  --color-error: #B23A3A;
+}
+
+/* ============================================================
+   SYSTEM B — the 8-file revision. Toggled with the button in
+   the header. Overrides only the tokens that actually differ.
+   ============================================================ */
+:root[data-system="b"]{
+  --container:1280px;
+  --paper-100:#F7F3EC;
+  --gold-400:#D4A547;
+  --petrol-900:#082226;
+  --radius:8px; --radius-lg:14px;
+  --gutter: clamp(20px,4vw,32px);
+  --text-2xl: clamp(28px,3vw,36px);
+  --text-3xl: clamp(36px,4.5vw,56px);
+}
+
+/* ============================================================
+   ACCESSIBILITY FIX — small-text-safe siblings for accent and
+   tertiary text. Off by default so you can see the failure;
+   toggle to see the fix. Colours look identical at a glance.
+   ============================================================ */
+:root[data-a11y="fixed"]{
+  --color-text-tertiary: var(--ink-500);
+  --color-accent-text: var(--gold-700);
+  --color-sector-education-text: var(--edu-700);
+  --color-sector-healthcare-text: var(--health-700);
+  --color-sector-environment-text: var(--green-700);
+}
+:root[data-a11y="raw"]{
+  --color-sector-education-text: var(--edu-500);
+  --color-sector-healthcare-text: var(--health-500);
+  --color-sector-environment-text: var(--green-500);
+}
+
+/* ============================================================
+   RESET + BASE
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth; scroll-padding-top:76px;}
+body{
+  margin:0; background:var(--color-surface); color:var(--color-text-primary);
+  font-family:var(--font-sans); font-size:var(--text-base); line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:var(--font-serif); font-weight:400; line-height:1.1; margin:0;}
+p{margin:0;}
+a{color:inherit;}
+img{max-width:100%; display:block;}
+::selection{background:var(--color-accent); color:var(--petrol-900);}
+
+.wrap{max-width:var(--container); margin-inline:auto; padding-inline:var(--gutter);}
+.wrap-narrow{max-width:var(--container-narrow); margin-inline:auto; padding-inline:var(--gutter);}
+
+section.gsection{padding-block: var(--space-9) var(--space-8); border-bottom:1px solid var(--color-border);}
+section.gsection:last-of-type{border-bottom:none;}
+.gsection--dark{background:var(--color-surface-inverse); color:var(--color-text-on-dark);}
+.gsection--raised{background:var(--color-surface-raised);}
+
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:var(--font-sans); font-size:var(--text-xs); font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--color-accent-text);
+}
+.eyebrow::before{content:""; width:18px; height:1px; background:currentColor; display:inline-block;}
+
+.section-head{max-width:760px; margin-bottom:var(--space-7);}
+.section-head h2{font-size:var(--text-3xl); color:var(--color-text-primary); margin-top:var(--space-3);}
+.section-head p{color:var(--color-text-secondary); margin-top:var(--space-3); font-size:var(--text-md); max-width:60ch;}
+.gsection--dark .section-head h2{color:var(--color-text-on-dark);}
+.gsection--dark .section-head p{color:var(--color-text-on-dark-secondary);}
+
+.subhead{font-size:var(--text-lg); font-family:var(--font-sans); font-weight:600; margin:var(--space-8) 0 var(--space-4); padding-top:var(--space-2);}
+.subhead:first-of-type{margin-top:0;}
+.note{font-size:var(--text-sm); color:var(--color-text-secondary); max-width:70ch; margin-top:var(--space-3); line-height:1.65;}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:.92em; background:var(--hairline); padding:.15em .45em; border-radius:4px;}
+
+/* ============================================================
+   TOP NAV
+   ============================================================ */
+.topnav{
+  position:sticky; top:0; z-index:var(--z-header);
+  background:rgba(244,239,231,.92); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--color-border);
+}
+:root[data-system="b"] .topnav{background:rgba(247,243,236,.92);}
+.topnav__inner{
+  max-width:var(--container); margin-inline:auto; padding-inline:var(--gutter);
+  height:60px; display:flex; align-items:center; gap:var(--space-6);
+}
+.topnav__brand{font-family:var(--font-serif); font-size:19px; white-space:nowrap;}
+.topnav__brand strong{color:var(--color-accent-text); font-weight:400;}
+.topnav__links{display:flex; gap:var(--space-5); overflow-x:auto; scrollbar-width:none; font-size:13px;}
+.topnav__links::-webkit-scrollbar{display:none;}
+.topnav__links a{white-space:nowrap; color:var(--color-text-secondary); text-decoration:none; padding:6px 0; border-bottom:2px solid transparent;}
+.topnav__links a:hover{color:var(--color-text-primary);}
+.topnav__controls{margin-left:auto; display:flex; gap:8px; flex-shrink:0;}
+
+.toggle{
+  display:inline-flex; border:1px solid var(--color-border-strong); border-radius:999px; padding:2px; background:var(--color-surface-raised);
+}
+.toggle button{
+  border:none; background:none; font-family:var(--font-sans); font-size:12px; font-weight:600;
+  padding:6px 12px; border-radius:999px; cursor:pointer; color:var(--color-text-secondary);
+  transition:background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+.toggle button[aria-pressed="true"]{background:var(--petrol-700); color:#fff;}
+
+/* ============================================================
+   INTRO / HERO OF THE GALLERY ITSELF
+   ============================================================ */
+.intro{padding-block:var(--space-9) var(--space-8);}
+.intro .eyebrow{margin-bottom:var(--space-4);}
+.intro h1{font-size:clamp(34px,5vw,58px); max-width:16ch; color:var(--color-text-primary);}
+.intro p.lede{font-size:var(--text-lg); color:var(--color-text-secondary); max-width:62ch; margin-top:var(--space-5); line-height:1.6;}
+.intro-meta{display:flex; gap:var(--space-7); flex-wrap:wrap; margin-top:var(--space-7); padding-top:var(--space-6); border-top:1px solid var(--color-border);}
+.intro-meta div{font-size:12px; color:var(--color-text-tertiary); text-transform:uppercase; letter-spacing:.08em;}
+.intro-meta strong{display:block; font-family:var(--font-sans); font-size:15px; color:var(--color-text-primary); text-transform:none; letter-spacing:0; margin-top:4px;}
+
+/* ============================================================
+   DECISION CARDS (the 7 by-eye choices)
+   ============================================================ */
+.decision{
+  border:1px solid var(--color-border-strong); border-radius:var(--radius-lg);
+  overflow:hidden; margin-bottom:var(--space-6); background:var(--color-surface-raised);
+}
+.decision__head{
+  padding:var(--space-5) var(--space-6); display:flex; align-items:baseline; justify-content:space-between; gap:var(--space-4);
+  border-bottom:1px solid var(--color-border); flex-wrap:wrap;
+}
+.decision__head h3{font-family:var(--font-sans); font-size:16px; font-weight:600; color:var(--color-text-primary);}
+.decision__tag{font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--color-text-tertiary); font-weight:600;}
+.decision__body{display:grid; grid-template-columns:1fr 1fr;}
+.decision__opt{padding:var(--space-6); position:relative;}
+.decision__opt + .decision__opt{border-left:1px solid var(--color-border);}
+.decision__opt-label{
+  font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--color-text-tertiary);
+  margin-bottom:var(--space-4); display:flex; justify-content:space-between; align-items:center;
+}
+.pill{font-size:10px; padding:2px 8px; border-radius:999px; background:var(--hairline); color:var(--color-text-secondary); font-weight:600;}
+.pill--rec{background:var(--color-accent); color:var(--petrol-900);}
+@media (max-width:720px){ .decision__body{grid-template-columns:1fr;} .decision__opt+.decision__opt{border-left:none; border-top:1px solid var(--color-border);} }
+
+/* ============================================================
+   COLOUR SWATCHES
+   ============================================================ */
+.swatch-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:var(--space-4);}
+.swatch{border-radius:var(--radius); overflow:hidden; border:1px solid var(--color-border);}
+.swatch__fill{height:78px;}
+.swatch__meta{padding:10px 12px; background:var(--color-surface-raised);}
+.swatch__name{font-size:12.5px; font-weight:600; color:var(--color-text-primary);}
+.swatch__hex{font-size:11px; color:var(--color-text-tertiary); font-family:ui-monospace,monospace; margin-top:2px;}
+
+.contrast-table{width:100%; border-collapse:collapse; font-size:14px; margin-top:var(--space-5);}
+.contrast-table th{text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--color-text-tertiary); padding:10px 14px; border-bottom:2px solid var(--color-border-strong);}
+.contrast-table td{padding:12px 14px; border-bottom:1px solid var(--color-border); vertical-align:middle;}
+.contrast-table tr:hover td{background:var(--hairline);}
+.pair-demo{display:inline-flex; align-items:center; gap:8px; padding:7px 14px; border-radius:8px; font-weight:600; font-size:13px;}
+.ratio{font-family:ui-monospace,monospace; font-weight:600;}
+.badge{display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:700; padding:3px 9px; border-radius:6px; letter-spacing:.02em;}
+.badge--pass{background:rgba(63,125,79,.14); color:#2C5C38;}
+.badge--fail{background:rgba(178,58,58,.14); color:#8E2E2E;}
+.badge::before{content:"✓"; }
+.badge--fail::before{content:"✕";}
+
+/* ============================================================
+   TYPE SPECIMENS
+   ============================================================ */
+.type-row{display:flex; align-items:baseline; gap:var(--space-6); padding:var(--space-5) 0; border-bottom:1px solid var(--color-border); flex-wrap:wrap;}
+.type-row__meta{width:150px; flex-shrink:0;}
+.type-row__name{font-family:var(--font-sans); font-weight:600; font-size:13px; color:var(--color-text-primary);}
+.type-row__spec{font-family:ui-monospace,monospace; font-size:11px; color:var(--color-text-tertiary); margin-top:3px; line-height:1.5;}
+.type-row__sample{font-family:var(--font-serif); color:var(--color-text-primary); flex:1; min-width:280px;}
+
+.hero-variant-grid{display:grid; gap:1px; background:var(--color-border); border:1px solid var(--color-border); border-radius:var(--radius-lg); overflow:hidden;}
+.hero-variant{background:var(--color-surface-raised); padding:var(--space-5) var(--space-6); display:flex; align-items:center; gap:var(--space-5); cursor:pointer;}
+.hero-variant input{accent-color:var(--color-accent);}
+.hero-variant__label{width:230px; flex-shrink:0; font-family:ui-monospace,monospace; font-size:11.5px; color:var(--color-text-secondary);}
+.hero-variant__label b{display:block; font-family:var(--font-sans); font-size:12px; color:var(--color-text-primary); margin-bottom:2px;}
+.hero-variant__sample{font-family:var(--font-serif); line-height:1.02; color:var(--color-text-primary); white-space:nowrap; overflow:hidden;}
+.hero-variant.is-selected{background:var(--paper-000); box-shadow:inset 3px 0 0 var(--color-accent);}
+
+.hero-live{
+  background:var(--color-surface-inverse); color:#fff; border-radius:var(--radius-lg);
+  padding:var(--space-8) var(--space-7); margin-top:var(--space-6); text-align:center;
+}
+.hero-live__label{font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.5); margin-bottom:var(--space-4);}
+.hero-live h3{font-family:var(--font-serif); color:#fff; font-size:var(--live-hero-size,44px); line-height:1.05;}
+
+/* ============================================================
+   SPACING BARS
+   ============================================================ */
+.space-row{display:flex; align-items:center; gap:var(--space-5); padding:10px 0;}
+.space-row__name{width:80px; flex-shrink:0; font-family:ui-monospace,monospace; font-size:12px; color:var(--color-text-secondary);}
+.space-row__bar{height:18px; background:var(--color-accent); border-radius:4px;}
+.space-row__val{font-family:ui-monospace,monospace; font-size:11px; color:var(--color-text-tertiary); margin-left:var(--space-4);}
+
+.rhythm-demo{border:1px dashed var(--color-border-strong); border-radius:var(--radius); overflow:hidden;}
+.rhythm-block{background:var(--paper-000); padding:14px var(--space-6); text-align:center; font-size:12px; color:var(--color-text-tertiary); font-family:ui-monospace,monospace;}
+.rhythm-gap{background:repeating-linear-gradient(45deg, var(--hairline), var(--hairline) 6px, transparent 6px, transparent 12px); display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--color-text-tertiary); font-family:ui-monospace,monospace;}
+
+/* ============================================================
+   ELEVATION / RADIUS / Z-INDEX / MOTION
+   ============================================================ */
+.demo-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:var(--space-6);}
+.elev-card{background:var(--paper-000); border-radius:var(--radius-lg); padding:var(--space-6); text-align:center;}
+.elev-card__box{height:60px; border-radius:var(--radius); background:var(--color-surface); margin-bottom:var(--space-4);}
+.elev-card__name{font-family:var(--font-sans); font-weight:600; font-size:13px;}
+.elev-card__val{font-family:ui-monospace,monospace; font-size:10.5px; color:var(--color-text-tertiary); margin-top:3px;}
+
+.radius-card{background:var(--paper-000); padding:var(--space-6); text-align:center; border:1px solid var(--color-border);}
+.radius-card__box{width:64px; height:64px; background:var(--color-accent); margin:0 auto var(--space-4);}
+
+.zstack{position:relative; height:260px; background:var(--paper-000); border-radius:var(--radius-lg); border:1px solid var(--color-border);}
+.zlayer{
+  position:absolute; left:50%; transform:translateX(-50%); width:78%; padding:12px 18px; border-radius:8px;
+  font-family:ui-monospace,monospace; font-size:11px; display:flex; justify-content:space-between; box-shadow:var(--shadow-2);
+  border:1px solid var(--color-border);
+}
+
+.motion-btn{
+  font-family:var(--font-sans); font-weight:600; font-size:13px; padding:14px 22px; border-radius:var(--radius);
+  border:1px solid var(--color-border-strong); background:var(--paper-000); cursor:pointer; color:var(--color-text-primary);
+  transform:scale(1); transition:transform var(--dur,180ms) var(--curve,var(--ease)), box-shadow var(--dur,180ms) var(--curve,var(--ease));
+}
+.motion-btn:hover{transform:scale(1.045); box-shadow:var(--shadow-2);}
+.motion-btn:active{transform:scale(.98);}
+
+/* ============================================================
+   BUTTONS / LINKS / FORMS
+   ============================================================ */
+.btn{
+  --btn-bg:var(--petrol-700); --btn-fg:#fff; --btn-border:var(--petrol-700);
+  display:inline-flex; align-items:center; gap:8px; font-family:var(--font-sans); font-weight:600; font-size:14px;
+  padding:13px 24px; border-radius:var(--radius); border:1px solid var(--btn-border); background:var(--btn-bg); color:var(--btn-fg);
+  cursor:pointer; text-decoration:none; transition:all var(--t-fast) var(--ease); line-height:1;
+}
+.btn:hover{filter:brightness(1.12); transform:translateY(-1px); box-shadow:var(--shadow-2);}
+.btn:active{transform:translateY(0); filter:brightness(.96);}
+.btn:focus-visible{outline:2px solid var(--color-focus); outline-offset:3px;}
+.btn[disabled]{opacity:.4; cursor:not-allowed; transform:none; filter:none; box-shadow:none;}
+.btn--gold{--btn-bg:var(--color-accent); --btn-fg:var(--petrol-900); --btn-border:var(--color-accent);}
+.btn--ghost{--btn-bg:transparent; --btn-fg:var(--color-text-primary); --btn-border:var(--color-border-strong);}
+.btn--ghost-light{--btn-bg:transparent; --btn-fg:#fff; --btn-border:var(--color-border-on-dark);}
+.btn--sm{padding:9px 16px; font-size:12.5px;}
+
+.state-row{display:flex; flex-wrap:wrap; gap:var(--space-4); align-items:center; padding:var(--space-5) 0; border-bottom:1px solid var(--color-border);}
+.state-row__label{width:130px; flex-shrink:0; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--color-text-tertiary); font-weight:600;}
+.force-hover{filter:brightness(1.12); transform:translateY(-1px); box-shadow:var(--shadow-2);}
+.force-active{filter:brightness(.96);}
+.force-focus{outline:2px solid var(--color-focus); outline-offset:3px;}
+
+.link-demo{color:var(--petrol-700); text-decoration-line:underline; text-decoration-color:var(--hairline-strong); text-underline-offset:3px; font-weight:500; transition:text-decoration-color var(--t-fast) var(--ease);}
+.link-demo:hover{text-decoration-color:currentColor;}
+.link-demo:focus-visible{outline:2px solid var(--color-focus); outline-offset:2px; border-radius:2px;}
+
+.field{margin-bottom:var(--space-5); max-width:420px;}
+.field label{display:block; font-size:12.5px; font-weight:600; color:var(--color-text-primary); margin-bottom:7px;}
+.field input, .field textarea, .field select{
+  width:100%; font-family:var(--font-sans); font-size:14px; padding:12px 14px; border-radius:8px;
+  border:1.5px solid var(--color-border-strong); background:var(--paper-000); color:var(--color-text-primary);
+  transition:border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+}
+.field input:focus, .field textarea:focus{outline:none; border-color:var(--color-accent); box-shadow:0 0 0 3px rgba(185,138,46,.18);}
+.field--error input{border-color:var(--color-error);}
+.field--error .field__msg{color:var(--color-error); font-size:12px; margin-top:6px;}
+.field--disabled input{background:var(--hairline); color:var(--color-text-tertiary); cursor:not-allowed;}
+.field__msg{font-size:12px; color:var(--color-text-tertiary); margin-top:6px;}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+.card-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:var(--space-6);}
+.card{
+  background:var(--paper-000); border-radius:var(--radius-lg); overflow:hidden; border:1px solid var(--color-border);
+  transition:box-shadow var(--t-med) var(--ease), transform var(--t-med) var(--ease);
+}
+.card:hover{box-shadow:var(--shadow-3); transform:translateY(-3px);}
+.card__media{aspect-ratio:16/10; background:linear-gradient(135deg,var(--petrol-700),var(--petrol-500)); position:relative;}
+.card__tag{position:absolute; top:14px; left:14px; background:var(--color-accent); color:var(--petrol-900); font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:4px 10px; border-radius:5px;}
+.card__body{padding:var(--space-5) var(--space-6) var(--space-6);}
+.card__date{font-size:11.5px; color:var(--color-text-tertiary); font-weight:600; text-transform:uppercase; letter-spacing:.05em;}
+.card__title{font-family:var(--font-serif); font-size:21px; margin-top:8px; line-height:1.25; color:var(--color-text-primary);}
+.card__excerpt{font-size:13.5px; color:var(--color-text-secondary); margin-top:10px; line-height:1.55;}
+
+.profile-card{background:var(--paper-000); border-radius:var(--radius-lg); border:1px solid var(--color-border); overflow:hidden; text-align:center;}
+.profile-card__photo{aspect-ratio:1; background:linear-gradient(160deg,var(--petrol-500),var(--petrol-900));}
+.profile-card__body{padding:var(--space-5);}
+.profile-card__name{font-family:var(--font-serif); font-size:19px;}
+.profile-card__role{font-size:12px; color:var(--color-accent-text); font-weight:600; margin-top:4px;}
+
+/* ============================================================
+   TABLE / LIST / BLOCKQUOTE
+   ============================================================ */
+table.g-table{width:100%; border-collapse:collapse; font-size:14px;}
+table.g-table th{text-align:left; padding:12px 16px; border-bottom:2px solid var(--color-border-strong); font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--color-text-tertiary);}
+table.g-table td{padding:14px 16px; border-bottom:1px solid var(--color-border);}
+table.g-table tr:hover td{background:var(--hairline);}
+
+ul.g-list{list-style:none; margin:0; padding:0;}
+ul.g-list li{display:flex; gap:12px; padding:11px 0; border-bottom:1px solid var(--color-border); font-size:14.5px;}
+ul.g-list li::before{content:"—"; color:var(--color-accent-text); flex-shrink:0; font-weight:700;}
+
+blockquote.g-quote{
+  border-left:3px solid var(--color-accent); padding-left:var(--space-6); margin:0;
+  font-family:var(--font-serif); font-size:24px; line-height:1.4; color:var(--color-text-primary);
+}
+blockquote.g-quote footer{font-family:var(--font-sans); font-size:13px; color:var(--color-text-tertiary); margin-top:var(--space-4); font-style:normal;}
+
+/* ============================================================
+   HERO PATTERNS (standard + business)
+   ============================================================ */
+.hero-standard{background:var(--color-surface-inverse); color:#fff; padding:var(--space-8) var(--space-7); border-radius:var(--radius-lg);}
+.hero-standard .eyebrow{color:var(--gold-400);}
+.hero-standard h2{font-size:var(--text-3xl); color:#fff; margin-top:var(--space-4);}
+.hero-standard p{color:var(--color-text-on-dark-secondary); margin-top:var(--space-4); max-width:60ch; font-size:15px;}
+
+.hero-business{
+  background:radial-gradient(120% 140% at 15% 0%, var(--petrol-500), var(--petrol-900) 70%);
+  color:#fff; padding:var(--space-9) var(--space-7); border-radius:var(--radius-lg); position:relative; overflow:hidden;
+}
+.hero-business::after{content:""; position:absolute; inset:0; background:repeating-linear-gradient(45deg, rgba(185,138,46,.06) 0 2px, transparent 2px 26px); pointer-events:none;}
+.hero-business .eyebrow{color:var(--gold-400);}
+.hero-business h2{font-size:var(--text-hero); color:#fff; margin-top:var(--space-4); max-width:14ch;}
+.hero-business p{color:var(--color-text-on-dark-secondary); margin-top:var(--space-5); max-width:56ch; font-size:16px;}
+.hero-business__actions{display:flex; gap:var(--space-4); margin-top:var(--space-7); flex-wrap:wrap; position:relative;}
+
+/* ============================================================
+   FIGURES / STATS / CTA / BREADCRUMB / PAGINATION
+   ============================================================ */
+.stats-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:var(--space-6); text-align:center;}
+.stat{padding:var(--space-6) var(--space-4); background:var(--paper-000); border-radius:var(--radius-lg); border:1px solid var(--color-border);}
+.stat__num{font-family:var(--font-serif); font-size:var(--text-4xl); color:var(--color-accent-text); line-height:1;}
+.stat__label{font-size:12px; color:var(--color-text-secondary); margin-top:10px; text-transform:uppercase; letter-spacing:.05em;}
+
+.cta-band{
+  background:var(--color-surface-inverse); color:#fff; border-radius:var(--radius-lg);
+  padding:var(--space-8) var(--space-7); display:flex; justify-content:space-between; align-items:center; gap:var(--space-6); flex-wrap:wrap;
+}
+.cta-band h3{font-family:var(--font-serif); font-size:var(--text-3xl); color:#fff; max-width:20ch;}
+.cta-band__actions{display:flex; gap:var(--space-4); flex-wrap:wrap;}
+
+.breadcrumb{display:flex; gap:8px; align-items:center; font-size:12.5px; color:var(--color-text-tertiary);}
+.breadcrumb a{color:var(--color-text-secondary); text-decoration:none;}
+.breadcrumb a:hover{color:var(--color-accent-text);}
+.breadcrumb span[aria-current]{color:var(--color-text-primary); font-weight:600;}
+
+.pagination{display:flex; gap:8px; align-items:center;}
+.pagination a, .pagination span{
+  min-width:36px; height:36px; display:inline-flex; align-items:center; justify-content:center;
+  border-radius:8px; font-family:ui-monospace,monospace; font-size:13px; text-decoration:none; color:var(--color-text-secondary);
+  border:1px solid transparent;
+}
+.pagination a:hover{border-color:var(--color-border-strong);}
+.pagination .is-current{background:var(--color-accent); color:var(--petrol-900); font-weight:700;}
+
+/* ============================================================
+   RESPONSIVE PREVIEW FRAME
+   ============================================================ */
+.frame-controls{display:flex; gap:8px; margin-bottom:var(--space-5);}
+.frame-shell{border:1px solid var(--color-border-strong); border-radius:var(--radius-lg); background:var(--paper-000); overflow:hidden;}
+.frame-topbar{background:var(--petrol-900); padding:8px 14px; display:flex; gap:6px;}
+.frame-topbar span{width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,.25);}
+.frame-viewport{width:100%; max-width:1280px; margin:0 auto; transition:max-width var(--t-med) var(--ease); overflow:hidden;}
+.frame-inner{padding:var(--space-6);}
+
+/* utility */
+.flex-gap{display:flex; gap:var(--space-4); flex-wrap:wrap; align-items:center;}
+footer.g-footer{padding:var(--space-8) 0; text-align:center; color:var(--color-text-tertiary); font-size:12.5px;}
+
+@media (max-width: 640px){
+  .topnav__links{display:none;}
+  .intro-meta{gap:var(--space-5);}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav__inner">
+    <div class="topnav__brand">IIUM <strong>Design System</strong></div>
+    <div class="topnav__links">
+      <a href="#decisions">Decisions</a>
+      <a href="#colour">Colour</a>
+      <a href="#type">Type</a>
+      <a href="#space">Spacing</a>
+      <a href="#elevation">Elevation</a>
+      <a href="#motion">Motion</a>
+      <a href="#components">Components</a>
+      <a href="#patterns">Patterns</a>
+      <a href="#responsive">Responsive</a>
+    </div>
+    <div class="topnav__controls">
+      <div class="toggle" role="group" aria-label="Token system">
+        <button type="button" data-set-system="a" aria-pressed="true">System A</button>
+        <button type="button" data-set-system="b" aria-pressed="false">System B</button>
+      </div>
+      <div class="toggle" role="group" aria-label="Accessibility fix">
+        <button type="button" data-set-a11y="raw" aria-pressed="true">Raw</button>
+        <button type="button" data-set-a11y="fixed" aria-pressed="false">A11y fixed</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<header class="intro wrap">
+  <div class="eyebrow">Design system gallery — not the finished system</div>
+  <h1>One page to see the whole system before we build a single line of it.</h1>
+  <p class="lede">
+    Everything here is measured from your 40 approved design files, not invented.
+    Where the files disagree, both options are shown side by side and you pick.
+    Where a value is missing, it is proposed and flagged. Nothing on this page is
+    committed to code until you approve it.
+  </p>
+  <div class="intro-meta">
+    <div>Source files<strong>40 HTML files</strong></div>
+    <div>Token declarations<strong>1,676 read</strong></div>
+    <div>Real conflicts<strong>11 tokens</strong></div>
+    <div>Open decisions<strong>13</strong></div>
+    <div>Contrast pairs computed<strong>21</strong></div>
+  </div>
+</header>
+
+<!-- ============================================================
+     DECISIONS
+     ============================================================ -->
+<section class="gsection wrap" id="decisions">
+  <div class="section-head">
+    <div class="eyebrow">Start here</div>
+    <h2>Thirteen decisions, seven by eye</h2>
+    <p>The other six are settled by measurement, shown further down: three from
+      the accessibility audit, and three from System B filling gaps System A
+      never had. Use the System A / System B toggle in the top bar to feel the
+      difference across the whole page, not just here.</p>
+  </div>
+
+  <div class="decision">
+    <div class="decision__head">
+      <h3>1 · Container width</h3>
+      <span class="decision__tag">32 files vs 8 files</span>
+    </div>
+    <div class="decision__body">
+      <div class="decision__opt">
+        <div class="decision__opt-label">System A <span class="pill">1200px</span></div>
+        <div class="wrap" style="max-width:100%; padding:0;">
+          <div style="max-width:1200px; margin:0 auto; height:44px; background:var(--hairline); border-radius:6px; display:flex; align-items:center; justify-content:center; font-family:ui-monospace,monospace; font-size:12px; color:var(--color-text-secondary); transform:scale(.42); transform-origin:left center; width:1200px;">1200px container</div>
+        </div>
+      </div>
+      <div class="decision__opt">
+        <div class="decision__opt-label">System B <span class="pill">1280px</span></div>
+        <div style="max-width:1280px; margin:0 auto; height:44px; background:var(--hairline); border-radius:6px; display:flex; align-items:center; justify-content:center; font-family:ui-monospace,monospace; font-size:12px; color:var(--color-text-secondary); transform:scale(.42); transform-origin:left center; width:1280px;">1280px container</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="decision">
+    <div class="decision__head"><h3>2 · Paper background</h3><span class="decision__tag">recommended: B</span></div>
+    <div class="decision__body">
+      <div class="decision__opt"><div class="decision__opt-label">System A <span class="pill">#F4EFE7</span></div>
+        <div style="height:70px; border-radius:8px; background:#F4EFE7; border:1px solid var(--color-border);"></div></div>
+      <div class="decision__opt"><div class="decision__opt-label">System B <span class="pill pill--rec">#F7F3EC</span></div>
+        <div style="height:70px; border-radius:8px; background:#F7F3EC; border:1px solid var(--color-border);"></div></div>
+    </div>
+  </div>
+
+  <div class="decision">
+    <div class="decision__head"><h3>3 · Gold soft (secondary accent)</h3><span class="decision__tag">32 files vs 8 files</span></div>
+    <div class="decision__body">
+      <div class="decision__opt"><div class="decision__opt-label">System A <span class="pill">#C99A3A</span></div>
+        <div style="height:70px; border-radius:8px; background:#C99A3A;"></div></div>
+      <div class="decision__opt"><div class="decision__opt-label">System B <span class="pill">#D4A547</span></div>
+        <div style="height:70px; border-radius:8px; background:#D4A547;"></div></div>
+    </div>
+  </div>
+
+  <div class="decision">
+    <div class="decision__head"><h3>4 · Petrol deep (darkest surface)</h3><span class="decision__tag">recommended: B, strongly</span></div>
+    <div class="decision__body">
+      <div class="decision__opt"><div class="decision__opt-label">System A <span class="pill">#0A0A0A — near-black, not petrol</span></div>
+        <div style="height:70px; border-radius:8px; background:#0A0A0A;"></div></div>
+      <div class="decision__opt"><div class="decision__opt-label">System B <span class="pill pill--rec">#082226 — an actual deep petrol</span></div>
+        <div style="height:70px; border-radius:8px; background:#082226;"></div></div>
+    </div>
+  </div>
+
+  <div class="decision">
+    <div class="decision__head"><h3>5 · Corner radius</h3><span class="decision__tag">32 files vs 8 files</span></div>
+    <div class="decision__body">
+      <div class="decision__opt"><div class="decision__opt-label">System A <span class="pill">10 / 16px</span></div>
+        <div class="flex-gap"><div style="width:70px;height:70px;background:var(--petrol-700);border-radius:10px;"></div><div style="width:70px;height:70px;background:var(--petrol-700);border-radius:16px;"></div></div></div>
+      <div class="decision__opt"><div class="decision__opt-label">System B <span class="pill">8 / 14px</span></div>
+        <div class="flex-gap"><div style="width:70px;height:70px;background:var(--petrol-700);border-radius:8px;"></div><div style="width:70px;height:70px;background:var(--petrol-700);border-radius:14px;"></div></div></div>
+    </div>
+  </div>
+
+  <div class="decision">
+    <div class="decision__head"><h3>6 · Type scale, 2xl / 3xl step</h3><span class="decision__tag">do not mix across systems</span></div>
+    <div class="decision__body">
+      <div class="decision__opt"><div class="decision__opt-label">System A <span class="pill">24→32 / 30→42</span></div>
+        <div style="font-family:var(--font-serif);"><div style="font-size:clamp(24px,2.6vw,32px);">Aa Section heading</div><div style="font-size:clamp(30px,3.4vw,42px); margin-top:8px;">Aa Page heading</div></div></div>
+      <div class="decision__opt"><div class="decision__opt-label">System B <span class="pill">28→36 / 36→56</span></div>
+        <div style="font-family:var(--font-serif);"><div style="font-size:clamp(28px,3vw,36px);">Aa Section heading</div><div style="font-size:clamp(36px,4.5vw,56px); margin-top:8px;">Aa Page heading</div></div></div>
+    </div>
+  </div>
+
+  <div class="decision">
+    <div class="decision__head"><h3>7 · Hero size — the worst drift in the corpus</h3><span class="decision__tag">12 values across 30 files</span></div>
+    <div class="decision__body" style="grid-template-columns:1fr;">
+      <div class="decision__opt" style="border-left:none;">
+        <p class="note" style="margin-top:0;">Pick the row that feels right. It drives the live demo below and every hero pattern on this page.</p>
+        <div class="hero-variant-grid" id="hero-variant-grid"></div>
+        <div class="hero-live"><div class="hero-live__label">Live preview at your selection</div><h3 id="hero-live-text">IIUM Holdings Group</h3></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     COLOUR
+     ============================================================ -->
+<section class="gsection wrap" id="colour">
+  <div class="section-head">
+    <div class="eyebrow">Foundations · 01</div>
+    <h2>Colour</h2>
+    <p>Two layers. Primitives name the paint and are never used directly.
+      Semantics name the job and are what every component, and every editor
+      picking a colour in WordPress, actually uses.</p>
+  </div>
+
+  <div class="subhead">Primitives</div>
+  <div class="swatch-grid">
+    <div class="swatch"><div class="swatch__fill" style="background:#0F1419"></div><div class="swatch__meta"><div class="swatch__name">ink-900</div><div class="swatch__hex">#0F1419</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:#5A6168"></div><div class="swatch__meta"><div class="swatch__name">ink-600</div><div class="swatch__hex">#5A6168</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:#646B72"></div><div class="swatch__meta"><div class="swatch__name">ink-500 <span style="color:var(--color-accent-text)">new</span></div><div class="swatch__hex">#646B72</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:#8A9098"></div><div class="swatch__meta"><div class="swatch__name">ink-400</div><div class="swatch__hex">#8A9098</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--paper-100); border-bottom:1px solid var(--color-border);"></div><div class="swatch__meta"><div class="swatch__name">paper-100</div><div class="swatch__hex" id="sw-paper">#F4EFE7</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:#FFFFFF; border-bottom:1px solid var(--color-border);"></div><div class="swatch__meta"><div class="swatch__name">paper-000</div><div class="swatch__hex">#FFFFFF</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--petrol-900)" id="sw-petrol900"></div><div class="swatch__meta"><div class="swatch__name">petrol-900</div><div class="swatch__hex" id="sw-petrol900-hex">#0A0A0A</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:#0E3B40"></div><div class="swatch__meta"><div class="swatch__name">petrol-700</div><div class="swatch__hex">#0E3B40</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:#1A5258"></div><div class="swatch__meta"><div class="swatch__name">petrol-500</div><div class="swatch__hex">#1A5258</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:#85621E"></div><div class="swatch__meta"><div class="swatch__name">gold-700 <span style="color:var(--color-accent-text)">new</span></div><div class="swatch__hex">#85621E</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:#B98A2E"></div><div class="swatch__meta"><div class="swatch__name">gold-500</div><div class="swatch__hex">#B98A2E</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--gold-400)" id="sw-gold400"></div><div class="swatch__meta"><div class="swatch__name">gold-400</div><div class="swatch__hex" id="sw-gold400-hex">#C99A3A</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:#4A7BA8"></div><div class="swatch__meta"><div class="swatch__name">edu-500</div><div class="swatch__hex">#4A7BA8</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:#B5566F"></div><div class="swatch__meta"><div class="swatch__name">health-500</div><div class="swatch__hex">#B5566F</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:#5B8C6E"></div><div class="swatch__meta"><div class="swatch__name">green-500 <span style="color:var(--color-accent-text)">was 2 names</span></div><div class="swatch__hex">#5B8C6E</div></div></div>
+  </div>
+
+  <div class="subhead">Semantic mapping — what components and the editor actually use</div>
+  <div class="swatch-grid">
+    <div class="swatch"><div class="swatch__fill" style="background:var(--color-text-primary)"></div><div class="swatch__meta"><div class="swatch__name">color-text-primary</div><div class="swatch__hex">→ ink-900</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--color-text-secondary)"></div><div class="swatch__meta"><div class="swatch__name">color-text-secondary</div><div class="swatch__hex">→ ink-600</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--color-text-tertiary)" id="sw-tertiary"></div><div class="swatch__meta"><div class="swatch__name">color-text-tertiary</div><div class="swatch__hex" id="sw-tertiary-hex">→ ink-400 (fails)</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--color-surface); border-bottom:1px solid var(--color-border);"></div><div class="swatch__meta"><div class="swatch__name">color-surface</div><div class="swatch__hex">→ paper-100</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--color-surface-inverse)"></div><div class="swatch__meta"><div class="swatch__name">color-surface-inverse</div><div class="swatch__hex">→ petrol-700</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--color-accent)"></div><div class="swatch__meta"><div class="swatch__name">color-accent</div><div class="swatch__hex">→ gold-500 (display)</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--color-accent-text)" id="sw-accent-text"></div><div class="swatch__meta"><div class="swatch__name">color-accent-text</div><div class="swatch__hex" id="sw-accent-text-hex">→ gold-500 (fails small)</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--color-sector-education)"></div><div class="swatch__meta"><div class="swatch__name">color-sector-education</div><div class="swatch__hex">→ edu-500</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--color-sector-healthcare)"></div><div class="swatch__meta"><div class="swatch__name">color-sector-healthcare</div><div class="swatch__hex">→ health-500</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--color-sector-environment)"></div><div class="swatch__meta"><div class="swatch__name">color-sector-environment</div><div class="swatch__hex">→ green-500</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--color-sector-infrastructure)"></div><div class="swatch__meta"><div class="swatch__name">color-sector-infrastructure</div><div class="swatch__hex">→ = gold-500. Same colour? #11</div></div></div>
+    <div class="swatch"><div class="swatch__fill" style="background:var(--color-focus)"></div><div class="swatch__meta"><div class="swatch__name">color-focus</div><div class="swatch__hex">proposed, section 3</div></div></div>
+  </div>
+
+  <div class="subhead">Contrast audit — every pair used for text, computed</div>
+  <p class="note">Toggle "A11y fixed" in the top bar to see the fix applied live: the
+    display accent stays for headings and icons, a darker sibling takes over for
+    small text. The badges below update with the toggle.</p>
+  <table class="contrast-table">
+    <thead><tr><th>Pair</th><th>Sample</th><th>Ratio</th><th>AA normal (4.5)</th><th>AA large (3.0)</th></tr></thead>
+    <tbody id="contrast-body"></tbody>
+  </table>
+</section>
+
+<!-- ============================================================
+     TYPE
+     ============================================================ -->
+<section class="gsection gsection--raised wrap" id="type">
+  <div class="section-head">
+    <div class="eyebrow">Foundations · 02</div>
+    <h2>Typography</h2>
+    <p>Geist for interface and body text. Instrument Serif for headlines. Every
+      size below is rendered at its real, current size — resize the window to
+      feel the <code>clamp()</code> ranges move.</p>
+  </div>
+
+  <div class="type-row"><div class="type-row__meta"><div class="type-row__name">text-xs</div><div class="type-row__spec">12px</div></div><div class="type-row__sample" style="font-family:var(--font-sans); font-size:var(--text-xs);">Eyebrow labels, metadata, captions</div></div>
+  <div class="type-row"><div class="type-row__meta"><div class="type-row__name">text-sm</div><div class="type-row__spec">13px</div></div><div class="type-row__sample" style="font-family:var(--font-sans); font-size:var(--text-sm);">Small print, form helper text</div></div>
+  <div class="type-row"><div class="type-row__meta"><div class="type-row__name">text-base</div><div class="type-row__spec">15px</div></div><div class="type-row__sample" style="font-family:var(--font-sans); font-size:var(--text-base);">Body copy, the reading default across the site</div></div>
+  <div class="type-row"><div class="type-row__meta"><div class="type-row__name">text-md</div><div class="type-row__spec">17px</div></div><div class="type-row__sample" style="font-family:var(--font-sans); font-size:var(--text-md);">Lede paragraphs, section intros</div></div>
+  <div class="type-row"><div class="type-row__meta"><div class="type-row__name">text-lg</div><div class="type-row__spec">19px</div></div><div class="type-row__sample" style="font-family:var(--font-sans); font-size:var(--text-lg);">Card titles, subheads</div></div>
+  <div class="type-row"><div class="type-row__meta"><div class="type-row__name">text-xl</div><div class="type-row__spec">22px</div></div><div class="type-row__sample" style="font-family:var(--font-sans); font-size:var(--text-xl);">Stat labels, small headings</div></div>
+  <div class="type-row"><div class="type-row__meta"><div class="type-row__name">text-2xl</div><div class="type-row__spec" id="spec-2xl">clamp(24,2.6vw,32)</div></div><div class="type-row__sample" style="font-size:var(--text-2xl);">Aa Section heading</div></div>
+  <div class="type-row"><div class="type-row__meta"><div class="type-row__name">text-3xl</div><div class="type-row__spec" id="spec-3xl">clamp(30,3.4vw,42)</div></div><div class="type-row__sample" style="font-size:var(--text-3xl);">Aa Page heading</div></div>
+  <div class="type-row"><div class="type-row__meta"><div class="type-row__name">text-4xl</div><div class="type-row__spec">clamp(44,6vw,80) new</div></div><div class="type-row__sample" style="font-size:var(--text-4xl);">Aa Stat figure</div></div>
+  <div class="type-row"><div class="type-row__meta"><div class="type-row__name">text-hero</div><div class="type-row__spec" id="spec-hero">your selection above</div></div><div class="type-row__sample" style="font-size:var(--text-hero); overflow:hidden; white-space:nowrap;">Aa Hero headline</div></div>
+
+  <div class="subhead">Colour on type</div>
+  <div class="flex-gap" style="gap:var(--space-6);">
+    <div><div style="font-family:var(--font-sans); font-size:12px; color:var(--color-text-tertiary); margin-bottom:6px;">Display accent — headings &amp; icons</div><div style="font-family:var(--font-serif); font-size:32px; color:var(--color-accent);">Our Businesses</div></div>
+    <div><div style="font-family:var(--font-sans); font-size:12px; color:var(--color-text-tertiary); margin-bottom:6px;">Accent text — links &amp; labels</div><div style="font-family:var(--font-sans); font-weight:600; font-size:15px; color:var(--color-accent-text);">Read the full report →</div></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SPACING
+     ============================================================ -->
+<section class="gsection wrap" id="space">
+  <div class="section-head">
+    <div class="eyebrow">Foundations · 03</div>
+    <h2>Spacing &amp; section rhythm</h2>
+    <p>An 8px-rooted scale, plus two rhythm tokens System A never had at all —
+      the reason section spacing varies page to page today.</p>
+  </div>
+
+  <div class="space-row"><div class="space-row__name">space-1</div><div class="space-row__bar" style="width:var(--space-1)"></div><div class="space-row__val">4px</div></div>
+  <div class="space-row"><div class="space-row__name">space-2</div><div class="space-row__bar" style="width:var(--space-2)"></div><div class="space-row__val">8px</div></div>
+  <div class="space-row"><div class="space-row__name">space-3</div><div class="space-row__bar" style="width:var(--space-3)"></div><div class="space-row__val">12px</div></div>
+  <div class="space-row"><div class="space-row__name">space-4</div><div class="space-row__bar" style="width:var(--space-4)"></div><div class="space-row__val">16px</div></div>
+  <div class="space-row"><div class="space-row__name">space-5</div><div class="space-row__bar" style="width:var(--space-5)"></div><div class="space-row__val">24px</div></div>
+  <div class="space-row"><div class="space-row__name">space-6</div><div class="space-row__bar" style="width:var(--space-6)"></div><div class="space-row__val">32px</div></div>
+  <div class="space-row"><div class="space-row__name">space-7</div><div class="space-row__bar" style="width:var(--space-7)"></div><div class="space-row__val">48px</div></div>
+  <div class="space-row"><div class="space-row__name">space-8</div><div class="space-row__bar" style="width:var(--space-8)"></div><div class="space-row__val">64px</div></div>
+  <div class="space-row"><div class="space-row__name">space-9</div><div class="space-row__bar" style="width:var(--space-9)"></div><div class="space-row__val">96px</div></div>
+  <div class="space-row"><div class="space-row__name">space-10</div><div class="space-row__bar" style="width:var(--space-10)"></div><div class="space-row__val">128px</div></div>
+
+  <div class="subhead">Section rhythm — new, adopt regardless of A/B</div>
+  <div class="rhythm-demo">
+    <div class="rhythm-block">Section: About the Group</div>
+    <div class="rhythm-gap" style="height:var(--section-y)">--section-y · clamp(72px,10vw,128px)</div>
+    <div class="rhythm-block">Section: Our Businesses</div>
+    <div class="rhythm-gap" style="height:var(--section-y-slow)">--section-y-slow · clamp(96px,12vw,160px)</div>
+    <div class="rhythm-block">Section: Leadership</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     ELEVATION / RADIUS / Z-INDEX / MOTION
+     ============================================================ -->
+<section class="gsection gsection--raised wrap" id="elevation">
+  <div class="section-head">
+    <div class="eyebrow">Foundations · 04</div>
+    <h2>Elevation, radius, stacking, motion</h2>
+    <p>None of these four existed in any of the 40 design files. Proposed here,
+      derived from the existing petrol-and-paper palette rather than a default.</p>
+  </div>
+
+  <div class="subhead">Elevation — shadows tinted toward petrol, not grey</div>
+  <div class="demo-grid">
+    <div class="elev-card"><div class="elev-card__box" style="box-shadow:var(--shadow-1)"></div><div class="elev-card__name">shadow-1</div><div class="elev-card__val">resting cards</div></div>
+    <div class="elev-card"><div class="elev-card__box" style="box-shadow:var(--shadow-2)"></div><div class="elev-card__name">shadow-2</div><div class="elev-card__val">hover, buttons</div></div>
+    <div class="elev-card"><div class="elev-card__box" style="box-shadow:var(--shadow-3)"></div><div class="elev-card__name">shadow-3</div><div class="elev-card__val">raised cards</div></div>
+    <div class="elev-card"><div class="elev-card__box" style="box-shadow:var(--shadow-4)"></div><div class="elev-card__name">shadow-4</div><div class="elev-card__val">modals, popovers</div></div>
+  </div>
+
+  <div class="subhead">Radius scale</div>
+  <div class="demo-grid">
+    <div class="radius-card"><div class="radius-card__box" style="border-radius:var(--radius-sm)"></div><div class="elev-card__name">radius-sm</div><div class="elev-card__val" id="rad-sm">4px</div></div>
+    <div class="radius-card"><div class="radius-card__box" style="border-radius:var(--radius)"></div><div class="elev-card__name">radius</div><div class="elev-card__val" id="rad-md">10px</div></div>
+    <div class="radius-card"><div class="radius-card__box" style="border-radius:var(--radius-lg)"></div><div class="elev-card__name">radius-lg</div><div class="elev-card__val" id="rad-lg">16px</div></div>
+    <div class="radius-card"><div class="radius-card__box" style="border-radius:var(--radius-xl)"></div><div class="elev-card__name">radius-xl</div><div class="elev-card__val">20px</div></div>
+  </div>
+
+  <div class="subhead">Z-index scale</div>
+  <p class="note">Needed now: Scroll to Top, a sticky header and the mobile menu already
+    stack. A named scale stops them fighting with arbitrary numbers.</p>
+  <div class="zstack">
+    <div class="zlayer" style="top:20px; background:var(--paper-000); z-index:1;"><span>base / raised</span><span>0–10</span></div>
+    <div class="zlayer" style="top:70px; background:var(--paper-000); z-index:2;"><span>sticky</span><span>100</span></div>
+    <div class="zlayer" style="top:120px; background:var(--paper-000); z-index:3;"><span>header</span><span>200</span></div>
+    <div class="zlayer" style="top:170px; background:var(--petrol-700); color:#fff; z-index:4;"><span>overlay / modal</span><span>800–900</span></div>
+    <div class="zlayer" style="top:220px; background:var(--color-accent); color:var(--petrol-900); z-index:5;"><span>toast</span><span>1000</span></div>
+  </div>
+
+  <div class="subhead" id="motion">Motion — click to feel it</div>
+  <div class="flex-gap">
+    <button class="motion-btn" style="--dur:var(--t-fast); --curve:var(--ease);">t-fast · 180ms</button>
+    <button class="motion-btn" style="--dur:var(--t-med); --curve:var(--ease);">t-med · 280ms</button>
+    <button class="motion-btn" style="--dur:var(--t-slow); --curve:var(--ease-out);">t-slow · 520ms, ease-out</button>
+  </div>
+</section>
+
+<!-- ============================================================
+     COMPONENTS
+     ============================================================ -->
+<section class="gsection wrap" id="components">
+  <div class="section-head">
+    <div class="eyebrow">Components</div>
+    <h2>Every component, every state</h2>
+    <p>Built from the semantic tokens only. Nothing here references a primitive directly.</p>
+  </div>
+
+  <div class="subhead">Buttons</div>
+  <div class="state-row"><div class="state-row__label">Default</div><button class="btn">Primary action</button><button class="btn btn--gold">Gold action</button><button class="btn btn--ghost">Ghost</button></div>
+  <div class="state-row"><div class="state-row__label">Hover</div><button class="btn force-hover">Primary action</button><button class="btn btn--gold force-hover">Gold action</button><button class="btn btn--ghost force-hover">Ghost</button></div>
+  <div class="state-row"><div class="state-row__label">Focus-visible</div><button class="btn force-focus">Primary action</button><button class="btn btn--gold force-focus">Gold action</button><button class="btn btn--ghost force-focus">Ghost</button></div>
+  <div class="state-row"><div class="state-row__label">Active</div><button class="btn force-active">Primary action</button><button class="btn btn--gold force-active">Gold action</button></div>
+  <div class="state-row"><div class="state-row__label">Disabled</div><button class="btn" disabled>Primary action</button><button class="btn btn--gold" disabled>Gold action</button></div>
+  <div class="state-row" style="background:var(--petrol-700); margin-top:var(--space-4); border-radius:var(--radius); padding:var(--space-5); border-bottom:none;">
+    <div class="state-row__label" style="color:rgba(255,255,255,.6);">On dark</div><button class="btn btn--gold">Gold on dark</button><button class="btn btn--ghost-light">Ghost on dark</button>
+  </div>
+
+  <div class="subhead">Links</div>
+  <div class="flex-gap" style="gap:var(--space-6);">
+    <a class="link-demo" href="#">Default underline link</a>
+    <a class="link-demo force-focus" href="#" style="text-decoration-color:currentColor;">Focus-visible state</a>
+  </div>
+
+  <div class="subhead">Form fields</div>
+  <div class="flex-gap" style="align-items:flex-start; gap:var(--space-7);">
+    <div class="field"><label>Full name</label><input type="text" placeholder="Nur Aisyah binti Rahman"></div>
+    <div class="field field--error"><label>Email address</label><input type="email" value="not-an-email"><div class="field__msg">Enter a valid email address</div></div>
+    <div class="field field--disabled"><label>Reference no.</label><input type="text" value="Auto-generated" disabled></div>
+  </div>
+
+  <div class="subhead">Cards</div>
+  <div class="card-grid">
+    <div class="card"><div class="card__media"><span class="card__tag">Media</span></div><div class="card__body"><div class="card__date">07 Aug 2026</div><div class="card__title">IIUM Holdings marks 25 years of national infrastructure</div><p class="card__excerpt">A milestone year for the group, and a look at what the next chapter holds.</p></div></div>
+    <div class="card"><div class="card__media" style="background:linear-gradient(135deg,var(--edu-700),var(--edu-500));"><span class="card__tag" style="background:var(--color-sector-education); color:#fff;">Education</span></div><div class="card__body"><div class="card__date">Tender</div><div class="card__title">Facilities upgrade, IIUM Schools</div><p class="card__excerpt">Closing 30 Sept 2026. Open to registered contractors.</p></div></div>
+    <div class="profile-card"><div class="profile-card__photo"></div><div class="profile-card__body"><div class="profile-card__name">Dato' Suzana</div><div class="profile-card__role">Chairman</div></div></div>
+  </div>
+
+  <div class="subhead">Table</div>
+  <table class="g-table">
+    <thead><tr><th>Subsidiary</th><th>Sector</th><th>Established</th></tr></thead>
+    <tbody>
+      <tr><td>IKOP Pharma Sdn Bhd</td><td>Healthcare</td><td>2003</td></tr>
+      <tr><td>IIUM Schools Sdn Bhd</td><td>Education</td><td>1998</td></tr>
+      <tr><td>Daya Bersih Sdn Bhd</td><td>Environment</td><td>2011</td></tr>
+    </tbody>
+  </table>
+
+  <div class="subhead">List</div>
+  <ul class="g-list">
+    <li>Fraud or theft</li>
+    <li>Bribery or corruption</li>
+    <li>Abuse of power</li>
+    <li>Conflicts of interest</li>
+  </ul>
+
+  <div class="subhead">Blockquote</div>
+  <blockquote class="g-quote">"Governance is not a department. It is how every one of our subsidiaries makes a decision."<footer>Nadzarudin, Group Managing Director / CEO</footer></blockquote>
+
+  <div class="subhead">Eyebrow &amp; section header</div>
+  <div class="section-head" style="margin-bottom:0;"><div class="eyebrow">About the group</div><h2 style="font-size:var(--text-3xl); margin-top:12px;">Twenty-five years of building what Malaysia relies on</h2></div>
+
+  <div class="subhead">Breadcrumb</div>
+  <div class="breadcrumb"><a href="#">Home</a><span>/</span><a href="#">Our Businesses</a><span>/</span><span aria-current="page">IKOP Pharma</span></div>
+
+  <div class="subhead">Pagination</div>
+  <div class="pagination"><a href="#">←</a><a href="#">1</a><span class="is-current">2</span><a href="#">3</a><a href="#">4</a><a href="#">→</a></div>
+</section>
+
+<!-- ============================================================
+     PATTERNS
+     ============================================================ -->
+<section class="gsection gsection--raised wrap" id="patterns">
+  <div class="section-head">
+    <div class="eyebrow">Composed patterns</div>
+    <h2>Hero, figures, CTA</h2>
+    <p>The shared blocks: <code>hero</code> appears in 23 of 40 files, the only
+      genuinely reused component today. These are what the pattern library in
+      the block system PRD is built from.</p>
+  </div>
+
+  <div class="subhead">Hero — standard</div>
+  <div class="hero-standard">
+    <div class="eyebrow">Governance</div>
+    <h2>Board of Directors</h2>
+    <p>Guiding the group's strategy, oversight and long-term direction across all three sectors.</p>
+  </div>
+
+  <div class="subhead">Hero — business</div>
+  <div class="hero-business">
+    <div class="eyebrow">Healthcare</div>
+    <h2>IKOP Pharma Sdn Bhd</h2>
+    <p>Malaysia's trusted name in pharmaceutical distribution, serving hospitals and clinics nationwide since 2003.</p>
+    <div class="hero-business__actions"><button class="btn btn--gold">Our services</button><button class="btn btn--ghost-light">Contact this business</button></div>
+  </div>
+
+  <div class="subhead">Figures / stats</div>
+  <div class="stats-row">
+    <div class="stat"><div class="stat__num">25</div><div class="stat__label">Years operating</div></div>
+    <div class="stat"><div class="stat__num">9</div><div class="stat__label">Subsidiaries</div></div>
+    <div class="stat"><div class="stat__num">3</div><div class="stat__label">Sectors</div></div>
+    <div class="stat"><div class="stat__num">1,200+</div><div class="stat__label">Employees</div></div>
+  </div>
+
+  <div class="subhead">CTA band</div>
+  <div class="cta-band">
+    <h3>Something to report? We're listening, in confidence.</h3>
+    <div class="cta-band__actions"><button class="btn btn--gold">Report a concern</button><button class="btn btn--ghost-light">Read the policy</button></div>
+  </div>
+</section>
+
+<!-- ============================================================
+     RESPONSIVE
+     ============================================================ -->
+<section class="gsection wrap" id="responsive">
+  <div class="section-head">
+    <div class="eyebrow">Responsiveness</div>
+    <h2>The same block at three widths</h2>
+    <p>The <code>clamp()</code> ranges are fluid by design, not tuned by eye at
+      three fixed Elementor breakpoints. Resize the frame and watch the hero
+      text and stat row respond continuously.</p>
+  </div>
+  <div class="frame-controls">
+    <button class="btn btn--ghost btn--sm" data-frame-width="390">390 · phone</button>
+    <button class="btn btn--ghost btn--sm" data-frame-width="768">768 · tablet</button>
+    <button class="btn btn--ghost btn--sm" data-frame-width="1280">1280 · desktop</button>
+  </div>
+  <div class="frame-shell">
+    <div class="frame-topbar"><span></span><span></span><span></span></div>
+    <div class="frame-viewport" id="frame-viewport" style="max-width:1280px;">
+      <div class="frame-inner">
+        <div class="hero-business" style="padding:var(--space-7) var(--space-6);">
+          <div class="eyebrow">Healthcare</div>
+          <h2 style="font-size:clamp(28px, 8vw, var(--text-hero));">IKOP Pharma Sdn Bhd</h2>
+          <p>Malaysia's trusted name in pharmaceutical distribution since 2003.</p>
+          <div class="hero-business__actions"><button class="btn btn--gold btn--sm">Our services</button></div>
+        </div>
+        <div class="stats-row" style="margin-top:var(--space-6);">
+          <div class="stat"><div class="stat__num">25</div><div class="stat__label">Years</div></div>
+          <div class="stat"><div class="stat__num">9</div><div class="stat__label">Subsidiaries</div></div>
+          <div class="stat"><div class="stat__num">3</div><div class="stat__label">Sectors</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="g-footer wrap">
+  Design system gallery · generated 2026-08-07 from 40 approved files ·
+  feeds PLAN/DESIGN-SYSTEM-DECISIONS.md · nothing here is shipped code
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+
+  // ---- System A/B toggle ----
+  document.querySelectorAll('[data-set-system]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var val = btn.getAttribute('data-set-system');
+      root.setAttribute('data-system', val);
+      document.querySelectorAll('[data-set-system]').forEach(function(b){
+        b.setAttribute('aria-pressed', b.getAttribute('data-set-system') === val ? 'true' : 'false');
+      });
+      updateReadouts();
+    });
+  });
+
+  // ---- A11y raw/fixed toggle ----
+  document.querySelectorAll('[data-set-a11y]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var val = btn.getAttribute('data-set-a11y');
+      root.setAttribute('data-a11y', val);
+      document.querySelectorAll('[data-set-a11y]').forEach(function(b){
+        b.setAttribute('aria-pressed', b.getAttribute('data-set-a11y') === val ? 'true' : 'false');
+      });
+      renderContrastTable();
+      updateReadouts();
+    });
+  });
+
+  function updateReadouts(){
+    var sys = root.getAttribute('data-system');
+    document.getElementById('sw-paper').textContent = sys === 'b' ? '#F7F3EC' : '#F4EFE7';
+    document.getElementById('sw-gold400-hex').textContent = sys === 'b' ? '#D4A547' : '#C99A3A';
+    document.getElementById('sw-petrol900-hex').textContent = sys === 'b' ? '#082226' : '#0A0A0A';
+    document.getElementById('spec-2xl').textContent = sys === 'b' ? 'clamp(28,3vw,36)' : 'clamp(24,2.6vw,32)';
+    document.getElementById('spec-3xl').textContent = sys === 'b' ? 'clamp(36,4.5vw,56)' : 'clamp(30,3.4vw,42)';
+    document.getElementById('rad-sm').textContent = '4px';
+    document.getElementById('rad-md').textContent = sys === 'b' ? '8px' : '10px';
+    document.getElementById('rad-lg').textContent = sys === 'b' ? '14px' : '16px';
+
+    var a11y = root.getAttribute('data-a11y');
+    document.getElementById('sw-tertiary-hex').textContent = a11y === 'fixed' ? '→ ink-500 (passes)' : '→ ink-400 (fails)';
+    document.getElementById('sw-accent-text-hex').textContent = a11y === 'fixed' ? '→ gold-700 (passes small)' : '→ gold-500 (fails small)';
+  }
+
+  // ---- Hero variant picker: the 12 --text-hero values found in the files ----
+  var heroValues = [
+    { label: 'Shipped in tokens.css today', spec: 'clamp(44px,7vw,92px)', count: 1 },
+    { label: 'Most common, set A', spec: 'clamp(38px,5.6vw,68px)', count: 8 },
+    { label: 'Most common, set B', spec: 'clamp(30px,3.8vw,50px)', count: 8 },
+    { label: 'Large, four files', spec: 'clamp(44px,7vw,88px)', count: 4 },
+    { label: 'Large variant', spec: 'clamp(44px,7vw,84px)', count: 2 },
+    { label: 'Compact', spec: 'clamp(40px,6vw,80px)', count: 2 },
+    { label: 'Compact, tighter vw', spec: 'clamp(40px,6.4vw,82px)', count: 1 },
+    { label: 'Compact variant', spec: 'clamp(40px,6.4vw,80px)', count: 1 },
+    { label: 'Largest found', spec: 'clamp(44px,8vw,108px)', count: 1 },
+    { label: 'Mid-small', spec: 'clamp(34px,5vw,60px)', count: 1 },
+    { label: 'Smallest found', spec: 'clamp(28px,3.5vw,46px)', count: 1 },
+    { label: 'One-off', spec: 'clamp(40px,6vw,80px)', count: 1 }
+  ];
+  var grid = document.getElementById('hero-variant-grid');
+  var selectedIndex = 0;
+  heroValues.forEach(function(v, i){
+    var row = document.createElement('label');
+    row.className = 'hero-variant' + (i === selectedIndex ? ' is-selected' : '');
+    row.innerHTML =
+      '<input type="radio" name="hero-variant" value="' + i + '"' + (i === selectedIndex ? ' checked' : '') + '>' +
+      '<span class="hero-variant__label"><b>' + v.label + '</b>' + v.spec + ' · ' + v.count + ' file' + (v.count>1?'s':'') + '</span>' +
+      '<span class="hero-variant__sample" style="font-size:' + v.spec + ';">Group of Companies</span>';
+    row.addEventListener('click', function(){
+      document.querySelectorAll('.hero-variant').forEach(function(r){ r.classList.remove('is-selected'); });
+      row.classList.add('is-selected');
+      root.style.setProperty('--text-hero', v.spec);
+      document.getElementById('spec-hero').textContent = v.spec;
+      document.getElementById('hero-live-text').style.fontSize = v.spec;
+    });
+    grid.appendChild(row);
+  });
+  // initialise with the shipped value
+  root.style.setProperty('--text-hero', heroValues[0].spec);
+  document.getElementById('hero-live-text').style.fontSize = heroValues[0].spec;
+
+  // ---- Contrast table, computed WCAG relative luminance ----
+  function hexToRgb(hex){
+    hex = hex.replace('#','');
+    return [parseInt(hex.substring(0,2),16), parseInt(hex.substring(2,4),16), parseInt(hex.substring(4,6),16)];
+  }
+  function lin(c){ c/=255; return c<=0.04045 ? c/12.92 : Math.pow((c+0.055)/1.055, 2.4); }
+  function luminance(hex){ var rgb = hexToRgb(hex); return 0.2126*lin(rgb[0]) + 0.7152*lin(rgb[1]) + 0.0722*lin(rgb[2]); }
+  function ratio(a,b){ var la=luminance(a), lb=luminance(b); var hi=Math.max(la,lb), lo=Math.min(la,lb); return (hi+0.05)/(lo+0.05); }
+
+  function pairs(){
+    var fixed = root.getAttribute('data-a11y') === 'fixed';
+    var paper = root.getAttribute('data-system') === 'b' ? '#F7F3EC' : '#F4EFE7';
+    return [
+      { name:'Text primary on Surface', fg:'#0F1419', bg:paper },
+      { name:'Text secondary on Surface', fg:'#5A6168', bg:paper },
+      { name:'Text tertiary on Surface' + (fixed?' — fixed':''), fg: fixed?'#646B72':'#8A9098', bg:paper },
+      { name:'Accent text on Surface' + (fixed?' — fixed':' (display colour used for text)'), fg: fixed?'#85621E':'#B98A2E', bg:paper },
+      { name:'Accent text on White' + (fixed?' — fixed':''), fg: fixed?'#85621E':'#B98A2E', bg:'#FFFFFF' },
+      { name:'Accent display on Petrol (headings, large only)', fg:'#B98A2E', bg:'#0E3B40' },
+      { name:'White on Petrol', fg:'#FFFFFF', bg:'#0E3B40' },
+      { name:'Education text' + (fixed?' — fixed':''), fg: fixed?'#3F6B93':'#4A7BA8', bg:'#FFFFFF' },
+      { name:'Healthcare text' + (fixed?' — fixed':''), fg: fixed?'#A3465F':'#B5566F', bg:'#FFFFFF' },
+      { name:'Environment text' + (fixed?' — fixed':''), fg: fixed?'#487256':'#5B8C6E', bg:'#FFFFFF' }
+    ];
+  }
+
+  function renderContrastTable(){
+    var tbody = document.getElementById('contrast-body');
+    tbody.innerHTML = '';
+    pairs().forEach(function(p){
+      var r = ratio(p.fg, p.bg);
+      var passNormal = r >= 4.5, passLarge = r >= 3.0;
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + p.name + '</td>' +
+        '<td><span class="pair-demo" style="color:' + p.fg + '; background:' + p.bg + '; border:1px solid var(--color-border);">Sample text</span></td>' +
+        '<td class="ratio">' + r.toFixed(2) + ':1</td>' +
+        '<td><span class="badge ' + (passNormal?'badge--pass':'badge--fail') + '">' + (passNormal?'Pass':'Fail') + '</span></td>' +
+        '<td><span class="badge ' + (passLarge?'badge--pass':'badge--fail') + '">' + (passLarge?'Pass':'Fail') + '</span></td>';
+      tbody.appendChild(tr);
+    });
+  }
+  renderContrastTable();
+  updateReadouts();
+
+  // ---- Responsive frame ----
+  document.querySelectorAll('[data-frame-width]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      document.getElementById('frame-viewport').style.maxWidth = btn.getAttribute('data-frame-width') + 'px';
+    });
+  });
+})();
+</script>
+</body>
+</html>

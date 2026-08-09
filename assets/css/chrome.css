@@ -1,0 +1,760 @@
+/**
+ * Site header, mega menu, mobile drawer and footer. Loaded sitewide only when
+ * the chrome toggle is on (met_hello_child_chrome_enabled(), inc/chrome.php).
+ *
+ * Reads theme.json custom properties directly. Every rule is scoped under
+ * .met-header, .met-drawer, .met-scrim or .met-footer, so nothing collides with
+ * .met-view, .met-page, .met-home or .elementor. Mobile-first: the nav is a
+ * drawer by default and becomes the horizontal bar at >=820px.
+ *
+ * rgba() literals are scrims/tints derived from palette tokens, noted inline.
+ */
+
+/* --------------------------------------------------------------------------
+   Header shell
+   -------------------------------------------------------------------------- */
+.met-header {
+	position: sticky;
+	top: 0;
+	z-index: var(--wp--custom--z--header, 200);
+	font-family: var(--wp--preset--font-family--sans);
+}
+
+/* The sticky header would otherwise cover whatever an in-page anchor link jumps
+   to. Loaded only with the chrome, so it never affects the parent header. */
+html {
+	scroll-padding-top: 120px;
+}
+
+@media (max-width: 819px) {
+	html {
+		scroll-padding-top: 80px;
+	}
+}
+
+.met-header * {
+	box-sizing: border-box;
+}
+
+.met-header .met-container {
+	max-width: var(--wp--style--global--wide-size, 1280px);
+	margin-inline: auto;
+	padding-inline: var(--wp--custom--gutter, clamp(20px, 4vw, 40px));
+}
+
+.met-header a {
+	text-decoration: none;
+	color: inherit;
+}
+
+/* Utility bar */
+.met-header__utility {
+	background: var(--wp--preset--color--surface-deepest);
+	color: rgba(255, 255, 255, 0.72); /* text-on-dark at 72% */
+	height: 40px;
+	overflow: hidden;
+	transition: height var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-header__utility-inner {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 40px;
+	font-size: 0.8rem;
+}
+
+.met-header__utility a {
+	color: rgba(255, 255, 255, 0.72);
+}
+
+.met-header__utility a:hover {
+	color: var(--wp--preset--color--text-on-dark);
+}
+
+.met-header__utility-links {
+	display: flex;
+	gap: 1.3rem;
+}
+
+.met-header__utility-note {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.met-header.is-scrolled .met-header__utility {
+	height: 0;
+}
+
+/* Main bar */
+.met-header__main {
+	background: var(--wp--preset--color--surface-raised);
+	border-bottom: 1px solid var(--wp--custom--border--hairline);
+}
+
+.met-header__main-inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.25rem;
+	height: 72px;
+}
+
+/* Brand */
+.met-brand {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.met-brand__logo {
+	font-family: var(--wp--preset--font-family--sans);
+	font-weight: 700;
+	font-size: 1.35rem;
+	color: var(--wp--preset--color--surface-dark);
+	letter-spacing: -0.02em;
+	line-height: 1;
+	white-space: nowrap;
+}
+
+.met-brand__logo b {
+	color: var(--wp--preset--color--accent-text);
+}
+
+.met-anniv {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.28rem 0.55rem;
+	border: 1px solid var(--wp--custom--border--hairline-strong);
+	border-radius: 999px;
+	font-size: 0.66rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	color: var(--wp--preset--color--surface-dark);
+	white-space: nowrap;
+}
+
+.met-anniv__n {
+	font-family: var(--wp--preset--font-family--serif);
+	font-size: 0.95rem;
+	color: var(--wp--preset--color--accent-text);
+	line-height: 1;
+}
+
+.met-anniv--on-dark {
+	border-color: var(--wp--custom--border--hairline-light);
+	color: var(--wp--preset--color--text-on-dark);
+}
+
+.met-anniv--on-dark .met-anniv__n {
+	color: var(--wp--preset--color--accent-soft);
+}
+
+/* Uploaded logos. Sized by height so any aspect ratio fits the bar; width auto
+   keeps the proportions. The heights step down with the viewport. */
+.met-brand__img {
+	display: block;
+	height: 46px;
+	width: auto;
+	max-width: 220px;
+	object-fit: contain;
+}
+
+.met-anniv-link {
+	display: inline-flex;
+	align-items: center;
+	line-height: 0;
+}
+
+.met-anniv-img {
+	display: block;
+	height: 42px;
+	width: auto;
+	max-width: 120px;
+	object-fit: contain;
+}
+
+@media (max-width: 819px) {
+	.met-brand__img {
+		height: 38px;
+	}
+
+	.met-anniv-img {
+		height: 34px;
+	}
+}
+
+@media (max-width: 480px) {
+	.met-brand__img {
+		height: 32px;
+		max-width: 150px;
+	}
+
+	.met-anniv-img {
+		height: 30px;
+	}
+}
+
+/* Desktop nav: hidden below 820px, where the six-item bar stops fitting. */
+.met-nav {
+	display: none;
+	align-items: center;
+	gap: 1.55rem;
+}
+
+.met-navlink {
+	font-weight: 500;
+	font-size: 0.95rem;
+	color: var(--wp--preset--color--text);
+	display: inline-flex;
+	align-items: center;
+	gap: 0.3rem;
+	padding: 0.4rem 0;
+	position: relative;
+	cursor: pointer;
+	background: none;
+	border: 0;
+}
+
+.met-navlink:hover {
+	color: var(--wp--preset--color--surface-dark);
+}
+
+.met-chev {
+	width: 9px;
+	height: 9px;
+	transition: transform var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-has-drop:hover .met-chev,
+.met-has-mega:hover .met-chev,
+.met-has-drop:focus-within .met-chev,
+.met-has-mega:focus-within .met-chev {
+	transform: rotate(180deg);
+}
+
+/* Dropdown */
+.met-has-drop {
+	position: relative;
+}
+
+.met-dropp {
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%) translateY(8px);
+	min-width: 260px;
+	background: var(--wp--preset--color--surface-raised);
+	border: 1px solid var(--wp--custom--border--hairline);
+	border-radius: var(--wp--custom--radius--lg, 14px);
+	box-shadow: var(--wp--custom--shadow--4);
+	padding: 10px;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease),
+		transform var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease),
+		visibility var(--wp--custom--motion--fast, 180ms);
+	z-index: var(--wp--custom--z--overlay, 800);
+}
+
+.met-has-drop:hover .met-dropp,
+.met-has-drop:focus-within .met-dropp {
+	opacity: 1;
+	visibility: visible;
+	transform: translateX(-50%) translateY(0);
+}
+
+.met-dropp a {
+	display: block;
+	font-size: 0.9rem;
+	font-weight: 500;
+	padding: 0.55rem 0.7rem;
+	border-radius: 8px;
+	color: var(--wp--preset--color--text);
+}
+
+.met-dropp a:hover {
+	background: var(--wp--preset--color--surface);
+	color: var(--wp--preset--color--surface-dark);
+}
+
+/* Mega */
+.met-has-mega {
+	position: relative;
+}
+
+.met-mega {
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	transform: translateX(-50%) translateY(8px);
+	min-width: 700px;
+	background: var(--wp--preset--color--surface-raised);
+	border: 1px solid var(--wp--custom--border--hairline);
+	border-radius: var(--wp--custom--radius--xl, 20px);
+	box-shadow: var(--wp--custom--shadow--4);
+	padding: 26px;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease),
+		transform var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease),
+		visibility var(--wp--custom--motion--med, 280ms);
+	z-index: var(--wp--custom--z--overlay, 800);
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 22px;
+}
+
+.met-has-mega:hover .met-mega,
+.met-has-mega:focus-within .met-mega {
+	opacity: 1;
+	visibility: visible;
+	transform: translateX(-50%) translateY(0);
+}
+
+.met-mega__h {
+	font-family: var(--wp--preset--font-family--sans);
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--text-secondary);
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 0 0 0.9rem;
+}
+
+.met-mega .met-cdot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	flex: none;
+}
+
+.met-cdot--education {
+	background: var(--wp--preset--color--sector-education);
+}
+
+.met-cdot--infrastructure {
+	background: var(--wp--preset--color--sector-infrastructure);
+}
+
+.met-cdot--healthcare {
+	background: var(--wp--preset--color--sector-healthcare);
+}
+
+.met-mega a {
+	display: block;
+	font-size: 0.88rem;
+	font-weight: 500;
+	padding: 0.4rem 0.5rem;
+	border-radius: 8px;
+	color: var(--wp--preset--color--text);
+}
+
+.met-mega a:hover {
+	background: var(--wp--preset--color--surface);
+	color: var(--wp--preset--color--surface-dark);
+}
+
+/* Actions */
+.met-header__actions {
+	display: flex;
+	align-items: center;
+	gap: 0.9rem;
+}
+
+/* `.met-header .met-header__contact` (two classes) so the white label beats the
+   `.met-header a { color: inherit }` primitive, which is otherwise more
+   specific and drags the text back to the dark bar colour. */
+.met-header .met-header__contact {
+	display: inline-flex;
+	align-items: center;
+	font-weight: 600;
+	font-size: 0.95rem;
+	padding: 0.7rem 1.4rem;
+	border-radius: 999px;
+	background: var(--wp--preset--color--surface-dark);
+	color: var(--wp--preset--color--text-on-dark);
+	border: 1.5px solid transparent;
+	transition: background var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease),
+		transform var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-header__contact:hover {
+	background: var(--wp--preset--color--surface-deepest);
+	transform: translateY(-2px);
+}
+
+.met-menu-btn {
+	display: inline-flex;
+	width: 44px;
+	height: 44px;
+	border: 1px solid var(--wp--custom--border--hairline-strong);
+	border-radius: 10px;
+	background: var(--wp--preset--color--surface-raised);
+	cursor: pointer;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
+}
+
+.met-menu-btn span {
+	width: 18px;
+	height: 2px;
+	background: var(--wp--preset--color--text);
+	border-radius: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Drawer
+   -------------------------------------------------------------------------- */
+.met-scrim {
+	position: fixed;
+	inset: 0;
+	background: rgba(8, 34, 38, 0.45); /* surface-deepest at 45% */
+	z-index: var(--wp--custom--z--modal, 900);
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease),
+		visibility var(--wp--custom--motion--med, 280ms);
+}
+
+.met-scrim.is-open {
+	opacity: 1;
+	visibility: visible;
+}
+
+.met-drawer {
+	position: fixed;
+	inset: 0 0 0 auto;
+	width: min(340px, 86vw);
+	background: var(--wp--preset--color--surface-raised);
+	z-index: calc(var(--wp--custom--z--modal, 900) + 1);
+	transform: translateX(100%);
+	transition: transform var(--wp--custom--motion--med, 280ms) var(--wp--custom--motion--ease, ease);
+	overflow-y: auto;
+	padding: 20px;
+	box-shadow: var(--wp--custom--shadow--4);
+	font-family: var(--wp--preset--font-family--sans);
+}
+
+.met-drawer.is-open {
+	transform: translateX(0);
+}
+
+.met-drawer a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.met-drawer__head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 1rem;
+}
+
+.met-drawer__close {
+	width: 44px;
+	height: 44px;
+	border: 1px solid var(--wp--custom--border--hairline-strong);
+	border-radius: 10px;
+	background: var(--wp--preset--color--surface-raised);
+	cursor: pointer;
+	font-size: 1.1rem;
+	line-height: 1;
+	color: var(--wp--preset--color--text);
+}
+
+.met-drawer__acc {
+	border-bottom: 1px solid var(--wp--custom--border--hairline);
+}
+
+.met-drawer__acc summary {
+	list-style: none;
+	cursor: pointer;
+	font-weight: 600;
+	padding: 0.85rem 0.3rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	min-height: 44px;
+}
+
+.met-drawer__acc summary::-webkit-details-marker {
+	display: none;
+}
+
+.met-drawer__acc summary::after {
+	content: "+";
+	color: var(--wp--preset--color--text-secondary);
+}
+
+.met-drawer__acc[open] summary::after {
+	content: "\2013";
+}
+
+.met-drawer__sub a {
+	display: block;
+	font-size: 0.9rem;
+	color: var(--wp--preset--color--text-secondary);
+	padding: 0.5rem 0.3rem 0.5rem 1rem;
+}
+
+.met-drawer__sub a:hover {
+	color: var(--wp--preset--color--surface-dark);
+}
+
+.met-drawer__flat {
+	display: block;
+	font-weight: 600;
+	color: var(--wp--preset--color--text);
+	padding: 0.85rem 0.3rem;
+	border-bottom: 1px solid var(--wp--custom--border--hairline);
+	min-height: 44px;
+}
+
+.met-drawer__grp {
+	font-size: 0.68rem;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--accent-text);
+	padding: 0.6rem 0.3rem 0.1rem;
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+.met-footer {
+	background: var(--wp--preset--color--surface-deepest);
+	color: rgba(255, 255, 255, 0.68); /* text-on-dark at 68% */
+	font-family: var(--wp--preset--font-family--sans);
+}
+
+.met-footer * {
+	box-sizing: border-box;
+}
+
+.met-footer .met-container {
+	max-width: var(--wp--style--global--wide-size, 1280px);
+	margin-inline: auto;
+	padding-inline: var(--wp--custom--gutter, clamp(20px, 4vw, 40px));
+}
+
+.met-footer a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.met-footer__top {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(28px, 4vw, 48px);
+	padding-block: clamp(50px, 6vw, 76px) clamp(34px, 4vw, 50px);
+}
+
+.met-footer__brand .met-brand__logo {
+	color: var(--wp--preset--color--text-on-dark);
+}
+
+/* Footer logos, sized for the dark footer block. */
+.met-footer .met-brand {
+	align-items: center;
+	gap: 0.9rem;
+}
+
+.met-footer .met-brand__img {
+	height: 52px;
+	max-width: 240px;
+}
+
+.met-footer .met-anniv-img {
+	height: 48px;
+	max-width: 130px;
+}
+
+.met-footer__about {
+	font-size: 0.9rem;
+	line-height: 1.7;
+	margin: 1.1rem 0;
+}
+
+.met-footer__about--tight {
+	margin-top: 0;
+}
+
+.met-footer__about a:hover {
+	color: var(--wp--preset--color--accent-soft);
+}
+
+.met-footer__h {
+	font-family: var(--wp--preset--font-family--sans);
+	font-size: 0.78rem;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--wp--preset--color--text-on-dark);
+	margin: 0 0 1.1rem;
+}
+
+.met-footer__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.7rem;
+}
+
+.met-footer__list a {
+	font-size: 0.9rem;
+	color: rgba(255, 255, 255, 0.68);
+}
+
+.met-footer__list a:hover {
+	color: var(--wp--preset--color--accent-soft);
+}
+
+.met-footer__socials {
+	display: flex;
+	gap: 0.7rem;
+	margin-top: 1.2rem;
+}
+
+.met-footer__socials a {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	border: 1px solid var(--wp--custom--border--hairline-light);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--wp--preset--color--text-on-dark);
+	transition: background var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease),
+		border-color var(--wp--custom--motion--fast, 180ms) var(--wp--custom--motion--ease, ease);
+}
+
+.met-footer__socials svg {
+	width: 18px;
+	height: 18px;
+}
+
+.met-footer__socials a:hover {
+	background: var(--wp--preset--color--accent);
+	border-color: var(--wp--preset--color--accent);
+}
+
+.met-footer__bottom {
+	border-top: 1px solid var(--wp--custom--border--hairline-light);
+	padding-block: 22px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem 1.4rem;
+	justify-content: space-between;
+	font-size: 0.82rem;
+}
+
+.met-footer__legal a:hover {
+	color: var(--wp--preset--color--accent-soft);
+}
+
+/* --------------------------------------------------------------------------
+   Focus visibility
+   -------------------------------------------------------------------------- */
+.met-header a:focus-visible,
+.met-header button:focus-visible,
+.met-drawer a:focus-visible,
+.met-drawer button:focus-visible,
+.met-drawer summary:focus-visible,
+.met-footer a:focus-visible {
+	outline: 2px solid var(--wp--preset--color--accent);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Breakpoints: nav becomes the bar at >=820px; the drawer takes over below it
+   -------------------------------------------------------------------------- */
+@media (min-width: 820px) {
+	.met-nav {
+		display: flex;
+	}
+
+	.met-menu-btn {
+		display: none;
+	}
+
+	/* Logo on the far left, nav and Contact grouped on the right. The auto
+	   left margin on the nav pushes it and everything after it to the end. */
+	.met-header__main-inner {
+		justify-content: flex-start;
+	}
+
+	.met-nav {
+		margin-left: auto;
+	}
+}
+
+/* Compact tier: from 900px up to a roomy laptop, the full bar shows but the nav
+   tightens so all six items plus the Contact button fit without wrapping or
+   spilling into the drawer. Sized against the real menu on a 953px screen. */
+@media (min-width: 820px) and (max-width: 1199px) {
+	.met-nav {
+		gap: 0.85rem;
+	}
+
+	.met-navlink {
+		font-size: 0.85rem;
+	}
+
+	.met-header__main-inner {
+		gap: 0.85rem;
+	}
+
+	.met-header .met-header__contact {
+		padding: 0.55rem 0.95rem;
+		font-size: 0.85rem;
+	}
+
+	.met-brand__img {
+		height: 36px;
+	}
+
+	.met-anniv-img {
+		height: 32px;
+	}
+}
+
+@media (min-width: 861px) {
+	.met-footer__top {
+		grid-template-columns: 1.5fr 1fr 1fr 1fr;
+	}
+}
+
+@media (min-width: 521px) and (max-width: 860px) {
+	.met-footer__top {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+/* Below the desktop breakpoint, drop the utility note so the bar stays clean */
+@media (max-width: 819px) {
+	.met-header__utility-note {
+		display: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.met-header *,
+	.met-drawer,
+	.met-scrim,
+	.met-footer * {
+		transition-duration: 0.001ms !important;
+	}
+}

@@ -80,6 +80,111 @@ Maintenance during WordPress updates (drop-in):
 
 == Changelog ==
 
+= 1.11.0 =
+* Add: the [met_posts] shortcode, a token-styled list of Posts filtered by
+  category slug, for use inside an Elementor Shortcode widget. Layouts grid,
+  list and album; attributes category, exclude_category, count, columns,
+  featured, paged and empty. Filters by slug, not term ID, so a page moves to
+  staging without breaking. Its stylesheet loads only on pages that use it.
+  See DECISIONS D44.
+* Add: an "External album" field on Posts (`_met_album_url`). A gallery Post
+  holds a cover and description while the photos stay on Facebook; the single
+  post shows a "View the full album" button. See DECISIONS D46.
+* Content: news, press releases, CSR and gallery are the standard Post type
+  separated by category, not new post types. See DECISIONS D45.
+
+= 1.10.0 =
+* Add: a designed, editable homepage as a Page Template
+  (`page-templates/template-homepage.php`), assigned to a Page and set as the
+  front page in Settings, Reading. Nine sections: hero carousel, announcements,
+  quick actions, about, stats, companies, RISE2030, newsroom, and a closing CTA.
+  Built on theme.json tokens with Geist headings and Instrument Serif numerals.
+  See DECISIONS D37.
+* Add: a custom site header and footer behind a Customizer toggle
+  (Appearance, Customize, Site Header & Footer), off by default. Sticky header
+  with a utility bar, a structural mega/dropdown menu built from the assigned
+  menu, a mobile drawer, and a four-column footer. When off, the parent theme's
+  header and footer render unchanged, so the switch is a one-click rollback.
+  See DECISIONS D38.
+* Add: `met_hero_slide`, a non-public custom post type for the homepage hero
+  carousel. Featured image plus eyebrow, headline, body and two buttons. Zero
+  slides falls back to a static slide from the site identity. See DECISIONS D39.
+* Add: a "Business Sector" Page meta box that colour-codes the nine
+  `/business/` companies across the homepage grid and the header mega menu.
+  See DECISIONS D40.
+* Add: a "Homepage" Customizer section for the four stats and the About image,
+  with live preview for the stats.
+* Change: the Page Hero variant control is now an explicit None / Standard /
+  Business radio, default None, so the band can be switched off on any Page.
+  No change to how existing heroes render.
+* Add: the header and footer use the Site Identity logo when one is set, plus an
+  optional 25th Anniversary logo with its own link, both set in the Customizer
+  and sized to fit the bar at every width.
+* Add: optional background images for the Tenders and Careers cards, and for the
+  About band, uploaded in the Homepage Customizer section and shown at full
+  quality. Company card images come from each business Page's Featured Image.
+* Add: a per-slide vertical focal point on hero slides, so the chosen part of a
+  photo stays in view when it is cropped. The slide editor lists the recommended
+  image size and notes WebP is supported.
+* Fix: `chrome.css` and `home.css` now declare the parent theme's stylesheets as
+  dependencies, so they print after the parent's `reset.css` instead of before
+  it. That reset styles bare `button` and `a` elements with selectors that tie
+  with a single class, so it was winning on source order: the mobile menu button
+  stayed visible at every width and buttons picked up the parent's pink border.
+* Fix: the mobile drawer now appears only below 820px, so the full menu shows on
+  laptops, and the menu is right-aligned beside the Contact button.
+* Fix: hero and card images now fill their frames at every width. A blanket
+  `height: auto` rule was outranking the hero's `height: 100%`, which left a gap
+  under the image as the window narrowed.
+* Fix: white text on the header Contact button, the CTA button, the quick action
+  cards, and the hero and RISE headings, with more even spacing in the hero,
+  RISE and quick action copy.
+* Add: `scroll-padding-top` so the sticky header no longer covers the target of
+  an in-page anchor link.
+
+= 1.9.0 =
+* Add: `theme.json`, the single canonical design-token source, replacing the
+  ad hoc values that had drifted across the site's design reference files.
+  See PLAN/PRD-design-system.md. Covers colour (with a display/text split on
+  the accent and each sector colour, since the display shade fails WCAG AA at
+  small sizes), the type scale, spacing, section rhythm, layout widths,
+  elevation, radius, z-index, motion and focus. The block editor now offers
+  only this palette and this font-size scale, nothing else.
+* Add: Geist and Instrument Serif are now self-hosted (`assets/fonts/`),
+  declared as `theme.json` font faces. Replaces the Google Fonts CDN enqueue
+  on the main site. The maintenance and 403 standalone pages still load from
+  the CDN, since they run outside a booted WordPress and cannot read
+  `theme.json` (see DECISIONS D7).
+* Add: `assets/css/tokens.css` is now an alias layer over the `theme.json`
+  custom properties, not an independent value source, so there is exactly one
+  place the numbers live.
+* Add: `page.php`. Hello Elementor ships none, so every Page fell through to
+  the template written for blog posts: a duplicate `<h1>` alongside Page
+  Hero's own, an open comment form on corporate pages, and a page that would
+  have been squeezed to the parent's 1140px blog-post width once it stopped
+  being an Elementor page. Keeps `id="content"` so the parent skip link still
+  resolves, drops `class="site-main"` so the parent width rule cannot match.
+  See DECISIONS D29.
+* Add: `assets/css/patterns.css`, component styles for Page bodies authored in
+  the block editor. Scoped under `.met-page`, reads `theme.json` properties
+  directly, and loads only on Pages that render through `page.php`. Icons are
+  CSS background data URIs, not inline SVG, because WordPress strips `<svg>`
+  from post content on save.
+* Add: `inc/migration-tools.php`. **Temporary.** Admin-only, nonce-checked
+  actions to move a Page between Elementor and block rendering, and back.
+  Needed because the meta involved is not exposed through the REST API and
+  this migration runs without WP-CLI. Delete it, and its `require_once` in
+  `functions.php`, once the Elementor removal phase ships. See DECISIONS D29.
+* Fix: the eyebrow label and in-body post links used the display gold as text
+  colour, at 2.72:1 and equivalent ratios, both failing WCAG AA. Swept every
+  matching case across `theme.css`, including a keyboard-focus outline that
+  would have gone the wrong direction on dark hero bands if fixed carelessly.
+  Every replacement value is computed, not estimated.
+
+Note for anyone reading this before release: 1.9.0 is not tagged. It also
+carries the 1.8.0 work, which was never released either, so a site on 1.7.2
+receives both at once.
+
 = 1.8.0 =
 * Add: sitewide design token layer. `assets/css/tokens.css` (`:root` custom
   properties only) and `assets/css/elementor-base.css` (base rules scoped to
