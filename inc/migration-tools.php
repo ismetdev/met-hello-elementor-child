@@ -127,7 +127,7 @@ add_action( 'admin_post_met_hello_child_set_hero_meta', 'met_hello_child_handle_
 
 /**
  * Backfill the `_met_sector` meta on the nine child Pages of /business/
- * (parent ID 172) from each Page's Page Hero eyebrow. A one-time convenience
+ * (parent resolved by slug) from each Page's Page Hero eyebrow. A one-time convenience
  * so the sector no longer has to be resolved from the eyebrow at render time
  * (inc/sectors.php). Idempotent: re-running writes the same values. Redirects
  * to the Pages list with a count. Same temporary/removal note as the rest of
@@ -140,15 +140,17 @@ function met_hello_child_handle_backfill_sectors() {
 
 	check_admin_referer( 'met_hello_child_migration_toggle' );
 
-	$met_backfill_children = get_posts(
+	$met_backfill_parent = met_hello_child_business_parent_id();
+
+	$met_backfill_children = $met_backfill_parent ? get_posts(
 		array(
 			'post_type'   => 'page',
-			'post_parent' => 172,
+			'post_parent' => $met_backfill_parent,
 			'numberposts' => -1,
 			'post_status' => 'any',
 			'fields'      => 'ids',
 		)
-	);
+	) : array();
 
 	$met_backfill_count = 0;
 	foreach ( $met_backfill_children as $met_backfill_id ) {

@@ -80,6 +80,12 @@ Maintenance during WordPress updates (drop-in):
 
 == Changelog ==
 
+= 1.11.1 =
+* Fix: the homepage companies grid and the sector backfill now resolve the
+  /business/ parent page by slug instead of a hardcoded ID. The ID differs
+  between sites, so the hardcoded value left the companies section empty after
+  the move to staging. Filterable via met_hello_child_business_parent_id.
+
 = 1.11.0 =
 * Add: the [met_posts] shortcode, a token-styled list of Posts filtered by
   category slug, for use inside an Elementor Shortcode widget. Layouts grid,

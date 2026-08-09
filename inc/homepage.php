@@ -199,10 +199,15 @@ function met_hello_child_get_newsroom_posts( $count = 5 ) {
  * @return array<int,array<string,mixed>>
  */
 function met_hello_child_get_companies() {
+	$met_business_parent = met_hello_child_business_parent_id();
+	if ( ! $met_business_parent ) {
+		return array();
+	}
+
 	$children = get_posts(
 		array(
 			'post_type'   => 'page',
-			'post_parent' => 172,
+			'post_parent' => $met_business_parent,
 			'post_status' => 'publish',
 			'numberposts' => -1,
 			'orderby'     => array(

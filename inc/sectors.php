@@ -27,6 +27,28 @@ function met_hello_child_sectors() {
 }
 
 /**
+ * The ID of the top-level "business" Page, resolved by slug.
+ *
+ * Resolved by slug, never hardcoded, because the page ID differs between sites
+ * (172 on local, 33 on staging). The homepage companies grid and the sector
+ * backfill both read this, so a hardcoded ID would leave the companies section
+ * empty after a move. Filterable for the rare site where the slug differs.
+ *
+ * @return int Parent page ID, or 0 when no such page exists.
+ */
+function met_hello_child_business_parent_id() {
+	$met_business_parent = get_page_by_path( 'business' );
+	$met_business_id     = $met_business_parent ? (int) $met_business_parent->ID : 0;
+
+	/**
+	 * Filter the business parent Page ID.
+	 *
+	 * @param int $met_business_id Resolved parent page ID.
+	 */
+	return (int) apply_filters( 'met_hello_child_business_parent_id', $met_business_id );
+}
+
+/**
  * Human label for a sector slug, for the badge and column heading.
  *
  * @param string $sector Sector slug.
