@@ -20,6 +20,91 @@ transcripts, moved to the archive with those entries.
 
 ---
 
+## 2026-08-11: all nine /business/ subsidiary pages built (local)
+
+Built every subsidiary child page from its owner-approved design file, in three
+batches by division. All nine are local only, not deployed.
+
+| Page | ID | Sections | Accent |
+|---|---|---|---|
+| IIUM Higher Education | 178 | 9 | Education `#4A7BA8` |
+| IIUM Schools | 179 | 9 | Education |
+| IIUM Educare | 180 | 10 | Education |
+| IIUM Consultancy and Innovation | 181 | 9 | Education |
+| Daya Bersih | 182 | 10 | Infrastructure `#B98A2E` |
+| IIUM Advanced Technologies | 183 | 5 | Infrastructure |
+| IIUM Properties | 184 | 5 | Infrastructure |
+| IIUM Medical Specialist Centre | 185 | 8 | Healthcare `#B5566F` |
+| IKOP Pharma | 186 | 9 | Healthcare |
+
+One shared section grammar across all nine, so the set reads as one system:
+hero, a coloured stat or fact band, an about split, then division-specific
+middle sections, and a closing CTA where the design has one. The two
+Infrastructure pages with the least content (IAT, Properties) carry a
+label-and-value fact band instead of numeric stats, and no CTA, because their
+approved designs have none. Divisional accent is the only colour that changes.
+
+**Page Hero is off on all nine.** This is the one departure from
+[D30](DECISIONS.md#d30) and it was the owner's correction mid-build: the
+instruction to "neglect the header" meant the site chrome, not the design's own
+hero band, which is content. `_met_hero_variant` is set to None on each page and
+the design hero is the first Elementor section, so each page still has exactly
+one h1. **On staging these nine must also be set to None**, or the old band
+returns above the new hero.
+
+Built with a reusable PHP helper library in the Novamira sandbox
+(`met-subsidiary-builder.php`, disabled between batches) rather than repeating
+widget arrays nine times. Native Elementor throughout, with one exception: the
+IKOP certification chip row is a single small HTML fragment, because Elementor
+free containers will not hug their content into inline pills. That is the D41
+"only what the plugins cannot do" case, same as the /business/ image stacks.
+
+Three fixes found by screenshot, not by markup: Font Awesome icon values need
+the `fas ` style prefix or Elementor prints PHP warnings into the card; the
+partner flags rendered blank as container backgrounds and had to become image
+widgets; and one downloaded flag was a corrupt 579-byte file that had to be
+re-imported. Verified on every page at 390/768/1366: no horizontal overflow,
+exactly one h1, images loading.
+
+All are Group B (image-heavy) for the next deploy. Stock photography is
+placeholder and can be swapped on staging.
+
+---
+
+## 2026-08-10: /business/ division landing page built (local)
+
+Built the `/business/` landing page (page 172, previously empty) from the
+owner-approved `business-content.html`. Intro, three division bands (Education,
+Infrastructure, Healthcare) each with a gradient, a translucent count and a
+short blurb, then nine alternating company feature rows, and a closing photo
+band with a CTA to `/contact-us/`. Page Hero kept standard; the design's intro
+headline is an h2 so the page keeps one h1.
+
+Native Elementor throughout (containers, headings, text, image, button, icon)
+except the nine overlapping image stacks, which use one small HTML widget each:
+a large photo, a small photo overlapping the corner with a white border, and a
+big index number behind. That composition needs absolute positioning Elementor
+free cannot express cleanly, so it is the D41 "only what the plugins cannot do"
+case. Alternating sides use flex `row` / `row-reverse` with
+`flex_direction_mobile: column`, so media leads on mobile and the sides swap on
+desktop.
+
+Owner decisions: all nine `Explore` links are placeholder `#` (the owner points
+them at the subsidiary pages after import), and the small overlapping photo
+reuses each subsidiary page's existing featured image rather than importing
+Unsplash stock. Ten images imported (nine company photos from the old
+production site, one Unsplash closing background); the nine logos and nine
+featured photos were already in the library.
+
+Verified at 390/768/1366/1920: no overflow, one h1, images load (the full-page
+capture showed blanks below the fold, the D43 lazy-load trap; a scrolled
+viewport capture confirmed every row renders). `check-design` returns no
+failures, only the expected off-palette warning for the brand and division
+accent colours. Built on local only; it is a Group B (image-heavy) page for the
+next deploy.
+
+---
+
 ## 2026-08-10: first full deploy to staging, complete and verified
 
 Staging went live with the whole revamp. This was the first time any of the

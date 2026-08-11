@@ -309,7 +309,19 @@ theme hero.
 ### Group B: baked images, import then fix the images
 
 `/iium-holdings-25th-anniversary/`, `/iium-holdings-group-of-companies/`,
-`/rise2030-strategy-blueprint/`.
+`/rise2030-strategy-blueprint/`. The first three moved in the 2026-08-10 deploy.
+
+**Still to move, built 2026-08-11 and never deployed:** `/business/` (the
+division landing page) and all nine subsidiary child pages (IIUM Higher
+Education, IIUM Schools, IIUM Educare, IIUM Consultancy and Innovation, Daya
+Bersih, IIUM Advanced Technologies, IIUM Properties, IIUM Medical Specialist
+Centre, IKOP Pharma). Two extra things for these ten:
+
+- **The nine subsidiary pages need Page Hero set to None**, same as step 1
+  below. Their design hero is the first Elementor section and prints the `h1`.
+  Leaving Page Hero on gives the page two `h1` tags and two stacked headers.
+- **The `/business/` landing page has nine placeholder `#` links.** Point each
+  `Explore` button at the matching subsidiary page after the children are in.
 
 Do the import mechanism above, then:
 

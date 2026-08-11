@@ -826,6 +826,28 @@ here is about the migration: every Page in it opts in, with the standard or
 business variant, and the variant is a content decision made in the meta box,
 not a design decision remade in CSS per page.
 
+### Amended 2026-08-11: the nine subsidiary pages are the exception
+
+The nine `/business/` subsidiary child pages (178 to 186) have **Page Hero set
+to None**, and their approved design's own hero band is built as the first
+Elementor section instead.
+
+**Why the exception holds.** D30 exists to stop the site growing thirty
+different headers. These nine share one hero design with each other, so the
+consistency argument is satisfied within the set: same dark ground, same gold
+eyebrow naming the division, same heading scale, same two buttons. They are
+also the deepest pages in the tree, where the design carries a photograph and a
+call to action that Page Hero has no field for.
+
+**The rule this does not break:** exactly one `h1` per page. Page Hero is off
+precisely so the design hero can own the `h1`. Turning Page Hero back on for
+any of these nine without removing its hero section would print two.
+
+**How this was found.** The build first kept Page Hero and dropped the design's
+hero, reading the owner's "neglect any header or footer" as covering it. The
+owner corrected it: that instruction meant the site chrome, and the design's
+hero band is page content.
+
 ---
 
 ## D35: Page bodies are built in Elementor again, governed by the token system <a id="d35"></a>

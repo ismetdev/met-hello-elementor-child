@@ -3,7 +3,7 @@
 Where the project stands today. Update when the shipped version, the open work, or
 the environment changes.
 
-Last updated: 2026-08-10
+Last updated: 2026-08-11
 
 ## At a glance
 
@@ -143,13 +143,16 @@ and is being brought forward as v1.10.0.
 - **42 Pages exist**, matching the live staging sitemap, with Page Hero meta,
   excerpts and Yoast fields. Hierarchy verified: 9 under `/business/`, 9 under
   `/board-of-directors/`.
-- **12 pages designed and built in Elementor**, all pre-flight clean:
+- **22 pages designed and built in Elementor**, all pre-flight clean:
   `/whistleblowing/`, `/contact-us/` (WPForms 197), `/sitemap/`,
   `/iium-holdings-group-of-companies/` (rebuilt 2026-08-09, page 152, 103
   widgets), `/iium-holdings-25th-anniversary/` (built 2026-08-09, page 161, 163
   widgets), `/news-announcement/` (page 170), `/media/` (page 171), `/gallery/`
   (page 168), `/press-releases/` (page 169), `/csr-initiatives/` (page 167),
-  `/rise2030-strategy-blueprint/` (page 160), all built 2026-08-09. All built
+  `/rise2030-strategy-blueprint/` (page 160), all built 2026-08-09;
+  `/business/` (the division landing page, page 172, built 2026-08-10); and the
+  nine `/business/` subsidiary child pages (178 to 186, built 2026-08-11). The
+  last ten are local only, not yet deployed. All built
   from **real Elementor widgets**, never a
   pasted HTML block. See [D41](DECISIONS.md#d41), which also lists the four
   Elementor gotchas that have each cost a rebuild. Images are imported into the
@@ -253,10 +256,28 @@ it still exists, it should be removed.
 
 ### Not done, for a future session
 
+- **`/business/` landing page (page 172) is built on local but not deployed.**
+  Designed 2026-08-10 from `business-content.html`. It is image-heavy (9 company
+  photos, 9 logos, 9 small featured photos, 1 closing background), so it is a
+  Group B page in the deploy guide: move it, then re-check the images on staging.
+  All nine `Explore` links are placeholder `#`, to be pointed at the subsidiary
+  pages after import. The nine small photos reuse the subsidiary pages' own
+  featured images.
+- **All nine `/business/` subsidiary child pages are built on local, not
+  deployed.** Designed 2026-08-11 from their approved design files: IIUM Higher
+  Education (178), IIUM Schools (179), IIUM Educare (180), IIUM Consultancy and
+  Innovation (181), Daya Bersih (182), IIUM Advanced Technologies (183), IIUM
+  Properties (184), IIUM Medical Specialist Centre (185), IKOP Pharma (186).
+  One shared section grammar, divisional accent the only colour that varies.
+  All are Group B (image-heavy). **Page Hero is set to None on all nine**, and
+  must be set to None on staging too, or the old band returns above the new
+  hero. Stock photography is placeholder and can be swapped on staging. See the
+  2026-08-11 PROJECT_LOG entry.
 - **Remaining page designs**, still on their original staging design, not yet
-  redesigned: Board of Directors, Management Team, and the nine `/business/`
-  subsidiary pages. (Homepage, 25th Anniversary, Group of Companies, News,
-  Media, Gallery, Press Releases, CSR and RISE2030 are all done and live.)
+  redesigned: Board of Directors and Management Team.
+  (Homepage, 25th Anniversary, Group of Companies, News, Media, Gallery, Press
+  Releases, CSR, RISE2030, the Business landing and all nine subsidiary pages
+  are done.)
 - **Homepage content to enrich over time**: no hero slides exist yet (the static
   fallback shows), and the nine `/business/` pages have no featured image (the
   sector-tinted placeholder shows). Both are content entry, not code. Hero slides
