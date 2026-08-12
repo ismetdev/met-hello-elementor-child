@@ -167,6 +167,50 @@ function met_hello_child_handle_backfill_sectors() {
 add_action( 'admin_post_met_hello_child_backfill_sectors', 'met_hello_child_handle_backfill_sectors' );
 
 /**
+ * One-time rename of the `_met_sector` value on every /business/ child Page
+ * from the old slug `infrastructure` to the new slug `facilities` (DECISIONS
+ * D49). Accepts a `direction` POST value so the move is reversible: 'forward'
+ * (the default) renames infrastructure -> facilities; 'back' undoes it.
+ * Idempotent in both directions. Redirects to the Pages list with a count.
+ * Same temporary/removal note as the rest of this file.
+ */
+function met_hello_child_handle_rename_sector() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'Not allowed.', 'met-hello-child' ), 403 );
+	}
+
+	check_admin_referer( 'met_hello_child_migration_toggle' );
+
+	$met_rename_direction = isset( $_POST['direction'] ) ? sanitize_key( wp_unslash( $_POST['direction'] ) ) : 'forward';
+	$met_rename_from      = 'back' === $met_rename_direction ? 'facilities' : 'infrastructure';
+	$met_rename_to        = 'back' === $met_rename_direction ? 'infrastructure' : 'facilities';
+
+	$met_rename_parent = met_hello_child_business_parent_id();
+
+	$met_rename_children = $met_rename_parent ? get_posts(
+		array(
+			'post_type'   => 'page',
+			'post_parent' => $met_rename_parent,
+			'numberposts' => -1,
+			'post_status' => 'any',
+			'fields'      => 'ids',
+		)
+	) : array();
+
+	$met_rename_count = 0;
+	foreach ( $met_rename_children as $met_rename_id ) {
+		if ( get_post_meta( $met_rename_id, '_met_sector', true ) === $met_rename_from ) {
+			update_post_meta( $met_rename_id, '_met_sector', $met_rename_to );
+			++$met_rename_count;
+		}
+	}
+
+	wp_safe_redirect( add_query_arg( 'met_sector_renamed', $met_rename_count, admin_url( 'edit.php?post_type=page' ) ) );
+	exit;
+}
+add_action( 'admin_post_met_hello_child_rename_sector', 'met_hello_child_handle_rename_sector' );
+
+/**
  * Print the nonce the two actions above require, as plain text, for a
  * script driving this tool over HTTP with no UI to read a nonce field from.
  * Same temporary/removal note as the rest of this file.

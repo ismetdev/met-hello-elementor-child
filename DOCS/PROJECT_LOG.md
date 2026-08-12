@@ -20,6 +20,77 @@ transcripts, moved to the archive with those entries.
 
 ---
 
+## 2026-08-11: homepage rebuilt in Elementor, v1.12.0 (local)
+
+Group MD/CEO feedback after the 2026-08-11 presentation, in ten numbered
+points, all implemented. Full plan and the options put to the owner:
+[PLAN/PRD-homepage-elementor.md](../PLAN/PRD-homepage-elementor.md). Decisions:
+[D47](DECISIONS.md#d47), [D48](DECISIONS.md#d48), [D49](DECISIONS.md#d49).
+
+**Homepage is now an Elementor page** (Page 156, template "Elementor Full
+Width"), not the v1.10.0 Page Template. Editorial furniture, eyebrows,
+headings, descriptions, buttons, is Elementor widgets the owner can edit
+directly. The four sections already approved by the Group MD/CEO, hero
+slider, announcement cards, portfolio gallery, newsroom list, render from
+the exact same code as before through a new shortcode bridge
+(`inc/home-shortcodes.php`), not rebuilt. Two new shortcodes,
+`[met_tenders]` and `[met_careers]`, read MetCPT's post types and meta keys
+without modifying MetCPT. `[met_companies]` takes `order`/`exclude`
+attributes; the homepage now lists Education (4), then Facilities (Daya
+Bersih, IIUM Properties, with IIUM Advanced Technologies excluded), then
+Healthcare (2), the exact sequence requested.
+
+**Old build untouched, and is the rollback.**
+`page-templates/template-homepage.php`, `inc/homepage.php`, and every
+partial in `template-parts/home/` are unmodified; re-selecting the Homepage
+template on Page 156 renders them exactly as before.
+
+**One real defect found and fixed mid-build**: `home.css` and `home.js` are
+entirely scoped under one `.met-home` ancestor that no longer existed once
+the page stopped using the Page Template. Fixed with one `the_content` filter
+that wraps Elementor's rendered output in the same element, so neither file
+needed any change.
+
+**Footer can now move to Elementor** (Header Footer Elementor, bundled with
+UAE), a second Customizer toggle independent of the header, which stays
+theme code because the owner is happy with the menu and it is the riskier
+half to rebuild. The Elementor footer sits on `surface` `#F7F3EC` instead of
+petrol, so the logo reads, the actual complaint. Cost real debugging time:
+the plugin's `ehf_template_type` meta must read the literal string
+`type_footer`, not `footer`, or the footer silently never renders with no
+visible error. Building it also surfaced a genuine, pre-existing menu bug:
+`wp_update_nav_menu_item()` resets every unspecified field to its default,
+so renaming one menu item's title without also passing its existing parent
+ID and URL silently promoted "Infrastructure" from a Business submenu column
+into its own top-level nav item. Caught by screenshot, not by the rename
+logic itself, and fixed by restoring the item's parent, URL and a
+deterministic re-numbering of its siblings.
+
+**Hero slides gained a per-slide headline size field** (28-72px, empty is
+unchanged), so a long programme or event name can be sized down instead of
+covering the photo. The CSS floor had to become `min(2.2rem, the custom
+max)` rather than a bare `2.2rem`, because `clamp()`'s floor always wins
+over its ceiling once the floor is the larger number.
+
+**Infrastructure renamed to Facilities, slug included**, per direct owner
+instruction (not a label-only change). Code, the `theme.json` colour token,
+and the three affected Pages' saved sector meta were renamed with a
+reversible migration action. The harder part was content no grep-for-code
+catches: three Facilities subsidiary pages' hero eyebrows, the `/business/`
+landing page's division band, one hero slide's own body text, three Yoast
+meta descriptions, and one main-menu item, all found by querying the
+database directly rather than trusting a code-only sweep.
+
+Verified: `phpcs` clean theme-wide; Novamira `check-design` returns `ok`
+with only the two expected sector-colour warnings and "elevate" (the owner's
+own RISE2030 wording, not invented copy); no horizontal scroll and exactly
+one `h1` at 390/768/1366/1920; the four unchanged sections
+screenshot-compared against a pre-change baseline. Version bumped to
+1.12.0. Built on branch `feat/home-elementor`, not yet committed, not
+deployed.
+
+---
+
 ## 2026-08-11: all nine /business/ subsidiary pages built (local)
 
 Built every subsidiary child page from its owner-approved design file, in three

@@ -218,6 +218,80 @@
 	font-size: var(--wp--preset--font-size--md);
 }
 
+/* Tender and career rows: content for the [met_tenders]/[met_careers]
+   shortcodes in inc/home-shortcodes.php (D47). New to the homepage, so this is
+   new CSS rather than a reuse; same card language (surface, hairline border,
+   xl radius) as the rest of the page. */
+.met-tender-list,
+.met-career-list {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	width: 100%;
+}
+
+.met-tender-row,
+.met-career-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 20px;
+	background: var(--wp--preset--color--surface-raised);
+	border: 1px solid var(--wp--custom--border--hairline);
+	border-radius: var(--wp--custom--radius--lg, 14px);
+	padding: 18px 22px;
+	color: var(--wp--preset--color--text);
+	transition: border-color var(--wp--custom--motion--fast, 0.2s) var(--wp--custom--motion--ease, ease), transform var(--wp--custom--motion--fast, 0.2s) var(--wp--custom--motion--ease, ease);
+}
+
+.met-tender-row:hover,
+.met-career-row:hover {
+	border-color: var(--wp--custom--border--hairline-strong);
+	transform: translateY(-2px);
+}
+
+.met-tender-row__ref {
+	font-family: var(--wp--preset--font-family--sans);
+	font-weight: 700;
+	font-size: var(--wp--preset--font-size--sm);
+	color: var(--wp--preset--color--text-secondary);
+	flex: 0 0 auto;
+}
+
+.met-tender-row__title,
+.met-career-row__title {
+	font-family: var(--wp--preset--font-family--sans);
+	font-weight: 700;
+	font-size: var(--wp--preset--font-size--md);
+	color: var(--wp--preset--color--text);
+	flex: 1 1 240px;
+}
+
+.met-tender-row__badge {
+	font-size: var(--wp--preset--font-size--xs);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	padding: 5px 12px;
+	border-radius: 999px;
+	border: 1px solid var(--wp--custom--border--hairline-strong);
+	color: var(--wp--preset--color--text-secondary);
+	flex: 0 0 auto;
+}
+
+.met-tender-row__badge--soon {
+	background: var(--wp--preset--color--accent);
+	border-color: var(--wp--preset--color--accent);
+	color: var(--wp--preset--color--text-on-dark);
+}
+
+.met-tender-row__date,
+.met-career-row__meta {
+	font-size: var(--wp--preset--font-size--sm);
+	color: var(--wp--preset--color--text-muted);
+	flex: 0 0 auto;
+}
+
 /* Empty-state media: sector-tinted gradient over surface, with the geometric
    pattern token. No <img>, so never a broken image. */
 .met-home__empty {
@@ -234,8 +308,8 @@
 	background-color: color-mix(in srgb, var(--wp--preset--color--sector-education) 12%, var(--wp--preset--color--surface));
 }
 
-.met-home__empty--infrastructure {
-	background-color: color-mix(in srgb, var(--wp--preset--color--sector-infrastructure) 12%, var(--wp--preset--color--surface));
+.met-home__empty--facilities {
+	background-color: color-mix(in srgb, var(--wp--preset--color--sector-facilities) 12%, var(--wp--preset--color--surface));
 }
 
 .met-home__empty--healthcare {
@@ -334,7 +408,14 @@
 }
 
 .met-hero-home__title {
-	font-size: clamp(2.2rem, 5vw, 3.9rem);
+	/* --met-hero-title-max: optional per-slide override, set inline by
+	   template-parts/home/hero.php from the slide's Headline size field
+	   (inc/hero-slides.php). Falls back to today's 3.9rem cap when unset, so a
+	   slide with no size chosen renders exactly as before. The floor is
+	   min(2.2rem, the max) rather than a bare 2.2rem: clamp()'s floor always
+	   wins over its ceiling when the floor is larger, so without this a custom
+	   max below 35px (2.2rem) would be silently ignored on wide screens. */
+	font-size: clamp(min(2.2rem, var(--met-hero-title-max, 3.9rem)), 5vw, var(--met-hero-title-max, 3.9rem));
 	color: var(--wp--preset--color--text-on-dark);
 	margin: 0;
 	font-weight: 700;
@@ -787,8 +868,8 @@
 	background: var(--wp--preset--color--sector-education);
 }
 
-.met-cdot--infrastructure {
-	background: var(--wp--preset--color--sector-infrastructure);
+.met-cdot--facilities {
+	background: var(--wp--preset--color--sector-facilities);
 }
 
 .met-cdot--healthcare {
@@ -859,8 +940,8 @@
 	background: var(--wp--preset--color--sector-education);
 }
 
-.met-co-card--infrastructure .met-co-badge {
-	background: var(--wp--preset--color--sector-infrastructure);
+.met-co-card--facilities .met-co-badge {
+	background: var(--wp--preset--color--sector-facilities);
 }
 
 .met-co-card--healthcare .met-co-badge {
@@ -927,8 +1008,8 @@
 	background: var(--wp--preset--color--sector-education);
 }
 
-.met-co-card--infrastructure::before {
-	background: var(--wp--preset--color--sector-infrastructure);
+.met-co-card--facilities::before {
+	background: var(--wp--preset--color--sector-facilities);
 }
 
 .met-co-card--healthcare::before {

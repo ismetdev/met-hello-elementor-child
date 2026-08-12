@@ -345,6 +345,20 @@ Image counts, so you know what to expect: anniversary about 14, group about 10
 
 ## Step 8: set the front page
 
+**This procedure describes staging's current state, 1.11.1, where the
+homepage is still the v1.10.0 Page Template.** Local is ahead of it: v1.12.0
+(built 2026-08-11, not yet deployed) rebuilds the homepage as a real
+Elementor page, per [D47](DECISIONS.md#d47). When that version deploys, the
+homepage becomes a **Group B** page like the other Elementor pages in this
+guide, image-heavy, moved by the Elementor template export/import mechanism,
+not by the steps below. It also needs the same two things every other
+Elementor page needs: **Page Hero set to None**, and its footer Customizer
+setting (`met_hello_child_footer_enabled`) carried over if the owner has
+built an Elementor footer by then (see D48). Update this section properly the
+first time that deploy actually happens, rather than trusting this note.
+
+The steps below apply only while staging is still on the Page Template:
+
 The homepage is a theme Page Template, not an Elementor page, so it does not move
 through Elementor at all. On staging:
 

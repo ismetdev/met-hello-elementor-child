@@ -57,7 +57,7 @@ $met_action_career_img = met_hello_child_get_home_image_id( 'action_career' );
 				<?php endif; ?>
 				<span class="met-eyebrow met-eyebrow--on-dark"><?php esc_html_e( 'Join the group', 'met-hello-child' ); ?></span>
 				<h2 class="met-action__title"><?php esc_html_e( 'Careers', 'met-hello-child' ); ?></h2>
-				<p><?php esc_html_e( 'Explore roles across nine companies in education, infrastructure, and healthcare.', 'met-hello-child' ); ?></p>
+				<p><?php esc_html_e( 'Explore roles across nine companies in education, facilities, and healthcare.', 'met-hello-child' ); ?></p>
 				<span class="met-action__go"><?php esc_html_e( 'See open positions', 'met-hello-child' ); ?> <?php echo met_hello_child_home_arrow(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted static SVG. ?></span>
 			</a>
 		</div>

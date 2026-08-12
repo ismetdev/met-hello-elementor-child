@@ -10,6 +10,7 @@ Last updated: 2026-08-11
 | | |
 |---|---|
 | Shipped version | **1.11.1**, released and **live on staging**. Deploy completed 2026-08-10. Includes the never-tagged 1.8.0, 1.9.0 and 1.10.0 work, folded into 1.11.0 |
+| Local version | **1.12.0, built and verified on local, not released.** Rebuilds the homepage in Elementor per Group MD/CEO feedback after the 2026-08-11 presentation. See "v1.12.0" below |
 | Staging status | **v2.iiumholdings.com.my is live on 1.11.1** with the full new design: custom chrome on, homepage as the front page, and all content pages moved. Presented to the Group MD/CEO on 2026-08-11 |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
 | Branch | `main` |
@@ -254,8 +255,82 @@ resolved empty. It now resolves the parent by slug. See the PROJECT_LOG entry.
 (`admin-claude-temporary`) for the deploy and planned to delete it once done. If
 it still exists, it should be removed.
 
+### v1.12.0, homepage rebuilt in Elementor. Built, verified on local, not released
+
+Built 2026-08-11, from Group MD/CEO feedback given after the 2026-08-11
+presentation of the (then still Page-Template) homepage. Full detail, the
+options put to the owner, and the reasoning behind each is
+[PLAN/PRD-homepage-elementor.md](../PLAN/PRD-homepage-elementor.md).
+
+- **Homepage (Page 156) is now an Elementor page**, template "Elementor Full
+  Width" (`elementor_header_footer`), not "Theme": that template calls
+  `get_header()`/`get_footer()` the same as "Theme" would, but skips
+  `page.php`'s Page Hero/fallback-intro branch, which would otherwise print a
+  second `<h1>` above the design's own hero. See [D47](DECISIONS.md#d47).
+  **The v1.10.0-era Page Template build is untouched** —
+  `page-templates/template-homepage.php`, `inc/homepage.php`, and all nine
+  partials in `template-parts/home/` stay on disk as the rollback: re-select
+  the Homepage template and they render exactly as before.
+- **A shortcode bridge**, [inc/home-shortcodes.php](../inc/home-shortcodes.php),
+  lets Elementor own the eyebrow/heading/description/button furniture while
+  four already-approved designs (hero slider, announcement cards, portfolio
+  gallery, newsroom list) keep rendering from the same partials and data
+  helpers as before, via `[met_home_hero]`, `[met_home_announcements]`,
+  `[met_companies]`, `[met_home_newsroom]`. Two new shortcodes,
+  `[met_tenders]` and `[met_careers]`, read MetCPT's `metcpt_tender` and
+  `metcpt_career` post types and meta keys but render theme markup, so MetCPT
+  itself is never modified. `[met_companies order="..." exclude="..."]`
+  gives the homepage its own company sequence, independent of the
+  `/business/` page order.
+- **`home.css` and `home.js` needed one fix to work off the old template.**
+  Every rule in `home.css` and every DOM query in `home.js` is scoped under
+  one `.met-home` ancestor, which used to be `<main class="met-home">` in the
+  Page Template. `met_hello_child_wrap_home_content()` (in
+  `inc/home-shortcodes.php`, on the `the_content` filter) wraps Elementor's
+  rendered output in that same element, so both files work completely
+  unchanged. Scoped to the front page, only when a home shortcode is present.
+- **The footer can now move to Elementor**, a second Customizer toggle,
+  `met_hello_child_footer_enabled` (default on, independent of the header
+  toggle). Built in Header Footer Elementor (bundled with UAE) on `surface`
+  `#F7F3EC`, not the petrol the header still uses, so the logo reads — the
+  Group MD/CEO's actual complaint. See [D48](DECISIONS.md#d48). One HFE detail
+  worth remembering if this is ever rebuilt: the `ehf_template_type` post meta
+  value must be the literal string `type_footer`, not `footer`.
+- **Hero slides gained a per-slide headline size field**, `_met_slide_size`,
+  28-72px, empty keeps today's size. `template-parts/home/hero.php` emits it
+  as an inline `--met-hero-title-max` custom property; the CSS floor is
+  `min(2.2rem, the custom max)` rather than a bare `2.2rem`, because `clamp()`
+  floor always outranks its ceiling once the floor is larger, and a bare
+  `2.2rem` floor would have silently ignored any custom max under 35px.
+- **Infrastructure renamed to Facilities, slug included** ([D49](DECISIONS.md#d49)):
+  `met_hello_child_sectors()`, the label map, the `theme.json` colour token
+  (`sector-infrastructure` to `sector-facilities`), every CSS class name, and
+  the saved `_met_sector` meta on Daya Bersih (182), IIUM Advanced
+  Technologies (183) and IIUM Properties (184). A one-time, reversible
+  migration action is in `inc/migration-tools.php`
+  (`admin-post.php?action=met_hello_child_rename_sector`). The eyebrow-parse
+  fallback in `inc/sectors.php` keeps `infrastructure` as a permanent legacy
+  alias, so any page whose hero eyebrow still reads the old text resolves
+  correctly. Content strings with no code path (hero eyebrows on the three
+  Facilities subsidiary pages, the `/business/` landing page's division band,
+  a hero slide's own body text, three Yoast meta descriptions, the main menu
+  item) were found and fixed by a direct database sweep, not by grep alone —
+  worth re-sweeping after any future find-and-replace of a division name.
+- **Stats are now plain Elementor text**, not the Customizer fields in
+  `inc/homepage.php`. Those fields still exist and still work if the
+  Page Template is ever restored, but on the Elementor build they are
+  dormant; the owner was told this in the planning conversation.
+- Verified: `phpcs` clean theme-wide; Novamira `check-design` returns `ok`,
+  two expected warnings (the education/healthcare sector colours, both
+  canonical `theme.json` tokens, and "elevate" as filler copy, which is the
+  owner's own RISE2030 wording); no horizontal scroll and exactly one `h1` at
+  390/768/1366/1920; the four unchanged sections screenshot-compared against
+  the pre-change baseline.
+
 ### Not done, for a future session
 
+- **The v1.12.0 homepage rebuild is local only, not deployed and not
+  committed.** See above.
 - **`/business/` landing page (page 172) is built on local but not deployed.**
   Designed 2026-08-10 from `business-content.html`. It is image-heavy (9 company
   photos, 9 logos, 9 small featured photos, 1 closing background), so it is a
@@ -278,11 +353,10 @@ it still exists, it should be removed.
   (Homepage, 25th Anniversary, Group of Companies, News, Media, Gallery, Press
   Releases, CSR, RISE2030, the Business landing and all nine subsidiary pages
   are done.)
-- **Homepage content to enrich over time**: no hero slides exist yet (the static
-  fallback shows), and the nine `/business/` pages have no featured image (the
-  sector-tinted placeholder shows). Both are content entry, not code. Hero slides
-  are added under the Hero Slides menu; the companies grid fills its images from
-  each business page's featured image.
+- **Homepage content, now populated**: 3 hero slides exist (Hero Slides menu),
+  and all nine `/business/` pages have a featured image, so the sector-tinted
+  placeholder is no longer the common case. Both remain plain content entry
+  going forward, not code.
 - **Elementor Google Fonts**, still deferred (see below).
 - **MetCPT items**, a separate repo (see below).
 

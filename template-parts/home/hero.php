@@ -27,6 +27,7 @@ if ( empty( $met_hero_slides ) ) {
 			'body'     => get_bloginfo( 'description' ),
 			'image_id' => 0,
 			'focus'    => 'center',
+			'size'     => 0,
 			'ctas'     => array(),
 		),
 	);
@@ -64,10 +65,18 @@ $met_hero_count     = count( $met_hero_slides );
 						<?php if ( ! empty( $met_hero_slide['eyebrow'] ) ) : ?>
 							<span class="met-eyebrow met-eyebrow--on-dark"><?php echo esc_html( $met_hero_slide['eyebrow'] ); ?></span>
 						<?php endif; ?>
+						<?php
+						// Per-slide headline size override (owner request, 2026-08-11): a
+						// long programme or event name can otherwise cover too much of the
+						// hero photo. Empty/zero keeps the CSS default in home.css.
+						$met_hero_title_style = ! empty( $met_hero_slide['size'] )
+							? ' style="--met-hero-title-max:' . esc_attr( $met_hero_slide['size'] ) . 'px"'
+							: '';
+						?>
 						<?php if ( $met_hero_active ) : ?>
-							<h1 class="met-hero-home__title"><?php echo esc_html( $met_hero_slide['headline'] ); ?></h1>
+							<h1 class="met-hero-home__title"<?php echo $met_hero_title_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built above from esc_attr() on an absint-sanitised value. ?>><?php echo esc_html( $met_hero_slide['headline'] ); ?></h1>
 						<?php else : ?>
-							<p class="met-hero-home__title" role="heading" aria-level="2"><?php echo esc_html( $met_hero_slide['headline'] ); ?></p>
+							<p class="met-hero-home__title" role="heading" aria-level="2"<?php echo $met_hero_title_style; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built above from esc_attr() on an absint-sanitised value. ?>><?php echo esc_html( $met_hero_slide['headline'] ); ?></p>
 						<?php endif; ?>
 						<?php if ( ! empty( $met_hero_slide['body'] ) ) : ?>
 							<p class="met-hero-home__body"><?php echo esc_html( $met_hero_slide['body'] ); ?></p>

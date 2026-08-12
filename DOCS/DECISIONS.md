@@ -1175,3 +1175,163 @@ reuse `met-card` and `met-thumb`.
 **The card links to the post, not straight to Facebook.** The post is the
 on-domain, indexable surface. Sending the card directly to the external album is
 a one-attribute change if that is ever wanted.
+
+---
+
+## D47: the homepage is an Elementor page, built on a shortcode bridge <a id="d47"></a>
+
+**Decision (2026-08-11, owner instruction, Group MD/CEO feedback).** The
+homepage (Page 156) moved from the v1.10.0 Page Template
+(`page-templates/template-homepage.php`, [D37](#d37)) to a real Elementor
+page, template "Elementor Full Width" (`elementor_header_footer`), so the
+Group MD/CEO can edit the editorial furniture, eyebrows, headings,
+descriptions, buttons, without a developer.
+
+**Why not literally the "Theme" template the owner named.** The owner's
+instruction said "change the template ... to Theme". That page template value
+routes through this theme's own `page.php`, which (correctly, for every other
+Page on the site) prints a Page Hero or a fallback `<h1>` intro whenever
+`_met_hero_variant` is empty. The homepage's own Elementor content already
+supplies its hero and its one `<h1>`, so `page.php`'s fallback would have
+printed a second, plain intro band above it, the exact class of bug D30 was
+written to prevent. "Elementor Full Width" calls the same `get_header()` and
+`get_footer()` as "Theme" would, keeping the header and footer theme-controlled
+exactly as intended, but skips `page.php`'s hero/intro branch entirely, which
+is what every other Elementor-built Page on this site already relies on. The
+owner's stated goal, "we need to use Elementor for the homepage", is met
+either way; this is the version of it that does not conflict with D30.
+
+**Why a shortcode bridge and not a rebuild of the approved sections.** Four
+sections were already shown to and approved by the Group MD/CEO: the hero
+slider, the announcement cards, the portfolio gallery, and the newsroom list.
+Rebuilding them as native Elementor widgets would mean re-approving work that
+was already signed off, and is exactly the kind of drift a second build tool
+invites. Instead, `inc/home-shortcodes.php` registers six shortcodes
+(`[met_home_hero]`, `[met_home_announcements]`, `[met_home_newsroom]`,
+`[met_companies]`, `[met_tenders]`, `[met_careers]`) that render from the same
+data helpers and, for the four approved sections, the same markup as the
+partials in `template-parts/home/`. Elementor supplies only the furniture
+around them.
+
+**The old build is the rollback, untouched.**
+`page-templates/template-homepage.php`, `inc/homepage.php`, and every partial
+in `template-parts/home/` are unmodified. Re-selecting the Homepage template
+on Page 156 renders them exactly as before; `met_hello_child_is_home_view()`
+still gates their own `home.css`/`home.js` enqueue on that template, so
+nothing about the old path changed.
+
+**One gap this uncovered.** Every rule in `home.css` and every DOM query in
+`home.js` is scoped under one ancestor element, `.met-home`, which used to be
+`<main class="met-home">` printed by the Page Template. An Elementor page has
+no such single wrapping element by default, its sections are separate
+top-level containers. `met_hello_child_wrap_home_content()`, hooked on
+`the_content` at priority 20, wraps Elementor's fully rendered output in
+`<div class="met-home met-home--js">`, reproducing the same single-ancestor
+structure with no changes to `home.css` or `home.js` themselves. Scoped to the
+front page, and only when a home shortcode is actually present, so it is inert
+everywhere else and inert again if the homepage's content ever changes to
+something that uses none of the six shortcodes.
+
+**Consequence for the homepage stats band.** The four stat figures
+(Incorporated, Companies, Industries, Employees) were Customizer fields in
+`inc/homepage.php`. On the Elementor build they are plain Elementor text,
+because there is no Elementor-native way to pull a Customizer `theme_mod` into
+a text widget without custom code the owner did not ask for. The Customizer
+fields still exist and still work if the Page Template is ever restored; on
+the Elementor page they are dormant. The owner was told this while the plan
+was being written.
+
+---
+
+## D48: the footer can move to Elementor independently of the header <a id="d48"></a>
+
+**Decision (2026-08-11, owner instruction, Group MD/CEO feedback).** The
+single chrome toggle from [D38](#d38) split into two:
+`met_hello_child_chrome_enabled` (the header, unchanged) and
+`met_hello_child_footer_enabled` (new, default on). Turning the footer toggle
+off hands the footer to a footer built in the Header Footer Elementor plugin
+(bundled with UAE), via `hfe_footer_enabled()` and `hfe_render_footer()`,
+falling back to the theme footer if none is assigned.
+
+**Why the header stays theme code.** The Group MD/CEO's only complaint was the
+footer: petrol background, logo lost against it. He said he is happy with the
+menu. The header carries the mega menu, the drawer, and keyboard/focus
+handling built and tuned over several rounds; rebuilding it in Elementor's
+free menu widget (no mega-menu support) would spend the most effort on the one
+part nobody asked to change, for a design that already works.
+
+**The Elementor footer sits on a light ground**, `surface` `#F7F3EC`, not the
+`surface-dark`/`surface-deepest` the header still uses, specifically so the
+logo reads, that was the actual complaint being fixed.
+
+**How Header Footer Elementor actually decides which template renders,
+because this cost real time to work out.** This plugin is settings-based, not
+condition-per-call the way Elementor Pro's Theme Builder is: exactly one
+`elementor-hf` post is "the" site footer, chosen by matching
+`ehf_target_include_locations` post meta against the current page, filtered to
+posts whose `ehf_template_type` meta equals the **literal string**
+`type_header`, `type_before_footer` or `type_footer`, not `header` or
+`footer`. Setting the meta to `footer` instead of `type_footer` produces no
+visible error; `hfe_footer_enabled()` and `get_hfe_footer_id()` simply return
+`false` forever, because `Header_Footer_Elementor::get_template_id()` is
+called with the full setting-name string as the comparison value. If a footer
+(or header) built this way is ever missing on the front end with no error
+anywhere, check this meta value first.
+
+**`met_hello_child_disable_hfe_when_chrome_on()` in `inc/chrome.php`
+now applies its four HFE-disabling filters in two independent pairs**, one
+gated on the header toggle and one on the footer toggle, so turning the
+footer toggle off actually lets an HFE footer render instead of being
+filtered back off by the theme's own insurance filters.
+
+---
+
+## D49: Infrastructure is renamed to Facilities, slug included <a id="d49"></a>
+
+**Decision (2026-08-11, owner instruction, Group MD/CEO feedback).** The
+"Infrastructure" division is renamed "Facilities" sitewide: the label in
+`met_hello_child_sector_label()`, the sector slug itself in
+`met_hello_child_sectors()` (`infrastructure` to `facilities`), the
+`theme.json` colour preset slug (`sector-infrastructure` to
+`sector-facilities`), every `met-*--infrastructure` CSS class in
+`home.css`/`chrome.css`, and the saved `_met_sector` meta on the three
+Facilities subsidiary Pages (Daya Bersih 182, IIUM Advanced Technologies 183,
+IIUM Properties 184).
+
+**Why the slug too, not only the label.** A label-only rename was offered as
+the faster, zero-migration option. The owner explicitly asked for the full
+rename, so the code and the visible interface agree: a future contributor
+reading `met_hello_child_sectors()` sees `facilities` and does not have to
+know it once meant something else.
+
+**The slug rename is reversible.** A new admin-post action,
+`met_hello_child_handle_rename_sector()` in `inc/migration-tools.php`, accepts
+a `direction` argument (`forward`, the default, or `back`) and rewrites
+`_met_sector` on the `/business/` child Pages accordingly. Same temporary-tool
+convention as the rest of that file.
+
+**The eyebrow-parse fallback keeps `infrastructure` as a permanent alias.**
+`met_hello_child_sector_from_eyebrow()` in `inc/sectors.php` checks for the
+substring `infrastructure` before checking the current sector list, and maps
+it to `facilities`. This is not a migration step to later remove: it is the
+same safety net D40 already relies on for any Page whose Page Hero eyebrow
+still reads old text, and there is no cost to leaving it in place.
+
+**What grep does not find.** A sitewide `grep -r infrastructure` catches code,
+but not the four kinds of hand-authored content that also named the division:
+a Page's own `_elementor_data` body copy (the three Facilities subsidiary
+pages' hero eyebrows, the `/business/` landing page's division band), a hero
+slide's body text, Yoast meta descriptions (three found: the homepage, the
+`/business/` page, Corporate Profile), and menu item titles (one: the
+"Business" mega-menu column header). All four were found by querying the
+database directly for the substring, not by trusting a code-only sweep. **A
+future rename of any division name must repeat this same four-part sweep**,
+not stop at `grep`.
+
+**One thing this correctly did not rename.** Plain English uses of the word
+"infrastructure" that are not the division name, Daya Bersih's own service
+list ("Roadworks, pavement, and infrastructure"), IAT's "IT systems and
+infrastructure", IMSC's "sharing infrastructure, diagnostic imaging", were
+left as written. Only the exact division-name occurrences (the heading
+"Infrastructure" and the three-item "education, infrastructure, and
+healthcare" list phrase) were replaced.

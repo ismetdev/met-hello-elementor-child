@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return string[]
  */
 function met_hello_child_sectors() {
-	return array( 'education', 'infrastructure', 'healthcare' );
+	return array( 'education', 'facilities', 'healthcare' );
 }
 
 /**
@@ -56,9 +56,9 @@ function met_hello_child_business_parent_id() {
  */
 function met_hello_child_sector_label( $sector ) {
 	$labels = array(
-		'education'      => __( 'Education', 'met-hello-child' ),
-		'infrastructure' => __( 'Infrastructure', 'met-hello-child' ),
-		'healthcare'     => __( 'Healthcare', 'met-hello-child' ),
+		'education'  => __( 'Education', 'met-hello-child' ),
+		'facilities' => __( 'Facilities', 'met-hello-child' ),
+		'healthcare' => __( 'Healthcare', 'met-hello-child' ),
 	);
 
 	return isset( $labels[ $sector ] ) ? $labels[ $sector ] : '';
@@ -106,6 +106,10 @@ function met_hello_child_get_page_sector( $post_id ) {
  * Parse a sector slug out of a Page Hero eyebrow string, case-insensitively.
  * "Education Division" -> education. Returns '' when nothing matches.
  *
+ * "Infrastructure" is kept as a legacy alias for "facilities" (see DECISIONS
+ * D49): any page whose hero eyebrow still reads the pre-rename text resolves
+ * correctly until that copy is edited by hand.
+ *
  * @param string $eyebrow Eyebrow text.
  * @return string
  */
@@ -115,6 +119,11 @@ function met_hello_child_sector_from_eyebrow( $eyebrow ) {
 	}
 
 	$eyebrow = strtolower( $eyebrow );
+
+	if ( false !== strpos( $eyebrow, 'infrastructure' ) ) {
+		return 'facilities';
+	}
+
 	foreach ( met_hello_child_sectors() as $sector ) {
 		if ( false !== strpos( $eyebrow, $sector ) ) {
 			return $sector;

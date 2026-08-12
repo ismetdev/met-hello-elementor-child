@@ -338,8 +338,8 @@ html {
 	background: var(--wp--preset--color--sector-education);
 }
 
-.met-cdot--infrastructure {
-	background: var(--wp--preset--color--sector-infrastructure);
+.met-cdot--facilities {
+	background: var(--wp--preset--color--sector-facilities);
 }
 
 .met-cdot--healthcare {

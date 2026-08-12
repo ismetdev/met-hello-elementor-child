@@ -32,7 +32,7 @@
 				{ "slug": "sector-healthcare-text", "name": "Healthcare text", "color": "#A3465F" },
 				{ "slug": "sector-environment", "name": "Environment", "color": "#5B8C6E" },
 				{ "slug": "sector-environment-text", "name": "Environment text", "color": "#487256" },
-				{ "slug": "sector-infrastructure", "name": "Infrastructure", "color": "#B98A2E" }
+				{ "slug": "sector-facilities", "name": "Facilities", "color": "#B98A2E" }
 			]
 		},
 		"typography": {

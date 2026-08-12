@@ -6,10 +6,18 @@
  * Elementor theme, so the switch is a one-click, instant rollback. See
  * DECISIONS D38.
  *
- * The parent currently renders the site chrome (HFE owns nothing: both
- * get_hfe_header_id() and get_hfe_footer_id() return false). The four HFE
- * filters below are defensive insurance only, added at load time when the
- * toggle is on, in case a header/footer is ever assigned in HFE.
+ * The header and footer are now two independent toggles (DECISIONS D48). The
+ * header toggle (met_hello_child_chrome_enabled) behaves exactly as before.
+ * The footer has its own toggle (met_hello_child_footer_enabled, default on):
+ * turning it off hands the footer to a footer built in the Header Footer
+ * Elementor plugin (bundled with UAE), via hfe_render_footer(). If none is
+ * assigned, footer.php falls back to the theme footer so the site is never
+ * left with no footer at all.
+ *
+ * The four HFE filters below are scoped to match: the two header filters are
+ * insurance while the theme header is on, the two footer filters only apply
+ * while the theme footer is on, so switching the footer toggle off actually
+ * lets a Theme Builder footer render.
  *
  * @package MetHelloElementorChild
  */
@@ -42,19 +50,33 @@ function met_hello_child_sanitize_chrome_enabled( $value ) {
 }
 
 /**
- * When the chrome is on, tell Header Footer Elementor to render nothing, so the
- * child header.php / footer.php are the only source of site chrome. Insurance
- * only; HFE owns nothing today.
+ * Whether the theme footer is switched on. Default true: existing sites keep
+ * today's footer until someone deliberately turns it off in favour of an
+ * Elementor Theme Builder footer. See DECISIONS D48.
+ *
+ * @return bool
+ */
+function met_hello_child_footer_enabled() {
+	return (bool) get_theme_mod( 'met_hello_child_footer_enabled', true );
+}
+
+/**
+ * When the theme header is on, tell Header Footer Elementor to render no
+ * header, so header.php is the only source of the top of the page. When the
+ * theme footer is on, do the same for the footer. Each pair is independent, so
+ * turning the footer toggle off actually lets a Theme Builder footer render.
+ * Insurance only; HFE owns nothing today.
  */
 function met_hello_child_disable_hfe_when_chrome_on() {
-	if ( ! met_hello_child_chrome_enabled() ) {
-		return;
+	if ( met_hello_child_chrome_enabled() ) {
+		add_filter( 'hfe_header_enabled', '__return_false' );
+		add_filter( 'enable_hfe_render_header', '__return_false' );
 	}
 
-	add_filter( 'hfe_header_enabled', '__return_false' );
-	add_filter( 'hfe_footer_enabled', '__return_false' );
-	add_filter( 'enable_hfe_render_header', '__return_false' );
-	add_filter( 'enable_hfe_render_footer', '__return_false' );
+	if ( met_hello_child_footer_enabled() ) {
+		add_filter( 'hfe_footer_enabled', '__return_false' );
+		add_filter( 'enable_hfe_render_footer', '__return_false' );
+	}
 }
 add_action( 'after_setup_theme', 'met_hello_child_disable_hfe_when_chrome_on' );
 
@@ -122,7 +144,26 @@ function met_hello_child_customize_register_chrome( $wp_customize ) {
 		array(
 			'type'    => 'checkbox',
 			'section' => 'met_hello_child_chrome',
-			'label'   => __( 'Use the custom header and footer', 'met-hello-child' ),
+			'label'   => __( 'Use the custom header', 'met-hello-child' ),
+		)
+	);
+
+	$wp_customize->add_setting(
+		'met_hello_child_footer_enabled',
+		array(
+			'type'              => 'theme_mod',
+			'default'           => true,
+			'sanitize_callback' => 'met_hello_child_sanitize_chrome_enabled',
+			'transport'         => 'refresh',
+		)
+	);
+	$wp_customize->add_control(
+		'met_hello_child_footer_enabled',
+		array(
+			'type'        => 'checkbox',
+			'section'     => 'met_hello_child_chrome',
+			'label'       => __( 'Use the custom footer', 'met-hello-child' ),
+			'description' => __( 'Untick to hand the footer to an Elementor Theme Builder footer instead. If none is assigned yet, this theme footer keeps showing.', 'met-hello-child' ),
 		)
 	);
 
@@ -178,7 +219,7 @@ add_action( 'customize_register', 'met_hello_child_customize_register_chrome' );
  * core), so it needs no stylesheet dependency.
  */
 function met_hello_child_enqueue_chrome_assets() {
-	if ( ! met_hello_child_chrome_enabled() ) {
+	if ( ! met_hello_child_chrome_enabled() && ! met_hello_child_footer_enabled() ) {
 		return;
 	}
 

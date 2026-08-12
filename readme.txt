@@ -80,6 +80,30 @@ Maintenance during WordPress updates (drop-in):
 
 == Changelog ==
 
+= 1.12.0 =
+* Change: the homepage is now built in Elementor instead of the theme Page
+  Template, per Group MD/CEO feedback after the presentation. The hero
+  slider, announcement cards, portfolio gallery and newsroom list keep
+  rendering from the exact same code as before, through six new shortcodes
+  (inc/home-shortcodes.php), so nothing already approved was rebuilt. The old
+  template and partials are untouched and are the rollback.
+* Change: the footer can now be built in Elementor (Header Footer Elementor,
+  bundled with UAE) instead of theme code, on a light ground so the logo
+  reads. A new Customizer checkbox, independent of the existing header
+  toggle. The header is unchanged.
+* Add: a per-slide headline size field on Hero Slides (28-72px), so a long
+  programme or event name can be sized down instead of covering the photo.
+  Empty keeps today's size.
+* Add: [met_tenders] and [met_careers] shortcodes, theme-styled rows over
+  MetCPT's tender and career post types. MetCPT itself is not modified.
+* Add: [met_companies] shortcode with order/exclude/filters attributes, so
+  the homepage portfolio section can set its own company sequence
+  independent of the /business/ page order.
+* Change: the "Infrastructure" division is renamed "Facilities" sitewide,
+  Group MD/CEO instruction. Labels, CSS classes, the theme.json colour token,
+  and the three affected /business/ pages' saved sector meta all renamed; a
+  reversible migration action added to inc/migration-tools.php.
+
 = 1.11.1 =
 * Fix: the homepage companies grid and the sector backfill now resolve the
   /business/ parent page by slug instead of a hardcoded ID. The ID differs

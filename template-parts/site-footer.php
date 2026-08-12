@@ -158,8 +158,8 @@ $met_socials = array(
 							'label' => __( 'Education', 'met-hello-child' ),
 						),
 						array(
-							'url'   => home_url( '/business/#infrastructure' ),
-							'label' => __( 'Infrastructure', 'met-hello-child' ),
+							'url'   => home_url( '/business/#facilities' ),
+							'label' => __( 'Facilities', 'met-hello-child' ),
 						),
 						array(
 							'url'   => home_url( '/business/#healthcare' ),

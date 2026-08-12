@@ -69,7 +69,29 @@ function met_hello_child_hero_slide_fields() {
 		'_met_slide_cta2_label' => 'sanitize_text_field',
 		'_met_slide_cta2_url'   => 'esc_url_raw',
 		'_met_slide_focus'      => 'met_hello_child_sanitize_slide_focus',
+		'_met_slide_size'       => 'met_hello_child_sanitize_slide_size',
 	);
+}
+
+/**
+ * Sanitise the headline size field: an integer pixel value clamped to 28-72,
+ * or '' (the default size) when left blank or zero. Owner request 2026-08-11:
+ * a long programme or event name can otherwise cover too much of the hero
+ * image, so the size is a per-slide number, not fixed.
+ *
+ * @param mixed $value Raw value.
+ * @return string
+ */
+function met_hello_child_sanitize_slide_size( $value ) {
+	$met_size = absint( $value );
+
+	if ( ! $met_size ) {
+		return '';
+	}
+
+	$met_size = max( 28, min( 72, $met_size ) );
+
+	return (string) $met_size;
 }
 
 /**
@@ -134,6 +156,7 @@ function met_hello_child_render_hero_slide_meta_box( $post ) {
 	if ( '' === $met_slide_focus ) {
 		$met_slide_focus = 'center';
 	}
+	$met_slide_size = get_post_meta( $post->ID, '_met_slide_size', true );
 	?>
 	<p class="description">
 		<?php esc_html_e( 'Set the background with the Featured Image. Order the slides with the Order field under Page Attributes. A button shows only when it has both a label and a URL.', 'met-hello-child' ); ?>
@@ -149,6 +172,11 @@ function met_hello_child_render_hero_slide_meta_box( $post ) {
 		<label for="met_slide_headline"><strong><?php esc_html_e( 'Headline', 'met-hello-child' ); ?></strong></label><br>
 		<input type="text" class="widefat" id="met_slide_headline" name="met_slide_headline" value="<?php echo esc_attr( $met_slide_headline ); ?>">
 		<span class="description"><?php esc_html_e( 'Falls back to the slide title if left empty.', 'met-hello-child' ); ?></span>
+	</p>
+	<p>
+		<label for="met_slide_size"><strong><?php esc_html_e( 'Headline size (pixels)', 'met-hello-child' ); ?></strong></label><br>
+		<input type="number" min="28" max="72" step="1" id="met_slide_size" name="met_slide_size" value="<?php echo esc_attr( $met_slide_size ); ?>" style="width:120px;">
+		<span class="description"><?php esc_html_e( 'Leave empty for the default size. Lower it for a long programme or event name so it does not cover the photo. Range 28-72; still scales down on small screens.', 'met-hello-child' ); ?></span>
 	</p>
 	<p>
 		<label for="met_slide_body"><strong><?php esc_html_e( 'Body', 'met-hello-child' ); ?></strong></label><br>
@@ -273,6 +301,7 @@ function met_hello_child_get_hero_slides() {
 			'body'     => get_post_meta( $met_slide_post->ID, '_met_slide_body', true ),
 			'image_id' => get_post_thumbnail_id( $met_slide_post->ID ),
 			'focus'    => array_key_exists( $met_slide_focus, met_hello_child_slide_focus_choices() ) ? $met_slide_focus : 'center',
+			'size'     => absint( get_post_meta( $met_slide_post->ID, '_met_slide_size', true ) ),
 			'ctas'     => $met_slide_ctas,
 		);
 	}
