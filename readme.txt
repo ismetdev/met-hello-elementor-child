@@ -80,6 +80,20 @@ Maintenance during WordPress updates (drop-in):
 
 == Changelog ==
 
+= 1.12.1 =
+* Includes the 1.12.0 changes below (homepage rebuilt in Elementor, footer
+  toggle). 1.12.0 was never published as a release, so 1.12.1 is the first
+  release that carries them.
+* Change: the Group now has eight companies. IIUM Advanced Technologies was
+  removed from the website. The Careers, About and Companies text says eight,
+  and the dormant Customizer stat default is 8.
+* Remove: inc/migration-tools.php. The temporary migration tool is gone; use
+  WP-CLI for any sector backfill.
+* Add: MET_HELLO_CHILD_DISABLE_UPDATER. Define it as true in wp-config.php to
+  switch off the GitHub update check. The updater stays on by default.
+* Change: development files (CLAUDE.md, README.md, readme.txt, and the update
+  library's README.md and composer.json) are no longer in the release zip.
+
 = 1.12.0 =
 * Change: the homepage is now built in Elementor instead of the theme Page
   Template, per Group MD/CEO feedback after the presentation. The hero
