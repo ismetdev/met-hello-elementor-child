@@ -56,7 +56,3 @@ require_once MET_HELLO_CHILD_DIR . 'inc/assets.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/template-tags.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/social.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/maintenance.php';
-
-// TEMPORARY, see the file header: remove once phase 4 of
-// PLAN/PRD-block-system.md ships or WP-CLI/DB access is available.
-require_once MET_HELLO_CHILD_DIR . 'inc/migration-tools.php';

@@ -30,7 +30,7 @@ lands.
 | Images used by those pages | Uploaded to staging media first, then referenced | No |
 | Menus and menu locations | Rebuilt by hand in Appearance, Menus | No |
 | Customizer settings | Retyped by hand. They are `theme_mod` rows, not code | No |
-| Page meta (Page Hero, `_met_sector`) | Retyped, or the backfill action in `inc/migration-tools.php` | Partly |
+| Page meta (Page Hero, `_met_sector`) | Retyped, or a WP-CLI backfill | Partly |
 | Front page setting | Set by hand in Settings, Reading | No |
 
 Only the first row is automated. Everything else is a deliberate manual step,
@@ -190,9 +190,9 @@ number.
 
 1. **Page Hero variant.** Any page whose design carries its own hero needs the
    variant set to **None**. Existing staging pages keep whatever they have.
-2. **`_met_sector`.** The nine `/business/` pages need it. Run the one-time
-   backfill in `inc/migration-tools.php` on staging, then spot-check three
-   pages. The eyebrow fallback means they render correctly even before the
+2. **`_met_sector`.** The nine `/business/` pages need it. Backfill it with
+   WP-CLI (`inc/migration-tools.php` was removed 2026-11-06), then spot-check
+   three pages. The eyebrow fallback means they render correctly even before the
    backfill, so this is tidying, not a blocker.
 3. **Front page.** Assign the **Homepage** template to the staging "Home" page
    in Page Attributes, then Settings, Reading, set it as the static front page.
@@ -223,8 +223,7 @@ neither exists on local:
 ## When WP-CLI arrives
 
 If the host ever gives shell access, Parts B, D and E collapse into scripted
-steps, and `inc/migration-tools.php` can be deleted (see D29). Until then this
-is the procedure.
+steps. `inc/migration-tools.php` was deleted on 2026-11-06 (see D29).
 
 ---
 
@@ -311,6 +310,8 @@ theme hero.
 `/iium-holdings-25th-anniversary/`, `/iium-holdings-group-of-companies/`,
 `/rise2030-strategy-blueprint/`. The first three moved in the 2026-08-10 deploy.
 
+**Update 2026-11-06:** IIUM Advanced Technologies was removed by the Group MD/CEO. Do not move its page (local 183); on staging it is a draft (ID 903). Count the rest as eight.
+
 **Still to move, built 2026-08-11 and never deployed:** `/business/` (the
 division landing page) and all nine subsidiary child pages (IIUM Higher
 Education, IIUM Schools, IIUM Educare, IIUM Consultancy and Innovation, Daya
@@ -370,14 +371,13 @@ through Elementor at all. On staging:
 5. Purge LiteSpeed. Open the site root and check.
 
 The homepage pulls its content from things already on staging: the announcements
-category, recent posts, the nine `/business/` child pages for the companies grid,
+category, recent posts, the eight published `/business/` child pages for the companies grid,
 and the stats and images from the Customizer (step 3). No hero slides exist yet,
 so the hero shows its static fallback, which is expected.
 
 The companies grid colour-codes each company from its `_met_sector` meta and
-falls back to reading the Page Hero eyebrow, so the nine pages show the right
-colour even before any backfill. Running the one-time sector backfill in
-`inc/migration-tools.php` on staging is optional tidying, not required.
+falls back to reading the Page Hero eyebrow, so the eight pages show the right
+colour even before any backfill. A WP-CLI sector backfill on staging is optional tidying, not required.
 
 ## Do it in this order
 

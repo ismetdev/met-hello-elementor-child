@@ -24,3 +24,8 @@
 /phpcs.xml.dist  export-ignore
 /DOCS            export-ignore
 /PLAN            export-ignore
+/CLAUDE.md       export-ignore
+/README.md       export-ignore
+/readme.txt      export-ignore
+/libs/plugin-update-checker/README.md     export-ignore
+/libs/plugin-update-checker/composer.json export-ignore

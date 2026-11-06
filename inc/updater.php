@@ -26,6 +26,13 @@ function met_hello_child_update_checker() {
 		return $checker;
 	}
 
+	// Kill switch for production. Define MET_HELLO_CHILD_DISABLE_UPDATER as true in
+	// wp-config.php to stop all GitHub update checks. The updater stays ON when
+	// the constant is absent or false. Returns null so callers can tell.
+	if ( defined( 'MET_HELLO_CHILD_DISABLE_UPDATER' ) && MET_HELLO_CHILD_DISABLE_UPDATER ) {
+		return null;
+	}
+
 	require_once MET_HELLO_CHILD_DIR . 'libs/plugin-update-checker/plugin-update-checker.php';
 
 	$checker = YahnisElsts\PluginUpdateChecker\v5\PucFactory::buildUpdateChecker(

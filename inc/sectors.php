@@ -81,8 +81,8 @@ function met_hello_child_sanitize_sector( $value ) {
  *
  * Order: the saved `_met_sector` meta, then a parse of the Page Hero eyebrow
  * ("Education Division" -> education), then ''. The eyebrow fallback means the
- * nine /business/ Pages render with the right colour on day one with zero data
- * entry; the one-time backfill in inc/migration-tools.php then writes the real
+ * /business/ Pages render with the right colour on day one with zero data
+ * entry; a one-time WP-CLI backfill of `_met_sector` can write the real
  * meta so the fallback is no longer relied on.
  *
  * @param int $post_id Page ID.

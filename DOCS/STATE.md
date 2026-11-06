@@ -3,7 +3,7 @@
 Where the project stands today. Update when the shipped version, the open work, or
 the environment changes.
 
-Last updated: 2026-08-11
+Last updated: 2026-11-06
 
 ## At a glance
 
@@ -19,6 +19,12 @@ Last updated: 2026-08-11
 | Requires | WordPress 6.0+ (tested to 6.5), PHP 7.4+ |
 | Text domain | `met-hello-child` (`/languages`) |
 | License | GPL-2.0-or-later |
+
+## Group size: 8 companies (changed 2026-11-06)
+
+The Group MD/CEO removed IIUM Advanced Technologies Sdn Bhd from the website. The Group now has **8 subsidiaries**. On staging that page (ID 903) is a draft, so it drops out of the `/business/` grid by itself: the company list is never hard-coded, it reads the published child pages of `/business/`. Theme strings and the dormant Customizer stat now say eight. Older entries below that say "nine" are history. `inc/migration-tools.php` was deleted; use WP-CLI for any `_met_sector` backfill.
+
+Production safety, in the next release: `CLAUDE.md`, `README.md`, `readme.txt` and the update library's `README.md` and `composer.json` are no longer shipped in the zip. Define `MET_HELLO_CHILD_DISABLE_UPDATER` as true in `wp-config.php` to switch the GitHub updater off. It stays on by default.
 
 ## Layout
 
@@ -56,7 +62,6 @@ Elementor pages, or the MetCPT custom post types.
 | Block content patterns | [assets/css/patterns.css](../assets/css/patterns.css) | Added 1.9.0. Component styles for block-authored Page bodies, scoped under `.met-page`, reading theme.json properties directly. Loads only on Pages that render through page.php |
 | Post listing shortcode | [inc/listing.php](../inc/listing.php), [template-parts/listing-card.php](../template-parts/listing-card.php), [assets/css/listing.css](../assets/css/listing.css) | Added 1.11.0. `[met_posts]` renders a token-styled list of Posts by category slug, for use in an Elementor Shortcode widget. Slug, not term ID, so it survives the move to staging. See [DECISIONS D44](DECISIONS.md#d44) |
 | External photo albums | [inc/albums.php](../inc/albums.php) | Added 1.11.0. `_met_album_url` post meta plus a "View the full album" button in `single.php`. Photos stay on Facebook; WordPress holds the pointer. See [DECISIONS D46](DECISIONS.md#d46) |
-| Migration tool (**temporary**) | [inc/migration-tools.php](../inc/migration-tools.php) | Added 1.9.0. `manage_options`-gated admin-post actions to flip the two meta keys a migration needs. **Delete this and its `require_once` when phase 4 ships or WP-CLI access arrives.** See D29 |
 | `<main>` landmark on Elementor Pages | [inc/setup.php](../inc/setup.php) | Added 1.8.0. Elementor's own page templates printed none. See D27 |
 | Auto-update pipeline | [inc/updater.php](../inc/updater.php), [release.yml](../.github/workflows/release.yml) | Shipped 1.4.0, verified by the 1.4.1 release |
 
@@ -199,8 +204,6 @@ done; owner does the visual pass.
 - **Page Hero** gained an explicit **None / Standard / Business** radio,
   default None. Existing heroes render unchanged.
 
-`inc/migration-tools.php` gained a one-time `_met_sector` backfill action.
-
 **Owner-set priority order for this build.** First, do not break what works
 (Page Hero on 42 Pages, scroll-to-top, the menu, the 4 built Elementor pages,
 MetCPT shortcodes, Yoast output). Second, and jointly: performance, SEO, beauty
@@ -307,8 +310,8 @@ options put to the owner, and the reasoning behind each is
   (`sector-infrastructure` to `sector-facilities`), every CSS class name, and
   the saved `_met_sector` meta on Daya Bersih (182), IIUM Advanced
   Technologies (183) and IIUM Properties (184). A one-time, reversible
-  migration action is in `inc/migration-tools.php`
-  (`admin-post.php?action=met_hello_child_rename_sector`). The eyebrow-parse
+  migration action was in `inc/migration-tools.php`
+  (removed 2026-11-06; use WP-CLI for any sector change). The eyebrow-parse
   fallback in `inc/sectors.php` keeps `infrastructure` as a permanent legacy
   alias, so any page whose hero eyebrow still reads the old text resolves
   correctly. Content strings with no code path (hero eyebrows on the three

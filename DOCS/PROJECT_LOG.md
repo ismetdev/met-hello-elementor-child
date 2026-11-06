@@ -20,6 +20,18 @@ transcripts, moved to the archive with those entries.
 
 ---
 
+## 2026-11-06: Group is now 8 companies; security cleanup (local, not released)
+
+IIUM Advanced Technologies Sdn Bhd was removed from the website by the Group MD/CEO. The owner updated the Elementor content in the staging database; this entry covers theme code only. No version bump, tag or release yet.
+
+- **Copy:** "nine" to "eight" in `template-parts/home/actions.php`, `about.php` and `companies.php`, and the dormant Customizer stat default `stat2_number` to 8 in `inc/homepage.php`. Code comments fixed. No company list is hard-coded; the grid reads the published children of `/business/`. No `.pot` or `.po` files exist (D24).
+- **Removed** `inc/migration-tools.php` and its `require_once`. Nothing else used it. Use WP-CLI for any `_met_sector` backfill.
+- **Release zip** no longer carries `CLAUDE.md`, `README.md`, `readme.txt`, or the update library's `README.md` and `composer.json` (`release.yml`, `.gitattributes`). Takes effect at the next release. Server-side deny rules are the owner's.
+- **Updater kill switch:** `MET_HELLO_CHILD_DISABLE_UPDATER` in `inc/updater.php`. Off by default, so the updater stays on. The constant is not set anywhere.
+- **Checked:** `php -l` and `phpcs` on changed files.
+
+---
+
 ## 2026-08-11: homepage rebuilt in Elementor, v1.12.0 (local)
 
 Group MD/CEO feedback after the 2026-08-11 presentation, in ten numbered
