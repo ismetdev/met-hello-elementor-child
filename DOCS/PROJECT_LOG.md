@@ -30,6 +30,17 @@ IIUM Advanced Technologies Sdn Bhd was removed from the website by the Group MD/
 - **Updater kill switch:** `MET_HELLO_CHILD_DISABLE_UPDATER` in `inc/updater.php`. Off by default, so the updater stays on. The constant is not set anywhere.
 - **Checked:** `php -l` and `phpcs` on changed files.
 
+### Later (after demo)
+
+Performance findings from the 2026-11-06 review. Nothing applied yet. The site runs near the PHP memory limit, so these are worth doing once the demo is over.
+
+1. **`_elementor_data` is scanned several times per request.** `inc/home-shortcodes.php:83` runs once at asset load and again on every `the_content` call on the front page (up to 6 `strpos` passes, one per tag). `inc/listing.php:292` adds one more scan on every singular page. Fix: cache the result per request in a `static`, do one `strpos( $data, '[met_' )` first, and return early for post types that never use Elementor. WordPress already loads that meta for the queried page, so this saves copies and CPU, not the first load.
+2. **Two scanners do one job.** `met_hello_child_page_has_any_home_shortcode()` and `met_hello_child_page_has_shortcode()` can share one cached helper that returns the tags found.
+3. **`met_hello_child_get_companies()` is not cached** (`inc/homepage.php:207`). It is cheap (about 8 pages) but is called by both `companies.php` and the `[met_companies]` shortcode. Add a `static` cache and `update_post_term_cache => false`.
+4. **Do not use `fields => 'ids'` there.** Each card needs title, URL and excerpt, so ids would add one query per child.
+5. **`get_the_excerpt()` can run the `the_content` filter** when a page has no manual excerpt. Risk is low, because the home wrapper returns early. A manual excerpt on each subsidiary page avoids the work.
+6. **`inc/listing.php:83`** is right to set `no_found_rows` only when paging is off. Add `update_post_term_cache => false` if the cards do not read terms.
+
 ---
 
 ## 2026-08-11: homepage rebuilt in Elementor, v1.12.0 (local)
