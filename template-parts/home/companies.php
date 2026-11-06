@@ -1,6 +1,6 @@
 <?php
 /**
- * Homepage companies grid: the nine /business/ child Pages, colour-coded by
+ * Homepage companies grid: the /business/ child Pages, colour-coded by
  * sector, with an industry filter. The filter bar is printed hidden and revealed
  * by JS, so with JS off every card shows and there are no dead controls.
  *
@@ -21,7 +21,7 @@ if ( empty( $met_companies ) ) {
 	<div class="met-container">
 		<div class="met-section__head met-reveal">
 			<span class="met-eyebrow"><?php esc_html_e( 'Our portfolio', 'met-hello-child' ); ?></span>
-			<h2><?php esc_html_e( 'Nine companies, three industries.', 'met-hello-child' ); ?></h2>
+			<h2><?php esc_html_e( 'Eight companies, three industries.', 'met-hello-child' ); ?></h2>
 			<p><?php esc_html_e( 'Each company is wholly owned and works within one of our three divisions.', 'met-hello-child' ); ?></p>
 		</div>
 

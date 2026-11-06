@@ -38,7 +38,7 @@ function met_hello_child_home_defaults() {
 	return array(
 		'stat1_number' => '2001',
 		'stat1_label'  => __( 'Incorporated', 'met-hello-child' ),
-		'stat2_number' => '9',
+		'stat2_number' => '8',
 		'stat2_label'  => __( 'Companies', 'met-hello-child' ),
 		'stat3_number' => '3',
 		'stat3_label'  => __( 'Industries', 'met-hello-child' ),
@@ -189,7 +189,7 @@ function met_hello_child_get_newsroom_posts( $count = 5 ) {
 }
 
 /**
- * The nine /business/ child Pages, shaped for the companies grid.
+ * The published /business/ child Pages, shaped for the companies grid.
  *
  * Return contract (stable, so a future swap to a real Company CPT is one
  * function): a list of items, each with id, title, url, sector (slug or ''),
