@@ -81,9 +81,8 @@ Maintenance during WordPress updates (drop-in):
 == Changelog ==
 
 = 1.12.1 =
-* Includes the 1.12.0 changes below (homepage rebuilt in Elementor, footer
-  toggle). 1.12.0 was never published as a release, so 1.12.1 is the first
-  release that carries them.
+* Builds on 1.12.0 (homepage rebuilt in Elementor, footer toggle). The next
+  four items are what is new in 1.12.1.
 * Change: the Group now has eight companies. IIUM Advanced Technologies was
   removed from the website. The Careers, About and Companies text says eight,
   and the dormant Customizer stat default is 8.
