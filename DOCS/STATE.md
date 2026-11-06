@@ -9,12 +9,12 @@ Last updated: 2026-11-06
 
 | | |
 |---|---|
-| Shipped version | **1.11.1**, released and **live on staging**. Deploy completed 2026-08-10. Includes the never-tagged 1.8.0, 1.9.0 and 1.10.0 work, folded into 1.11.0 |
-| Local version | **1.12.0, built and verified on local, not released.** Rebuilds the homepage in Elementor per Group MD/CEO feedback after the 2026-08-11 presentation. See "v1.12.0" below |
-| Staging status | **v2.iiumholdings.com.my is live on 1.11.1** with the full new design: custom chrome on, homepage as the front page, and all content pages moved. Presented to the Group MD/CEO on 2026-08-11 |
+| Shipped version | **1.12.1**, released on GitHub 2026-11-06 (tag `v1.12.1`, latest). Builds on **1.12.0** (released 2026-08-12), which holds the homepage rebuild. The never-tagged 1.8.0 to 1.10.0 work was folded into 1.11.0 |
+| Local version | **1.12.1**, same as the release. The homepage rebuild (1.12.0) came from Group MD/CEO feedback after the 2026-08-11 presentation. See "v1.12.0" below |
+| Staging status | **v2.iiumholdings.com.my runs 1.12.1** (updated and verified by the owner on 2026-11-06). It has the full new design: custom chrome on, homepage as the front page, and all content pages moved. Presented to the Group MD/CEO on 2026-08-11 |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
 | Branch | `main` |
-| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.7.1`, `v1.7.2`, `v1.11.0`, `v1.11.1` (1.8.0 to 1.10.0 folded into 1.11.0, never tagged separately) |
+| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.7.1`, `v1.7.2`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.12.1` (1.8.0 to 1.10.0 folded into 1.11.0, never tagged separately) |
 | Parent theme | `hello-elementor` |
 | Requires | WordPress 6.0+ (tested to 6.5), PHP 7.4+ |
 | Text domain | `met-hello-child` (`/languages`) |
@@ -258,7 +258,7 @@ resolved empty. It now resolves the parent by slug. See the PROJECT_LOG entry.
 (`admin-claude-temporary`) for the deploy and planned to delete it once done. If
 it still exists, it should be removed.
 
-### v1.12.0, homepage rebuilt in Elementor. Built, verified on local, not released
+### v1.12.0, homepage rebuilt in Elementor. Released 2026-08-12
 
 Built 2026-08-11, from Group MD/CEO feedback given after the 2026-08-11
 presentation of the (then still Page-Template) homepage. Full detail, the
@@ -332,8 +332,8 @@ options put to the owner, and the reasoning behind each is
 
 ### Not done, for a future session
 
-- **The v1.12.0 homepage rebuild is local only, not deployed and not
-  committed.** See above.
+- **The v1.12.0 homepage rebuild is released** (tag `v1.12.0`) and is on staging
+  (now at 1.12.1). See above.
 - **`/business/` landing page (page 172) is built on local but not deployed.**
   Designed 2026-08-10 from `business-content.html`. It is image-heavy (9 company
   photos, 9 logos, 9 small featured photos, 1 closing background), so it is a
