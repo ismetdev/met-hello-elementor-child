@@ -47,7 +47,7 @@ if ( ! headers_sent() ) {
 </head>
 <body>
 	<div class="wrap">
-	<div class="brand">IIUM Holdings Sdn Bhd</div>
+	<div class="brand">IIUM Holdings Sendirian Berhad</div>
 	<h1>We&rsquo;ll be right back</h1>
 	<p>The site is briefly unavailable while we apply a scheduled update. Please check back in a few minutes.</p>
 	</div>

@@ -44,7 +44,7 @@ if ( ! headers_sent() ) {
 </head>
 <body>
 	<div class="wrap">
-	<div class="brand">IIUM Holdings Sdn Bhd</div>
+	<div class="brand">IIUM Holdings Sendirian Berhad</div>
 	<div class="code">403</div>
 	<h1>Access Denied</h1>
 	<p>You don&rsquo;t have permission to access this page. If you believe this is an error, please contact the site administrator.</p>
