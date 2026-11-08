@@ -22,7 +22,7 @@ if ( empty( $met_hero_slides ) ) {
 	$met_hero_slides = array(
 		array(
 			'id'       => 0,
-			'eyebrow'  => __( 'The commercial arm of IIUM', 'met-hello-child' ),
+			'eyebrow'  => __( 'The business arm of IIUM', 'met-hello-child' ),
 			'headline' => get_bloginfo( 'name' ),
 			'body'     => get_bloginfo( 'description' ),
 			'image_id' => 0,
