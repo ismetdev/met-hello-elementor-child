@@ -80,6 +80,12 @@ Maintenance during WordPress updates (drop-in):
 
 == Changelog ==
 
+= 1.12.3 =
+* Change: the company name is now "IIUM Holdings Sendirian Berhad" in the footer
+  copyright, the 403 page and the maintenance page.
+* Change: the footer link label is now "The Code of Business Conduct and
+  Ethics".
+
 = 1.12.2 =
 * Change: the Activities feed on the homepage no longer shows posts in the
   Wishes category.
