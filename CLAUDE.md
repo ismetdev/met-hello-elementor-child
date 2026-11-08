@@ -2,14 +2,14 @@
 
 Rules for Claude Code in this repository. Read `DOCS/` for the full context.
 
-## Model: plan on the default model, code on Sonnet 5
+## Model: plan on the default model, code on Sonnet 5.5
 
-All coding runs on **Sonnet 5**. Planning, research and review run on whatever
+All coding runs on **Sonnet 5.5**. Planning, research and review run on whatever
 model the session starts with.
 
 After the user approves a plan, **stop before writing any code** and say:
 
-> Plan approved. Switch to Sonnet 5 now: run `/model sonnet`. Tell me when you
+> Plan approved. Switch to Sonnet 5.5 now: run `/model sonnet`. Tell me when you
 > have, and I will start.
 
 Do not edit project files until the user confirms the switch. If the user says to
