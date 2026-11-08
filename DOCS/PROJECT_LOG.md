@@ -20,6 +20,21 @@ transcripts, moved to the archive with those entries.
 
 ---
 
+## 2026-11-08: v1.12.3 company name and code name (theme strings)
+
+Theme only. The owner already changed page and post content in the database.
+
+- Footer copyright, 403 page and maintenance page now say "IIUM Holdings
+  Sendirian Berhad". Subsidiary names, slugs, URLs and emails are unchanged.
+- Footer link label is "The Code of Business Conduct and Ethics". The link
+  target `/code-of-business-conduct/` is unchanged.
+- `dropins/maintenance.php` is copied by hand to `wp-content/`. Staging's copy
+  has neither name, so there was nothing to re-copy.
+- **Checked:** `php -l`, `phpcs`, footer at 390, 768 and 1280 pixels (no
+  overflow; the longer label wraps to two lines at 1280).
+
+---
+
 ## 2026-11-08: v1.12.2 homepage tweaks (committed locally, not released)
 
 Theme only. No database, Elementor or MetCPT change.
