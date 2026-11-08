@@ -305,6 +305,30 @@
 	flex: 0 0 auto;
 }
 
+/* "View all" outline pill printed by [met_tenders_button] and
+   [met_careers_button]. Same look as the Elementor button it replaces. */
+.met-btn-out-wrap {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.met-btn-out,
+.met-btn-out:hover,
+.met-btn-out:focus {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 12px 24px;
+	font-size: 15px;
+	font-weight: 600;
+	line-height: 1;
+	color: var(--wp--preset--color--text, #0f1419);
+	background: transparent;
+	border: 1px solid #e3e2da;
+	border-radius: 999px;
+	text-decoration: none;
+}
+
 /* Empty-state media: sector-tinted gradient over surface, with the geometric
    pattern token. No <img>, so never a broken image. */
 .met-home__empty {

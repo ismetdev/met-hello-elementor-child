@@ -13,13 +13,15 @@
  * hero/announcements/companies/newsroom, echoes the same template parts or the
  * same markup, so there is nothing to keep in sync by hand.
  *
- * Six shortcodes:
+ * Eight shortcodes:
  * - [met_home_hero]            The slider, unchanged (no separate furniture)
  * - [met_home_announcements]   The poster grid only, no eyebrow/heading/button
  * - [met_home_newsroom]        The feature + list only, no eyebrow/heading/button
  * - [met_companies]            The filter bar + grid, with order/exclude/filters
  * - [met_tenders]              New: theme-styled rows over metcpt_tender
  * - [met_careers]              New: theme-styled rows over metcpt_career
+ * - [met_tenders_button]       New: the "view all" button for the tenders list only
+ * - [met_careers_button]       New: the "view all" button for the careers list only
  *
  * Tenders and careers read MetCPT's post types and meta keys but render theme
  * markup, so MetCPT itself is never modified and keeps its own release cycle.
@@ -32,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * All six shortcode tags this file owns, for the shared detection/enqueue
+ * All eight shortcode tags this file owns, for the shared detection/enqueue
  * logic below.
  *
  * @return string[]
@@ -45,11 +47,13 @@ function met_hello_child_home_shortcode_tags() {
 		'met_companies',
 		'met_tenders',
 		'met_careers',
+		'met_tenders_button',
+		'met_careers_button',
 	);
 }
 
 /**
- * Register the six shortcodes.
+ * Register the eight shortcodes.
  */
 function met_hello_child_register_home_shortcodes() {
 	add_shortcode( 'met_home_hero', 'met_hello_child_shortcode_home_hero' );
@@ -58,11 +62,13 @@ function met_hello_child_register_home_shortcodes() {
 	add_shortcode( 'met_companies', 'met_hello_child_shortcode_companies' );
 	add_shortcode( 'met_tenders', 'met_hello_child_shortcode_tenders' );
 	add_shortcode( 'met_careers', 'met_hello_child_shortcode_careers' );
+	add_shortcode( 'met_tenders_button', 'met_hello_child_shortcode_tenders_button' );
+	add_shortcode( 'met_careers_button', 'met_hello_child_shortcode_careers_button' );
 }
 add_action( 'init', 'met_hello_child_register_home_shortcodes' );
 
 /**
- * Whether the current singular view carries any of the six shortcodes, in
+ * Whether the current singular view carries any of the eight shortcodes, in
  * post_content or in Elementor's _elementor_data. Same detection shape as
  * met_hello_child_page_has_shortcode() in inc/listing.php, generalised to a
  * list of tags in one pass.
@@ -96,7 +102,7 @@ function met_hello_child_page_has_any_home_shortcode() {
 }
 
 /**
- * Enqueue home.css and home.js when any of the six shortcodes is present,
+ * Enqueue home.css and home.js when any of the eight shortcodes is present,
  * independent of met_hello_child_enqueue_home_assets() in inc/homepage.php
  * (which stays gated on the old Page Template and is the rollback path).
  *
@@ -382,6 +388,124 @@ function met_hello_child_shortcode_companies( $atts ) {
 }
 
 /**
+ * The "still open" rule for tenders and careers, in one place. A tender or a job
+ * is open when its close date is today or later. The list shortcodes and the
+ * button shortcodes all use this, so a button and its list can never disagree.
+ * Reads MetCPT's post types and meta keys only; MetCPT is never modified.
+ *
+ * @param string $kind  'tender' or 'career'.
+ * @param int    $count How many posts the query returns.
+ * @return array<string,mixed> WP_Query args, or an empty array for an unknown kind.
+ */
+function met_hello_child_open_query_args( $kind, $count ) {
+	$kinds = array(
+		'tender' => array(
+			'post_type' => 'metcpt_tender',
+			'close_key' => 'tender_close_date',
+		),
+		'career' => array(
+			'post_type' => 'metcpt_career',
+			'close_key' => 'career_close_date',
+		),
+	);
+
+	if ( ! isset( $kinds[ $kind ] ) ) {
+		return array();
+	}
+
+	$close_key = $kinds[ $kind ]['close_key'];
+
+	return array(
+		'post_type'      => $kinds[ $kind ]['post_type'],
+		'post_status'    => 'publish',
+		'posts_per_page' => max( 1, (int) $count ),
+		'no_found_rows'  => true,
+		'meta_key'       => $close_key, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- small, capped list on the homepage only.
+		'orderby'        => 'meta_value',
+		'order'          => 'ASC',
+		'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- "still open" is the whole point of this rule.
+			array(
+				'key'     => $close_key,
+				'value'   => current_time( 'Y-m-d' ),
+				'compare' => '>=',
+				'type'    => 'DATE',
+			),
+		),
+	);
+}
+
+/**
+ * Whether at least one tender or job is open. Cached for the request.
+ *
+ * @param string $kind 'tender' or 'career'.
+ * @return bool
+ */
+function met_hello_child_has_open( $kind ) {
+	static $cache = array();
+
+	if ( isset( $cache[ $kind ] ) ) {
+		return $cache[ $kind ];
+	}
+
+	$args = met_hello_child_open_query_args( $kind, 1 );
+	if ( empty( $args ) || ! post_type_exists( $args['post_type'] ) ) {
+		$cache[ $kind ] = false;
+		return false;
+	}
+
+	$args['fields'] = 'ids';
+	$query          = new WP_Query( $args );
+
+	$cache[ $kind ] = $query->have_posts();
+
+	return $cache[ $kind ];
+}
+
+/**
+ * Markup for the outline pill button the tenders and careers shortcodes print.
+ * Matches the Elementor button it replaces, and opens in a new tab.
+ *
+ * @param string $url   Button link.
+ * @param string $label Button text.
+ * @return string
+ */
+function met_hello_child_open_button_html( $url, $label ) {
+	return '<div class="met-btn-out-wrap"><a class="met-btn-out" href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $label ) . '</a></div>';
+}
+
+/**
+ * [met_tenders_button]: only the "view all" button for the tenders list. The
+ * label changes when no tender is open.
+ *
+ * @return string
+ */
+function met_hello_child_shortcode_tenders_button() {
+	if ( ! post_type_exists( 'metcpt_tender' ) ) {
+		return '';
+	}
+
+	$label = met_hello_child_has_open( 'tender' ) ? __( 'View all tenders', 'met-hello-child' ) : __( 'View past tenders', 'met-hello-child' );
+
+	return met_hello_child_open_button_html( home_url( '/tenders/' ), $label );
+}
+
+/**
+ * [met_careers_button]: only the "view all" button for the careers list. The
+ * label changes when no job is open.
+ *
+ * @return string
+ */
+function met_hello_child_shortcode_careers_button() {
+	if ( ! post_type_exists( 'metcpt_career' ) ) {
+		return '';
+	}
+
+	$label = met_hello_child_has_open( 'career' ) ? __( 'View all openings', 'met-hello-child' ) : __( 'Visit Careers', 'met-hello-child' );
+
+	return met_hello_child_open_button_html( home_url( '/careers/' ), $label );
+}
+
+/**
  * [met_tenders count="4"]: open/closing-soon tenders from MetCPT's
  * metcpt_tender post type. Reads the plugin's own post type and meta keys
  * (tender_close_date, tender_ref) but renders theme markup and theme tokens,
@@ -398,25 +522,7 @@ function met_hello_child_shortcode_tenders( $atts ) {
 
 	$atts = shortcode_atts( array( 'count' => '4' ), $atts, 'met_tenders' );
 
-	$met_tender_query = new WP_Query(
-		array(
-			'post_type'      => 'metcpt_tender',
-			'post_status'    => 'publish',
-			'posts_per_page' => max( 1, (int) $atts['count'] ),
-			'no_found_rows'  => true,
-			'meta_key'       => 'tender_close_date', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- small, capped list on the homepage only.
-			'orderby'        => 'meta_value',
-			'order'          => 'ASC',
-			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- "still open" is the whole point of this shortcode.
-				array(
-					'key'     => 'tender_close_date',
-					'value'   => current_time( 'Y-m-d' ),
-					'compare' => '>=',
-					'type'    => 'DATE',
-				),
-			),
-		)
-	);
+	$met_tender_query = new WP_Query( met_hello_child_open_query_args( 'tender', $atts['count'] ) );
 
 	ob_start();
 	if ( $met_tender_query->have_posts() ) :
@@ -451,7 +557,7 @@ function met_hello_child_shortcode_tenders( $atts ) {
 		wp_reset_postdata();
 	else :
 		?>
-		<p class="met-empty-note met-reveal"><?php esc_html_e( 'No open tenders at this time.', 'met-hello-child' ); ?></p>
+		<p class="met-empty-note met-reveal"><?php esc_html_e( 'No open tenders now. Please check again soon.', 'met-hello-child' ); ?></p>
 		<?php
 	endif;
 	return ob_get_clean();
@@ -471,25 +577,7 @@ function met_hello_child_shortcode_careers( $atts ) {
 
 	$atts = shortcode_atts( array( 'count' => '4' ), $atts, 'met_careers' );
 
-	$met_career_query = new WP_Query(
-		array(
-			'post_type'      => 'metcpt_career',
-			'post_status'    => 'publish',
-			'posts_per_page' => max( 1, (int) $atts['count'] ),
-			'no_found_rows'  => true,
-			'meta_key'       => 'career_close_date', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- small, capped list on the homepage only.
-			'orderby'        => 'meta_value',
-			'order'          => 'ASC',
-			'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- "still open" is the whole point of this shortcode.
-				array(
-					'key'     => 'career_close_date',
-					'value'   => current_time( 'Y-m-d' ),
-					'compare' => '>=',
-					'type'    => 'DATE',
-				),
-			),
-		)
-	);
+	$met_career_query = new WP_Query( met_hello_child_open_query_args( 'career', $atts['count'] ) );
 
 	ob_start();
 	if ( $met_career_query->have_posts() ) :
@@ -515,7 +603,7 @@ function met_hello_child_shortcode_careers( $atts ) {
 		wp_reset_postdata();
 	else :
 		?>
-		<p class="met-empty-note met-reveal"><?php esc_html_e( 'No open positions at this time.', 'met-hello-child' ); ?></p>
+		<p class="met-empty-note met-reveal"><?php esc_html_e( 'No open positions now. Please check again soon.', 'met-hello-child' ); ?></p>
 		<?php
 	endif;
 	return ob_get_clean();
