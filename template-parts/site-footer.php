@@ -136,7 +136,7 @@ $met_socials = array(
 						),
 						array(
 							'url'   => home_url( '/code-of-business-conduct/' ),
-							'label' => __( 'Code of Business Conduct', 'met-hello-child' ),
+							'label' => __( 'The Code of Business Conduct and Ethics', 'met-hello-child' ),
 						),
 						array(
 							'url'   => home_url( '/whistleblowing/' ),
@@ -176,7 +176,7 @@ $met_socials = array(
 				<?php
 				printf(
 					/* translators: %s: current year. */
-					esc_html__( '© %s IIUM Holdings Sdn. Bhd. All rights reserved.', 'met-hello-child' ),
+					esc_html__( '© %s IIUM Holdings Sendirian Berhad. All rights reserved.', 'met-hello-child' ),
 					esc_html( gmdate( 'Y' ) )
 				);
 				?>
