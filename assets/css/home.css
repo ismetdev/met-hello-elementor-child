@@ -306,7 +306,9 @@
 }
 
 /* "View all" outline pill printed by [met_tenders_button] and
-   [met_careers_button]. Same look as the Elementor button it replaces. */
+   [met_careers_button]. Every property is written out on purpose, to match the
+   Elementor button it replaces. No hover or focus change, as before. The hover
+   and focus selectors only hold the colour against the parent reset's `a:hover`. */
 .met-btn-out-wrap {
 	display: flex;
 	justify-content: flex-end;
@@ -315,18 +317,19 @@
 .met-btn-out,
 .met-btn-out:hover,
 .met-btn-out:focus {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	padding: 12px 24px;
+	display: inline-block;
+	background-color: transparent;
+	font-family: "Geist", sans-serif;
 	font-size: 15px;
 	font-weight: 600;
 	line-height: 1;
-	color: var(--wp--preset--color--text, #0f1419);
-	background: transparent;
+	text-align: center;
+	text-decoration: none;
+	color: #0f1419;
+	fill: #0f1419;
 	border: 1px solid #e3e2da;
 	border-radius: 999px;
-	text-decoration: none;
+	padding: 14px 28px 14px 28px;
 }
 
 /* Empty-state media: sector-tinted gradient over surface, with the geometric
