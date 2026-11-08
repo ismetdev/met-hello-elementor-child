@@ -80,6 +80,18 @@ Maintenance during WordPress updates (drop-in):
 
 == Changelog ==
 
+= 1.12.2 =
+* Change: the Activities feed on the homepage no longer shows posts in the
+  Wishes category.
+* Change: the Tender ID now sits above the tender title in the homepage
+  tenders list.
+* Change: new empty-state texts for the tenders and careers lists.
+* Add: [met_tenders_button] and [met_careers_button]. Each prints only the
+  "view all" button, and the label changes when nothing is open. They change
+  nothing until placed on a page.
+* Change: the homepage hero fallback line now reads "The business arm of
+  IIUM".
+
 = 1.12.1 =
 * Builds on 1.12.0 (homepage rebuilt in Elementor, footer toggle). The next
   four items are what is new in 1.12.1.
