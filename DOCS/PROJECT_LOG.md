@@ -20,6 +20,28 @@ transcripts, moved to the archive with those entries.
 
 ---
 
+## 2026-11-08: v1.12.2 homepage tweaks (committed locally, not released)
+
+Theme only. No database, Elementor or MetCPT change.
+
+- **Activities feed** (`[met_home_newsroom]`) now skips the `announcements` and
+  `wishes` categories by slug. A missing slug is ignored.
+- **Tender ID** sits above the title in `[met_tenders]`.
+- **Empty texts** for tenders and careers changed. The old "No open positions at
+  this time." line is gone.
+- **New shortcodes** `[met_tenders_button]` and `[met_careers_button]` print only
+  the "view all" outline pill. The label changes when nothing is open. They sit
+  in the section header row on page 7003, so the button cannot move below the
+  list. The "still open" rule is one cached helper shared by lists and buttons.
+- **Hero fallback** line is "The business arm of IIUM".
+- **Checked:** `php -l`, `phpcs`, and both states of all four shortcodes with a
+  WordPress stub. Layout checked at 390, 768 and 1280 pixels.
+- **Owner step after release:** install 1.12.2 on staging, purge LiteSpeed, then
+  place the two new shortcodes in Elementor and remove the two old buttons
+  (`3a23661f`, `6dd5032c`) in the same edit.
+
+---
+
 ## 2026-11-06: Group is now 8 companies; security cleanup (local, not released)
 
 IIUM Advanced Technologies Sdn Bhd was removed from the website by the Group MD/CEO. The owner updated the Elementor content in the staging database; this entry covers theme code only. No version bump, tag or release yet.
