@@ -168,7 +168,8 @@ function met_hello_child_get_announcements( $count = 4 ) {
 
 /**
  * Newsroom posts (latest published), excluding announcements so the two
- * sections do not repeat each other.
+ * sections do not repeat each other, and wishes, which are greetings and not
+ * news. Categories are matched by slug. A slug that does not exist is skipped.
  *
  * @param int $count How many to return.
  * @return WP_Post[]
@@ -180,9 +181,15 @@ function met_hello_child_get_newsroom_posts( $count = 5 ) {
 		'numberposts' => (int) $count,
 	);
 
-	$term = get_category_by_slug( 'announcements' );
-	if ( $term ) {
-		$args['category__not_in'] = array( $term->term_id );
+	$excluded = array();
+	foreach ( array( 'announcements', 'wishes' ) as $slug ) {
+		$term = get_category_by_slug( $slug );
+		if ( $term ) {
+			$excluded[] = (int) $term->term_id;
+		}
+	}
+	if ( $excluded ) {
+		$args['category__not_in'] = $excluded;
 	}
 
 	return get_posts( $args );
