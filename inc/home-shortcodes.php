@@ -431,8 +431,10 @@ function met_hello_child_shortcode_tenders( $atts ) {
 				$met_tender_soon  = null !== $met_tender_days && $met_tender_days <= (int) get_option( 'metcpt_closing_soon_days', 7 );
 				?>
 				<a class="met-tender-row" href="<?php the_permalink(); ?>">
-					<span class="met-tender-row__ref"><?php echo esc_html( $met_tender_ref ? $met_tender_ref : '—' ); ?></span>
-					<span class="met-tender-row__title"><?php the_title(); ?></span>
+					<span class="met-tender-row__main">
+						<span class="met-tender-row__ref"><?php echo esc_html( $met_tender_ref ? $met_tender_ref : '—' ); ?></span>
+						<span class="met-tender-row__title"><?php the_title(); ?></span>
+					</span>
 					<span class="met-tender-row__badge<?php echo $met_tender_soon ? ' met-tender-row__badge--soon' : ''; ?>">
 						<?php echo $met_tender_soon ? esc_html__( 'Closing soon', 'met-hello-child' ) : esc_html__( 'Open', 'met-hello-child' ); ?>
 					</span>

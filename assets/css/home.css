@@ -250,6 +250,19 @@
 	transform: translateY(-2px);
 }
 
+/* Tender ID sits above the title, both in one column. */
+.met-tender-row__main {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	flex: 1 1 240px;
+	min-width: 0;
+}
+
+.met-tender-row__main .met-tender-row__title {
+	flex: 0 0 auto;
+}
+
 .met-tender-row__ref {
 	font-family: var(--wp--preset--font-family--sans);
 	font-weight: 700;
