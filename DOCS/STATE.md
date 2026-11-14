@@ -3,18 +3,19 @@
 Where the project stands today. Update when the shipped version, the open work, or
 the environment changes.
 
-Last updated: 2026-11-06
+Last updated: 2026-11-14
 
 ## At a glance
 
 | | |
 |---|---|
-| Shipped version | **1.12.1**, released on GitHub 2026-11-06 (tag `v1.12.1`, latest). Builds on **1.12.0** (released 2026-08-12), which holds the homepage rebuild. The never-tagged 1.8.0 to 1.10.0 work was folded into 1.11.0 |
-| Local version | **1.12.1**, same as the release. The homepage rebuild (1.12.0) came from Group MD/CEO feedback after the 2026-08-11 presentation. See "v1.12.0" below |
-| Staging status | **v2.iiumholdings.com.my runs 1.12.1** (updated and verified by the owner on 2026-11-06). It has the full new design: custom chrome on, homepage as the front page, and all content pages moved. Presented to the Group MD/CEO on 2026-08-11 |
+| Shipped version | **1.12.3**, tag `v1.12.3` (latest). 1.12.2 (2026-11-08) added the homepage tweaks and the two button shortcodes. 1.12.3 (2026-11-08) changed the company name strings. Builds on **1.12.0** (2026-08-12), the homepage rebuild. The never-tagged 1.8.0 to 1.10.0 work was folded into 1.11.0 |
+| Local version | **1.12.3**, same as the release. Nothing unreleased |
+| Staging status | **v2.iiumholdings.com.my runs 1.12.3**, with Hello Elementor 3.5.2 and MetCPT 1.7.0. Header chrome on, footer toggle off (footer from Header Footer Elementor), homepage is an Elementor page as the front page. Presented to the Group MD/CEO on 2026-08-11 |
+| Main site | Still on Astra. Plan: rehearse on a LocalWP copy, then go live on 2026-11-16 on 1.12.3, no new release before that |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
 | Branch | `main` |
-| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.7.1`, `v1.7.2`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.12.1` (1.8.0 to 1.10.0 folded into 1.11.0, never tagged separately) |
+| Tags | `v1.4.0`, `v1.4.1`, `v1.4.2`, `v1.5.0`, `v1.6.0`, `v1.7.0`, `v1.7.1`, `v1.7.2`, `v1.11.0`, `v1.11.1`, `v1.12.0`, `v1.12.1`, `v1.12.2`, `v1.12.3` (1.8.0 to 1.10.0 folded into 1.11.0, never tagged separately) |
 | Parent theme | `hello-elementor` |
 | Requires | WordPress 6.0+ (tested to 6.5), PHP 7.4+ |
 | Text domain | `met-hello-child` (`/languages`) |
