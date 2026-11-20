@@ -20,6 +20,23 @@ transcripts, moved to the archive with those entries.
 
 ---
 
+## 2026-11-20: v1.12.4 addresses and sections (built, tested, NOT released)
+
+Owner approved the release. The code is in the working tree, uncommitted. No tag, release or deploy until the owner approves after the pilot test.
+
+**Why.** The live main site (Astra) keeps its own addresses and names, with no redirects. The pilot copy showed 1.12.3 breaks there: Contact, Tenders and Careers links 404, the Announcements section is empty (main's slug is `announcement`), and the portfolio grid is empty (main's 8 company pages sit at the root, not under `/business/`).
+
+- **New** `inc/site-settings.php`: Customizer section "IIUM Holdings: addresses and sections". Settings: tenders, careers, contact and news page addresses; announcements, press releases and wishes category slugs; company page slugs. All empty by default. Empty means the old value, so V2 is unchanged.
+- **Filters:** `met_hello_child_page_url`, `met_hello_child_category_slug`, `met_hello_child_company_slugs`.
+- **13 hard-coded links replaced** with `met_hello_child_page_url()` (header, drawer, footer, home cards, section buttons, back link). The two tender and career buttons still print nothing when MetCPT is missing, as before.
+- **Categories:** `get_announcements()` and the newsroom exclusion use the slug helper. `[met_posts category="press-releases"]` (also announcements, wishes) maps to the site's own slug when one is set, so a shortcode copied from V2 works on main.
+- **Companies:** `met_hello_child_get_companies()` returns the listed published Pages in the listed order when slugs are set. Empty keeps the children of `/business/`. Pages need `_met_sector` meta for the sector colour and the filter bar.
+- **Out of scope, unchanged:** the footer `/business/#...` anchors and `/code-of-business-conduct/`, hero slides, anything visual.
+- **Checked:** `php -l` and `phpcs` clean on all changed files. 27 stub checks pass (defaults, main values, junk input, sub-folder site, filters). Not yet run in a browser: LocalWP `v2` was down (502) when built. The manual list is in the hand-over.
+- **Rollback:** reinstall 1.12.3. The settings are theme mods and are ignored by 1.12.3.
+
+---
+
 ## 2026-11-08: v1.12.3 company name and code name (theme strings)
 
 Theme only. The owner already changed page and post content in the database.

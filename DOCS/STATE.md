@@ -12,6 +12,7 @@ Last updated: 2026-11-14
 | Shipped version | **1.12.3**, tag `v1.12.3` (latest). 1.12.2 (2026-11-08) added the homepage tweaks and the two button shortcodes. 1.12.3 (2026-11-08) changed the company name strings. Builds on **1.12.0** (2026-08-12), the homepage rebuild. The never-tagged 1.8.0 to 1.10.0 work was folded into 1.11.0 |
 | Local version | **1.12.3**, same as the release. Nothing unreleased |
 | Staging status | **v2.iiumholdings.com.my runs 1.12.3**, with Hello Elementor 3.5.2 and MetCPT 1.7.0. Header chrome on, footer toggle off (footer from Header Footer Elementor), homepage is an Elementor page as the front page. Presented to the Group MD/CEO on 2026-08-11 |
+| In progress | **1.12.4** built in the working tree, not committed, not tagged. Adds site settings for addresses, category slugs and company slugs. Waits for the owner's pilot test. See the 2026-11-20 PROJECT_LOG entry |
 | Main site | Still on Astra. Plan: rehearse on a LocalWP copy, then go live on 2026-11-16 on 1.12.3, no new release before that |
 | Repository | https://github.com/ismetdev/met-hello-elementor-child (public) |
 | Branch | `main` |
