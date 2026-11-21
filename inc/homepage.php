@@ -151,7 +151,7 @@ function met_hello_child_get_home_image_id( $slot ) {
  * @return WP_Post[]
  */
 function met_hello_child_get_announcements( $count = 4 ) {
-	$term = get_category_by_slug( 'announcements' );
+	$term = get_category_by_slug( met_hello_child_category_slug( 'announcements' ) );
 	if ( ! $term ) {
 		return array();
 	}
@@ -182,7 +182,7 @@ function met_hello_child_get_newsroom_posts( $count = 5 ) {
 	);
 
 	$excluded = array();
-	foreach ( array( 'announcements', 'wishes' ) as $slug ) {
+	foreach ( array( met_hello_child_category_slug( 'announcements' ), met_hello_child_category_slug( 'wishes' ) ) as $slug ) {
 		$term = get_category_by_slug( $slug );
 		if ( $term ) {
 			$excluded[] = (int) $term->term_id;
@@ -203,26 +203,44 @@ function met_hello_child_get_newsroom_posts( $count = 5 ) {
  * sector_label, description, and image_id (0 when none). Ordered by menu_order
  * then title, matching the mega menu.
  *
+ * Since 1.12.4, when the "Company page slugs" setting (or the
+ * met_hello_child_company_slugs filter) is filled, those Pages are returned in
+ * that order instead, wherever they sit in the page tree.
+ *
  * @return array<int,array<string,mixed>>
  */
 function met_hello_child_get_companies() {
-	$met_business_parent = met_hello_child_business_parent_id();
-	if ( ! $met_business_parent ) {
-		return array();
-	}
+	$met_company_slugs = met_hello_child_company_slugs();
 
-	$children = get_posts(
-		array(
-			'post_type'   => 'page',
-			'post_parent' => $met_business_parent,
-			'post_status' => 'publish',
-			'numberposts' => -1,
-			'orderby'     => array(
-				'menu_order' => 'ASC',
-				'title'      => 'ASC',
-			),
-		)
-	);
+	if ( $met_company_slugs ) {
+		// Slugs set (Customizer or filter): show exactly those published Pages,
+		// in that order, wherever they sit in the page tree.
+		$children = array();
+		foreach ( $met_company_slugs as $met_company_slug ) {
+			$met_company_page = get_page_by_path( $met_company_slug, OBJECT, 'page' );
+			if ( $met_company_page && 'publish' === $met_company_page->post_status ) {
+				$children[] = $met_company_page;
+			}
+		}
+	} else {
+		$met_business_parent = met_hello_child_business_parent_id();
+		if ( ! $met_business_parent ) {
+			return array();
+		}
+
+		$children = get_posts(
+			array(
+				'post_type'   => 'page',
+				'post_parent' => $met_business_parent,
+				'post_status' => 'publish',
+				'numberposts' => -1,
+				'orderby'     => array(
+					'menu_order' => 'ASC',
+					'title'      => 'ASC',
+				),
+			)
+		);
+	}
 
 	$companies = array();
 	foreach ( $children as $child ) {

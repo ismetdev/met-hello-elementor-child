@@ -80,6 +80,21 @@ Maintenance during WordPress updates (drop-in):
 
 == Changelog ==
 
+= 1.12.4 =
+* Add: Appearance, Customize, "IIUM Holdings: addresses and sections". A site
+  can now set its own addresses for the Tenders, Careers, Contact and News
+  pages, its own slugs for the Announcements, Press releases and Wishes
+  categories, and a list of company page slugs for the portfolio grid.
+* Change: the header and drawer Contact button, the homepage Tenders and
+  Careers cards, the section buttons, the footer links and the back link now
+  read these settings.
+* Change: [met_posts category="press-releases"] (and announcements, wishes)
+  finds the site's own slug when one is set.
+* Every setting is empty by default and an empty setting keeps the old
+  behaviour, so a site that sets nothing looks and works exactly as in 1.12.3.
+* Each setting also has a filter: met_hello_child_page_url,
+  met_hello_child_category_slug and met_hello_child_company_slugs.
+
 = 1.12.3 =
 * Change: the company name is now "IIUM Holdings Sendirian Berhad" in the footer
   copyright, the 403 page and the maintenance page.

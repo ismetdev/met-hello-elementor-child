@@ -205,6 +205,9 @@ function met_hello_child_listing_slugs_to_ids( $slugs ) {
 			continue;
 		}
 
+		// A built-in slug such as press-releases maps to this site's own slug.
+		$slug = met_hello_child_map_category_slug( $slug );
+
 		$term = get_term_by( 'slug', $slug, 'category' );
 		if ( $term && ! is_wp_error( $term ) ) {
 			$ids[] = (int) $term->term_id;

@@ -63,7 +63,7 @@ function met_hello_child_get_primary_term( $post_id = null, $taxonomy = 'categor
  * @return string
  */
 function met_hello_child_back_link_url() {
-	$default = home_url( '/news-announcement/' );
+	$default = met_hello_child_page_url( 'news' );
 
 	/**
 	 * Filter the "Back to Newsroom" destination URL.

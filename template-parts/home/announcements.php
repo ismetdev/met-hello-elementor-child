@@ -20,7 +20,7 @@ $met_ann_posts = met_hello_child_get_announcements( 4 );
 				<h2><?php esc_html_e( 'Latest from the group', 'met-hello-child' ); ?></h2>
 				<p><?php esc_html_e( 'Festive greetings, milestones, and group notices.', 'met-hello-child' ); ?></p>
 			</div>
-			<a class="met-btn met-btn--ghost met-reveal" href="<?php echo esc_url( home_url( '/news-announcement/' ) ); ?>"><?php esc_html_e( 'View all', 'met-hello-child' ); ?> <?php echo met_hello_child_home_arrow(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted static SVG. ?></a>
+			<a class="met-btn met-btn--ghost met-reveal" href="<?php echo esc_url( met_hello_child_page_url( 'news' ) ); ?>"><?php esc_html_e( 'View all', 'met-hello-child' ); ?> <?php echo met_hello_child_home_arrow(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted static SVG. ?></a>
 		</div>
 
 		<?php if ( ! empty( $met_ann_posts ) ) : ?>

@@ -16,7 +16,7 @@ $met_action_career_img = met_hello_child_get_home_image_id( 'action_career' );
 <section class="met-section">
 	<div class="met-container">
 		<div class="met-actions met-reveal">
-			<a class="met-action met-action--tender" href="<?php echo esc_url( home_url( '/tenders/' ) ); ?>">
+			<a class="met-action met-action--tender" href="<?php echo esc_url( met_hello_child_page_url( 'tenders' ) ); ?>">
 				<?php if ( $met_action_tender_img ) : ?>
 					<span class="met-action__bg">
 					<?php
@@ -38,7 +38,7 @@ $met_action_career_img = met_hello_child_get_home_image_id( 'action_career' );
 				<p><?php esc_html_e( 'View open procurement opportunities across IIUM Holdings and its companies.', 'met-hello-child' ); ?></p>
 				<span class="met-action__go"><?php esc_html_e( 'View open tenders', 'met-hello-child' ); ?> <?php echo met_hello_child_home_arrow(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted static SVG. ?></span>
 			</a>
-			<a class="met-action met-action--career" href="<?php echo esc_url( home_url( '/careers/' ) ); ?>">
+			<a class="met-action met-action--career" href="<?php echo esc_url( met_hello_child_page_url( 'careers' ) ); ?>">
 				<?php if ( $met_action_career_img ) : ?>
 					<span class="met-action__bg">
 					<?php

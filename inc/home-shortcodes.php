@@ -486,7 +486,7 @@ function met_hello_child_shortcode_tenders_button() {
 
 	$label = met_hello_child_has_open( 'tender' ) ? __( 'View all tenders', 'met-hello-child' ) : __( 'View past tenders', 'met-hello-child' );
 
-	return met_hello_child_open_button_html( home_url( '/tenders/' ), $label );
+	return met_hello_child_open_button_html( met_hello_child_page_url( 'tenders' ), $label );
 }
 
 /**
@@ -502,7 +502,7 @@ function met_hello_child_shortcode_careers_button() {
 
 	$label = met_hello_child_has_open( 'career' ) ? __( 'View all openings', 'met-hello-child' ) : __( 'Visit Careers', 'met-hello-child' );
 
-	return met_hello_child_open_button_html( home_url( '/careers/' ), $label );
+	return met_hello_child_open_button_html( met_hello_child_page_url( 'careers' ), $label );
 }
 
 /**

@@ -34,6 +34,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			);
 		}
 		?>
-		<a class="met-drawer__flat" href="<?php echo esc_url( home_url( '/contact-us/' ) ); ?>"><?php esc_html_e( 'Contact Us', 'met-hello-child' ); ?></a>
+		<a class="met-drawer__flat" href="<?php echo esc_url( met_hello_child_page_url( 'contact' ) ); ?>"><?php esc_html_e( 'Contact Us', 'met-hello-child' ); ?></a>
 	</nav>
 </aside>

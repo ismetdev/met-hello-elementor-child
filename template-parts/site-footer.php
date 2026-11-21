@@ -104,15 +104,15 @@ $met_socials = array(
 							'label' => __( 'RISE2030', 'met-hello-child' ),
 						),
 						array(
-							'url'   => home_url( '/news-announcement/' ),
+							'url'   => met_hello_child_page_url( 'news' ),
 							'label' => __( 'Newsroom', 'met-hello-child' ),
 						),
 						array(
-							'url'   => home_url( '/careers/' ),
+							'url'   => met_hello_child_page_url( 'careers' ),
 							'label' => __( 'Careers', 'met-hello-child' ),
 						),
 						array(
-							'url'   => home_url( '/contact-us/' ),
+							'url'   => met_hello_child_page_url( 'contact' ),
 							'label' => __( 'Contact Us', 'met-hello-child' ),
 						),
 					)

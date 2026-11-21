@@ -65,7 +65,7 @@ $met_util_links = array(
 			</nav>
 
 			<div class="met-header__actions">
-				<a class="met-btn met-btn--primary met-header__contact" href="<?php echo esc_url( home_url( '/contact-us/' ) ); ?>"><?php esc_html_e( 'Contact Us', 'met-hello-child' ); ?></a>
+				<a class="met-btn met-btn--primary met-header__contact" href="<?php echo esc_url( met_hello_child_page_url( 'contact' ) ); ?>"><?php esc_html_e( 'Contact Us', 'met-hello-child' ); ?></a>
 				<button type="button" class="met-menu-btn" id="met-menu-btn" aria-label="<?php esc_attr_e( 'Open menu', 'met-hello-child' ); ?>" aria-expanded="false" aria-controls="met-drawer">
 					<span></span><span></span><span></span>
 				</button>

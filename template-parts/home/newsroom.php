@@ -21,7 +21,7 @@ $met_news_posts = met_hello_child_get_newsroom_posts( 5 );
 				<h2><?php esc_html_e( 'News and activities', 'met-hello-child' ); ?></h2>
 				<p><?php esc_html_e( 'Updates from across the group, refreshed regularly.', 'met-hello-child' ); ?></p>
 			</div>
-			<a class="met-btn met-btn--ghost met-reveal" href="<?php echo esc_url( home_url( '/news-announcement/' ) ); ?>"><?php esc_html_e( 'Visit the newsroom', 'met-hello-child' ); ?> <?php echo met_hello_child_home_arrow(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted static SVG. ?></a>
+			<a class="met-btn met-btn--ghost met-reveal" href="<?php echo esc_url( met_hello_child_page_url( 'news' ) ); ?>"><?php esc_html_e( 'Visit the newsroom', 'met-hello-child' ); ?> <?php echo met_hello_child_home_arrow(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted static SVG. ?></a>
 		</div>
 
 		<?php if ( ! empty( $met_news_posts ) ) : ?>
