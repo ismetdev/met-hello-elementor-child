@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Theme version. Bump this together with the header in style.css. Used for asset
  * cache-busting, and read by the update checker.
  */
-define( 'MET_HELLO_CHILD_VERSION', '1.12.4' );
+define( 'MET_HELLO_CHILD_VERSION', '1.12.5' );
 
 /**
  * Absolute path to the theme directory, with a trailing slash.
@@ -46,6 +46,7 @@ require_once MET_HELLO_CHILD_DIR . 'inc/updater.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/page-hero.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/scroll-top.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/site-settings.php';
+require_once MET_HELLO_CHILD_DIR . 'inc/metcpt-fixes.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/sectors.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/hero-slides.php';
 require_once MET_HELLO_CHILD_DIR . 'inc/chrome.php';

@@ -80,6 +80,15 @@ Maintenance during WordPress updates (drop-in):
 
 == Changelog ==
 
+= 1.12.5 =
+* Fix: "Back to Tenders" on a single tender page now goes to the address with a
+  trailing slash (and follows the Tenders address setting), so it no longer
+  redirects. "Back to Careers" does the same.
+* Fix: a single career page no longer shows the same text twice. An empty
+  excerpt, or one that repeats the start of the description, is hidden. A
+  different hand-written excerpt is kept.
+* New file: inc/metcpt-fixes.php. Nothing else changed.
+
 = 1.12.4 =
 * Add: Appearance, Customize, "IIUM Holdings: addresses and sections". A site
   can now set its own addresses for the Tenders, Careers, Contact and News

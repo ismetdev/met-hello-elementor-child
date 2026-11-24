@@ -20,6 +20,18 @@ transcripts, moved to the archive with those entries.
 
 ---
 
+## 2026-11-24: v1.12.5 back links and career excerpt
+
+v1.12.4 was released on 2026-11-21 (commit 403ef56). 1.12.5 adds `inc/metcpt-fixes.php` and changes nothing else.
+
+- "Back to Tenders" on a single tender fell back to `/tenders` with no slash, which redirects. The MetCPT template builds that link, so the theme filters `home_url` for that one call on a single tender page and returns the Tenders address setting.
+- "Back to Careers" reads the option `metcpt_careers_page_url`. An empty value or the `/careers` default now follows the Careers address setting. Other saved values get a trailing slash.
+- A single career page showed the excerpt and the description with the same text. With no hand-written excerpt, WordPress builds one from the start of the description. The excerpt is now blank when empty or when it only repeats the start of the description. A different hand-written excerpt stays.
+- /business/ has no H1. The theme prints one only when Page Hero is set on the page. A Full Width Elementor page with no hero variant gets none, so the fix is in the page (set Page Hero, or make the top heading an H1). Not changed in the theme.
+- Tested: PHPCS clean, 13 stub checks pass. The Local sites were down, so the browser test list is for the pilot.
+
+---
+
 ## 2026-11-20: v1.12.4 addresses and sections (built, tested, NOT released)
 
 Owner approved the release. The code is in the working tree, uncommitted. No tag, release or deploy until the owner approves after the pilot test.
