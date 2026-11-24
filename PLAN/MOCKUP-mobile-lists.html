@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup: tenders and careers lists on phone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ------------------------------------------------------------------
+   Mockup page chrome (not part of the proposal)
+------------------------------------------------------------------ */
+:root{
+  --text:#0F1419; --sub:#5A6168; --bg:#F7F3EC; --card:#FFFFFF;
+  --accent:#B98A2E; --accent-text:#85621E;
+  --line:rgba(15,20,25,.12); --track:#ECE7DD;
+  --open-bg:#E4EEE6; --open-tx:#25593A;
+  --soon-bg:#F6ECD2; --soon-tx:#7A5718;
+  --closed-bg:#ECE8E0; --closed-tx:#4A5158;
+}
+*{box-sizing:border-box}
+body{margin:0;background:#E9E4DA;color:var(--text);font-family:"Geist",-apple-system,"Segoe UI",sans-serif;line-height:1.5}
+.page{max-width:1180px;margin:0 auto;padding:32px 20px 80px}
+.page h1{font-size:28px;margin:0 0 6px;letter-spacing:-.01em}
+.page .lead{color:var(--sub);margin:0 0 24px;max-width:70ch}
+.note{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:0 0 28px;font-size:14px}
+.note b{font-weight:600}
+.note ul{margin:6px 0 0;padding-left:20px}
+h2.sec{font-size:18px;margin:44px 0 4px;letter-spacing:-.005em}
+p.cap{color:var(--sub);font-size:14px;margin:0 0 14px}
+.stage{display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap;overflow-x:auto;padding-bottom:6px}
+.device{flex:none}
+.device .label{font-size:12px;font-weight:600;color:var(--sub);text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px}
+.frame{background:var(--bg);container-type:inline-size;border-radius:18px;box-shadow:0 0 0 1px rgba(15,20,25,.18),0 10px 30px rgba(15,20,25,.08);overflow:hidden}
+.frame-in{padding:20px 16px 24px}
+.frame-head{margin:0 0 16px}
+.frame-head .eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text)}
+.frame-head h3{font-size:22px;line-height:1.2;margin:4px 0 0;letter-spacing:-.01em}
+
+/* ------------------------------------------------------------------
+   PROPOSED CSS. Same selectors as the MetCPT markup.
+   In the theme this is written as @media (max-width: 768px).
+   Here it is @container so each frame can be a different width.
+------------------------------------------------------------------ */
+
+/* Base (all widths): calm look for the toolbar */
+.tdl-toolbar,.crl-toolbar{display:flex;gap:12px;align-items:center;margin:0 0 14px}
+.tdl-search,.crl-search{flex:1;min-width:200px;height:44px;border:1px solid var(--line);border-radius:10px;padding:0 14px;font:inherit;font-size:16px;background:#fff;color:var(--text)}
+.tdl-search::placeholder,.crl-search::placeholder{color:var(--sub)}
+.tdl-tabs,.crl-tabs{display:flex;gap:4px;background:var(--track);border-radius:10px;padding:3px}
+.tdl-tab,.crl-tab{font:inherit;font-size:14px;font-weight:500;min-height:44px;padding:0 14px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--sub);cursor:pointer}
+.tdl-tab.active,.crl-tab.active{background:#fff;color:var(--text);border-color:var(--line);font-weight:600}
+.tdl-count,.crl-count{font-size:13px;color:var(--sub);margin-left:auto;white-space:nowrap}
+.tdl-search:focus-visible,.crl-search:focus-visible,.tdl-tab:focus-visible,.crl-tab:focus-visible,.tdl-btn:focus-visible,.met-list-empty button:focus-visible{outline:2px solid var(--accent-text);outline-offset:2px}
+
+/* Desktop reference table (unchanged look, approximated) */
+.tdl-table-wrap,.crl-table-wrap{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tdl-table,.crl-table{width:100%;border-collapse:collapse;font-size:14px}
+.tdl-table th,.crl-table th{background:#FBF9F5;text-align:left;font-size:12px;font-weight:600;color:var(--sub);padding:11px 14px;border-bottom:1px solid var(--line)}
+.tdl-table td,.crl-table td{padding:14px;border-bottom:1px solid #EFEBE3;vertical-align:top}
+.tdl-table tbody tr:last-child td,.crl-table tbody tr:last-child td{border-bottom:0}
+.tdl-ref{font-family:"Geist Mono",monospace;font-size:12px;color:var(--sub)}
+.tdl-title a,.crl-title a{color:var(--text);font-weight:600;text-decoration:none}
+.tdl-desc{font-size:13px;color:var(--sub);margin-top:4px}
+.tdl-badge,.crl-badge{display:inline-flex;align-items:center;gap:6px;min-height:24px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:600;white-space:nowrap}
+.tdl-badge::before,.crl-badge::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.tdl-badge-open,.crl-badge-open{background:var(--open-bg);color:var(--open-tx)}
+.tdl-badge-soon,.crl-badge-soon{background:var(--soon-bg);color:var(--soon-tx)}
+.tdl-badge-closed,.crl-badge-closed{background:var(--closed-bg);color:var(--closed-tx)}
+.tdl-btn{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 16px;border-radius:8px;background:var(--accent-text);color:#fff;font-size:13px;font-weight:600;text-decoration:none}
+.tdl-btn-closed{background:var(--closed-bg);color:var(--closed-tx)}
+.tdl-footer,.crl-footer{padding:10px 4px;font-size:13px;color:var(--sub)}
+.tdl-badge-wrap{margin-top:6px}
+
+/* Empty message (new). Hidden until the list has no rows. */
+.met-list-empty{display:none;text-align:center;background:#fff;border:1px dashed rgba(15,20,25,.25);border-radius:14px;padding:28px 20px;margin-top:12px}
+.met-list-empty.show{display:block}
+.met-list-empty p{margin:0 0 14px;font-size:16px;font-weight:500}
+.met-list-empty button{font:inherit;font-size:14px;font-weight:600;min-height:44px;padding:0 18px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--text);cursor:pointer}
+
+/* ===== Phone and iPad portrait: table becomes cards (768px and below) ===== */
+@container (max-width: 768px){
+  .frame-in{padding:20px 16px 24px}
+
+  /* Toolbar: search full width, tabs below, count below */
+  .tdl-toolbar,.crl-toolbar{flex-direction:column;align-items:stretch;gap:10px}
+  .tdl-search,.crl-search{flex:none;min-width:0;width:100%;height:48px}
+  .tdl-tabs,.crl-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+  .tdl-tab,.crl-tab{padding:0 4px}
+  .tdl-count,.crl-count{margin-left:0;white-space:normal}
+
+  /* Table to blocks */
+  .tdl-table-wrap,.crl-table-wrap{background:none;border:0;border-radius:0;overflow:visible}
+  .tdl-table,.crl-table,.tdl-table tbody,.crl-table tbody{display:block;width:auto;min-width:0}
+  .tdl-table thead,.crl-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .tdl-table tbody,.crl-table tbody{display:grid;grid-template-columns:1fr;gap:12px}
+
+  .tdl-table tbody tr[data-status],.crl-table tbody tr[data-status]{
+    position:relative;display:grid;grid-template-columns:1fr 1fr;column-gap:16px;row-gap:8px;
+    background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;
+  }
+  .tdl-table tbody tr[data-status]:hover,.crl-table tbody tr[data-status]:hover{border-color:var(--accent)}
+  .tdl-table td,.crl-table td{display:block;padding:0;border:0}
+  .tdl-table tbody tr[data-status]:hover td,.crl-table tbody tr[data-status]:hover td{background:none}
+
+  /* Whole card is one tap target: the title link stretches over the card */
+  .tdl-title a::after,.crl-title a::after{content:"";position:absolute;inset:0;border-radius:14px}
+  .tdl-title a,.crl-title a{outline:none}
+  .tdl-table tbody tr:has(.tdl-title a:focus-visible),.crl-table tbody tr:has(.crl-title a:focus-visible){outline:2px solid var(--accent-text);outline-offset:2px}
+
+  /* Closed cards sit back a little */
+  .tdl-table tbody tr[data-status="closed"],.crl-table tbody tr[data-status="closed"]{background:#FBFAF7}
+  .tdl-table tbody tr[data-status="closed"] .tdl-title a,.crl-table tbody tr[data-status="closed"] .crl-title a{color:var(--sub)}
+
+  /* Small labels. Visible text, read out by screen readers. */
+  .tdl-issuer::before,.tdl-location::before,.crl-dept::before,.crl-location::before{display:block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--sub);margin-bottom:1px}
+  .tdl-issuer::before{content:"Issuer"}
+  .tdl-location::before,.crl-location::before{content:"Location"}
+  .crl-dept::before{content:"Department"}
+  .tdl-issuer,.tdl-location,.crl-dept,.crl-location{font-size:14px;color:var(--text);overflow-wrap:anywhere}
+
+  /* ---------- TENDER card ----------
+     row 1: ref (left)  status (right)
+     row 2: title
+     row 3: excerpt (2 lines, only if there is one)
+     row 4: issuer | location
+     row 5: closing date (left)  document button (right)            */
+  .tdl-table tbody tr[data-status] > td:nth-child(1){display:contents}
+  .tdl-ref{grid-column:1;grid-row:1;align-self:center;font-size:12px;overflow-wrap:anywhere}
+  .tdl-badge-wrap{grid-column:2;grid-row:1;justify-self:end;margin:0}
+  .tdl-table tbody tr[data-status] > td:nth-child(2){grid-column:1/-1;grid-row:2}
+  .tdl-title{font-size:17px;line-height:1.35;letter-spacing:-.005em}
+  .tdl-title a{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;line-clamp:4;overflow:hidden;overflow-wrap:anywhere}
+  .tdl-desc{font-size:14px;margin-top:6px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden}
+  .tdl-table tbody tr[data-status] > td.tdl-issuer{grid-column:1;grid-row:3;margin-top:4px}
+  .tdl-table tbody tr[data-status] > td.tdl-location{grid-column:2;grid-row:3;margin-top:4px}
+  .tdl-table tbody tr[data-status]::after,.crl-table tbody tr[data-status]::after{content:"";grid-column:1/-1;grid-row:4;align-self:start;border-top:1px solid var(--line);margin-top:4px;pointer-events:none}
+  .tdl-table tbody tr[data-status] > td.tdl-date{grid-column:1;grid-row:4;align-self:center;font-weight:600;font-size:14px;color:var(--accent-text);padding-top:16px}
+  .tdl-table tbody tr[data-status] > td.tdl-doc-cell{grid-column:2;grid-row:4;justify-self:end;align-self:center;padding-top:12px;position:relative;z-index:1}
+  .tdl-btn{min-height:44px;min-width:96px;padding:0 20px;font-size:14px}
+  .tdl-table tbody tr[data-status="closed"] > td.tdl-date{color:var(--sub);font-weight:500}
+  .tdl-date::before{content:"Closes "}
+  tr[data-status="closed"] .tdl-date::before{content:"Closed "}
+
+  /* ---------- CAREER card ----------
+     row 1: status (left)  closing date (right)
+     row 2: position title
+     row 3: company (left)  type chip (right)
+     row 4: department | location                                    */
+  .crl-table tbody tr[data-status] > td:nth-child(1){display:contents}
+  .crl-badge-wrap{grid-column:1;grid-row:1;align-self:center}
+  .crl-table tbody tr[data-status] > td.crl-date{grid-column:2;grid-row:1;justify-self:end;align-self:center;font-size:14px;font-weight:600;color:var(--accent-text)}
+  .crl-table tbody tr[data-status="closed"] > td.crl-date{color:var(--sub);font-weight:500}
+  .crl-date::before{content:"Closes "}
+  tr[data-status="closed"] .crl-date::before{content:"Closed "}
+  .crl-title{grid-column:1/-1;grid-row:2;font-size:17px;line-height:1.35;letter-spacing:-.005em}
+  .crl-title a{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden;overflow-wrap:anywhere}
+  .crl-table tbody tr[data-status] > td.crl-company{grid-column:1;grid-row:3;font-size:14px;color:var(--sub);align-self:center}
+  .crl-table tbody tr[data-status] > td.crl-type{grid-column:2;grid-row:3;justify-self:end;align-self:center;font-size:12px;font-weight:600;color:var(--text);background:var(--track);border-radius:999px;padding:3px 10px}
+  .crl-table tbody tr[data-status] > td.crl-dept{grid-column:1;grid-row:4;padding-top:16px}
+  .crl-table tbody tr[data-status] > td.crl-location{grid-column:2;grid-row:4;padding-top:16px}
+  .crl-badge-wrap{margin:0}
+
+  /* Duplicate count line in the footer is not needed on cards */
+  .tdl-footer,.crl-footer{display:none}
+}
+
+/* iPad portrait: two columns of cards */
+@container (min-width: 600px) and (max-width: 768px){
+  .tdl-table tbody,.crl-table tbody{grid-template-columns:1fr 1fr;align-items:stretch}
+  .tdl-toolbar,.crl-toolbar{flex-direction:row;flex-wrap:wrap;align-items:center}
+  .tdl-search,.crl-search{flex:1 1 100%;width:auto}
+  .tdl-tabs,.crl-tabs{flex:0 0 auto;display:flex}
+  .tdl-tab,.crl-tab{padding:0 14px}
+  .tdl-count,.crl-count{margin-left:auto}
+}
+
+/* Narrow phones: tabs wrap to 2 x 2 so each stays 44px tall and readable */
+@container (max-width: 479px){
+  .tdl-tabs,.crl-tabs{grid-template-columns:1fr 1fr}
+}
+
+/* Reduce motion: nothing here animates, but keep it that way */
+@media (prefers-reduced-motion: reduce){ *{transition:none!important;animation:none!important} }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Tenders and careers lists on phone: mockup</h1>
+  <p class="lead">Stage 1 of 3. This is a picture of the plan, not the final code. Nothing is changed on any site. Open it on your phone or a desktop browser. The filters and search work, so you can try them.</p>
+
+  <div class="note">
+    <b>What you are looking at</b>
+    <ul>
+      <li>Phone (375px) and iPad portrait (768px): each row of the table becomes a card. No sideways scroll.</li>
+      <li>Desktop (1000px): the table stays as it is today. It is shown for reference only.</li>
+      <li>Titles, reference numbers, issuers and locations come from the local copy of the V2 site (the sample tenders and jobs there). Closing dates are moved so that every state appears: open, closing soon (7 days or less) and closed. One tender has a long title of 200 characters. One tender has an excerpt, written for this mockup.</li>
+      <li>The live pages could not be reached from the build machine, so nothing was copied from them.</li>
+    </ul>
+  </div>
+
+  <h2 class="sec">1. Tenders</h2>
+  <p class="cap">Cards: reference and status first, then the title, issuer and place, then the closing date with the document button. The tender with no document shows "Details". Try the tabs and the search box.</p>
+  <div class="stage" id="tenders-stage"></div>
+
+  <h2 class="sec">2. Careers</h2>
+  <p class="cap">Cards: status and closing date first, then the position, company and type, then department and location.</p>
+  <div class="stage" id="careers-stage"></div>
+
+  <h2 class="sec">3. Empty result (new message)</h2>
+  <p class="cap">Today the "No tenders found." and "No positions found." messages only appear when there are no records at all. They do not appear when a search or tab has no match. The mockup shows the message for both. It also shows on desktop.</p>
+  <div class="stage" id="empty-stage"></div>
+
+  <h2 class="sec">4. Desktop (unchanged)</h2>
+  <p class="cap">At 769px and wider the table stays. Only the empty message is added.</p>
+  <div class="stage" id="desktop-stage"></div>
+</div>
+
+<script>
+/* ------------------------------------------------------------------
+   Mockup data and rendering. The markup mirrors the MetCPT shortcode
+   output (tenders_list and careers_list) so the CSS above is the CSS
+   that would go in the theme.
+------------------------------------------------------------------ */
+var TODAY = new Date(); TODAY.setHours(0,0,0,0);
+function dayOffset(n){ var d = new Date(TODAY); d.setDate(d.getDate()+n); return d; }
+function fmt(d){ return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); }
+function statusOf(d){ var diff = Math.round((d - TODAY)/86400000); return diff < 0 ? 'closed' : (diff <= 7 ? 'soon' : 'open'); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+var TENDERS = [
+ {t:'Supply of Office Furniture – HQ Renovation', ref:'IIUMH/TDR/2025/001', iss:'IIUM Holdings Sdn Bhd', loc:'Gombak, Selangor', off:28, doc:true},
+ {t:'Provision of Security Services – IIUM Schools', ref:'IIUMS/TDR/2025/002', iss:'IIUM Schools Sdn Bhd', loc:'Multiple Locations', off:3, doc:true, desc:'Security guard services for all school campuses for a period of 24 months, including night patrol and access control.'},
+ {t:'Landscaping and Maintenance Works – IIUM Educare', ref:'IIUME/TDR/2025/003', iss:'IIUM Educare Sdn Bhd', loc:'Gombak, Selangor', off:14, doc:false},
+ {t:'Supply of ICT Equipment – Batch 1', ref:'IIUMH/TDR/2025/004', iss:'IIUM Holdings Sdn Bhd', loc:'Gombak, Selangor', off:-9, doc:true},
+ {t:'Consultancy for RISE2030 Implementation Review', ref:'ICI/TDR/2025/005', iss:'ICI – IIUM Consultancy & Innovation', loc:'Gombak, Selangor', off:6, doc:true},
+ {t:'Cleaning Services – IIUM Medical Centre', ref:'IUMSC/TDR/2026/007', iss:'IIUM Medical Specialist Centre', loc:'Kuantan, Pahang', off:-30, doc:false},
+ {t:'Supply, delivery, installation, testing and commissioning of a new integrated building management system, including CCTV, access control, fire alarm interface and energy monitoring, for the IIUM Holdings headquarters and three satellite offices', ref:'IIUMH/TDR/2026/011', iss:'IIUM Holdings Sdn Bhd', loc:'Gombak, Selangor', off:21, doc:true, long:true}
+];
+var CAREERS = [
+ {t:'Finance Executive', co:'IIUM Holdings', dep:'Finance', loc:'Gombak, Selangor', type:'Full Time', off:18},
+ {t:'ICT Support Specialist', co:'IIUM Holdings', dep:'ICT', loc:'Gombak, Selangor', type:'Full Time', off:4},
+ {t:'Marketing Intern', co:'IIUM Holdings', dep:'Marketing', loc:'Gombak, Selangor', type:'Internship', off:-12},
+ {t:'Legal Counsel', co:'IIUM Holdings', dep:'Legal', loc:'Kuala Lumpur', type:'Full Time', off:25},
+ {t:'Procurement Officer', co:'IIUM Holdings', dep:'Procurement', loc:'Gombak, Selangor', type:'Contract', off:9},
+ {t:'Senior Human Resource Manager (Group Human Capital, Talent and Succession Planning)', co:'IIUM Holdings', dep:'Human Resource', loc:'Gombak, Selangor', type:'Full Time', off:12},
+ {t:'Administration Assistant', co:'IIUM Holdings', dep:'Administration', loc:'Gombak, Selangor', type:'Part Time', off:-3}
+];
+var BADGE = {open:'Open', soon:'Closing Soon', closed:'Closed'};
+
+function tenderRow(r){
+  var d = dayOffset(r.off), s = statusOf(d);
+  return '<tr data-status="'+s+'" data-search="'+esc((r.t+' '+r.ref+' '+r.iss).toLowerCase())+'">'+
+   '<td><div class="tdl-ref">'+esc(r.ref)+'</div><div class="tdl-badge-wrap"><span class="tdl-badge tdl-badge-'+s+'">'+BADGE[s]+'</span></div></td>'+
+   '<td><div class="tdl-title"><a href="#">'+esc(r.t)+'</a></div>'+(r.desc?'<div class="tdl-desc">'+esc(r.desc)+'</div>':'')+'</td>'+
+   '<td class="tdl-issuer">'+esc(r.iss)+'</td><td class="tdl-location">'+esc(r.loc)+'</td>'+
+   '<td class="tdl-date">'+fmt(d)+'</td>'+
+   '<td class="tdl-doc-cell"><a href="#" class="tdl-btn'+(s==='closed'?' tdl-btn-closed':'')+'">'+(r.doc?'View':'Details')+'</a></td></tr>';
+}
+function careerRow(r){
+  var d = dayOffset(r.off), s = statusOf(d);
+  return '<tr data-status="'+s+'" data-search="'+esc((r.t+' '+r.co+' '+r.dep+' '+r.loc).toLowerCase())+'">'+
+   '<td><div class="crl-title"><a href="#">'+esc(r.t)+'</a></div><div class="crl-badge-wrap"><span class="crl-badge crl-badge-'+s+'">'+BADGE[s]+'</span></div></td>'+
+   '<td class="crl-company">'+esc(r.co)+'</td><td class="crl-dept">'+esc(r.dep)+'</td><td class="crl-location">'+esc(r.loc)+'</td>'+
+   '<td class="crl-type">'+esc(r.type)+'</td><td class="crl-date">'+fmt(d)+'</td></tr>';
+}
+
+function frame(host, o){
+  var k = o.kind, p = k==='tender' ? 'tdl' : 'crl', rows = k==='tender' ? TENDERS : CAREERS;
+  var noun = k==='tender' ? 'tender' : 'position';
+  var head = k==='tender'
+    ? '<thead><tr><th>Ref No.</th><th>Tender Title</th><th>Issuer</th><th>Location</th><th>Closing Date</th><th>Document</th></tr></thead>'
+    : '<thead><tr><th>Position</th><th>Company</th><th>Department</th><th>Location</th><th>Type</th><th>Closes</th></tr></thead>';
+  var dev = document.createElement('div'); dev.className = 'device';
+  dev.innerHTML =
+   '<div class="label">'+o.label+'</div>'+
+   '<div class="frame" style="width:'+o.width+'px"><div class="frame-in" style="'+(o.width>768?'padding:28px 32px':'')+'">'+
+   '<div class="frame-head"><div class="eyebrow">— '+(k==='tender'?'Tender Opportunities':'Careers')+'</div><h3>'+(k==='tender'?'Procurement & Tenders':'Join our team')+'</h3></div>'+
+   '<div class="'+p+'-wrap">'+
+    '<div class="'+p+'-toolbar">'+
+     '<input class="'+p+'-search" type="text" placeholder="'+(k==='tender'?'Search by title, ref or issuer...':'Search by title, company or department...')+'" aria-label="Search '+(k==='tender'?'tenders':'careers')+'" value="'+esc(o.search||'')+'">'+
+     '<div class="'+p+'-tabs" role="tablist"><button class="'+p+'-tab active" data-filter="all" role="tab">All</button><button class="'+p+'-tab" data-filter="open" role="tab">Open</button><button class="'+p+'-tab" data-filter="soon" role="tab">Closing Soon</button><button class="'+p+'-tab" data-filter="closed" role="tab">Closed</button></div>'+
+     '<span class="'+p+'-count" role="status" aria-live="polite"></span>'+
+    '</div>'+
+    '<div class="'+p+'-table-wrap"><table class="'+p+'-table">'+head+'<tbody class="'+p+'-tbody">'+rows.map(k==='tender'?tenderRow:careerRow).join('')+'</tbody></table></div>'+
+    '<div class="met-list-empty" role="status"><p>No '+noun+'s found.</p><button type="button">Clear search and filter</button></div>'+
+    '<div class="'+p+'-footer"><span class="'+p+'-result-count"></span></div>'+
+   '</div></div></div>';
+  host.appendChild(dev);
+
+  var wrap = dev.querySelector('.'+p+'-wrap'), search = wrap.querySelector('.'+p+'-search'),
+      tabs = wrap.querySelectorAll('.'+p+'-tab'), trs = wrap.querySelectorAll('tbody tr[data-status]'),
+      count = wrap.querySelector('.'+p+'-count'), foot = wrap.querySelector('.'+p+'-result-count'),
+      empty = wrap.querySelector('.met-list-empty'), tw = wrap.querySelector('.'+p+'-table-wrap');
+  var f = 'all', q = (o.search||'').toLowerCase();
+  function apply(){
+    var n = 0;
+    trs.forEach(function(r){
+      var s = r.getAttribute('data-status'), t = r.getAttribute('data-search');
+      var okF = f==='all' || s===f || (f==='open' && s==='soon');
+      var okS = q==='' || t.indexOf(q) > -1;
+      r.style.display = (okF && okS) ? '' : 'none'; if(okF && okS) n++;
+    });
+    var label = 'Showing ' + (n===1 ? '1 '+noun : n+' '+noun+'s');
+    count.textContent = label; foot.textContent = label;
+    empty.classList.toggle('show', n===0); tw.style.display = n===0 ? 'none' : '';
+  }
+  tabs.forEach(function(b){ b.addEventListener('click', function(){ tabs.forEach(function(x){x.classList.remove('active');}); b.classList.add('active'); f=b.getAttribute('data-filter'); apply(); }); });
+  search.addEventListener('input', function(){ q = this.value.toLowerCase().trim(); apply(); });
+  empty.querySelector('button').addEventListener('click', function(){ search.value=''; q=''; f='all'; tabs.forEach(function(x){x.classList.toggle('active', x.getAttribute('data-filter')==='all');}); apply(); });
+  apply();
+}
+
+var T = document.getElementById('tenders-stage'), C = document.getElementById('careers-stage'),
+    E = document.getElementById('empty-stage'), D = document.getElementById('desktop-stage');
+frame(T,{kind:'tender',width:375,label:'Phone, 375px'});
+frame(T,{kind:'tender',width:768,label:'iPad portrait, 768px (two columns)'});
+frame(C,{kind:'career',width:375,label:'Phone, 375px'});
+frame(C,{kind:'career',width:768,label:'iPad portrait, 768px (two columns)'});
+frame(E,{kind:'tender',width:375,label:'Tenders, no match (search "zzz")',search:'zzz'});
+frame(E,{kind:'career',width:375,label:'Careers, no match (search "zzz")',search:'zzz'});
+frame(D,{kind:'tender',width:1000,label:'Desktop, 1000px (table stays)'});
+</script>
+</body>
+</html>
