@@ -80,6 +80,12 @@ Maintenance during WordPress updates (drop-in):
 
 == Changelog ==
 
+= 1.12.6 =
+* Fix: pages no longer print two meta description tags. When Yoast SEO is
+  active, the parent theme's excerpt-based description tag is turned off, so
+  only Yoast's tag remains. Without Yoast, nothing changes.
+* New file: inc/seo.php.
+
 = 1.12.5 =
 * Fix: "Back to Tenders" on a single tender page now goes to the address with a
   trailing slash (and follows the Tenders address setting), so it no longer
